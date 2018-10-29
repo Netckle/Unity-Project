@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 15
-  productGUID: 1a2e3328223bacc498a92914f38d5799
+  productGUID: 98e7337f9c344274190d6f9040db15fd
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: Mouse On the Table
+  productName: Netcle_Fighter
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -650,8 +650,8 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 152e4a78-22a2-4bc0-8ad6-9c135ad14d48
-  projectName: Mouse On the Table (1)
+  cloudProjectId: b2ea3ec7-826c-412f-9f70-b79fe8c54ae5
+  projectName: Netcle_Fighter
   organizationId: bluenet246
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
