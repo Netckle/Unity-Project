@@ -22,9 +22,10 @@ GameObject:
   - component: {fileID: 33377126672824764}
   - component: {fileID: 23810965472698704}
   - component: {fileID: 65537178789283176}
+  - component: {fileID: 114213452994925330}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,3 +97,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114213452994925330
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1899434385986178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba6db15c79f23ff49927fa529c08f0a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockType: 0

@@ -24,18 +24,22 @@ public class BattleChip : MonoBehaviour
     public string explanation;
 
     public Vector3[] chipPoints;
+    private Vector3[] chipPoints_backup;
     public GameObject colliderSpace;
     private GameObject[] chipColliders;
 
+    public bool onSkill = false;
+
     void Start()
     {
-
+        
     }
 
     // 배틀칩의 변수들을 초기화하는 함수
     public void Instantiate()
     {
         chipColliders = new GameObject[maxIndex];
+        chipPoints_backup = new Vector3[maxIndex];
 
         switch (chipState)
         {
@@ -62,7 +66,7 @@ public class BattleChip : MonoBehaviour
     {
         for (int i = 0; i < maxIndex; i++) 
         {
-            chipPoints[i].Set(
+            chipPoints_backup[i].Set(
                 player.transform.position.x + chipPoints[i].x,
                 player.transform.position.y + chipPoints[i].y,
                 player.transform.position.z + chipPoints[i].z
@@ -73,14 +77,19 @@ public class BattleChip : MonoBehaviour
     // 배틀칩의 기록된 범위와 경로에 콜라이더 생성 및 제거하는 함수
     public IEnumerator executeAct()
     {
+        if (onSkill)
+            yield break;
+
+        onSkill = true;
+
         for (int i = 0; i < maxIndex; i++)
         {
-            chipColliders[i] = Instantiate(colliderSpace, chipPoints[i], Quaternion.identity) as GameObject;
+            chipColliders[i] = Instantiate(colliderSpace, chipPoints_backup[i], Quaternion.identity) as GameObject;
 
             yield return new WaitForSeconds(coolTime);
         }
 
-        yield return new WaitForSeconds(1.0F);
+        yield return new WaitForSeconds(0.1F);
 
         for (int i = 0; i < maxIndex; i++)
         {
@@ -88,5 +97,7 @@ public class BattleChip : MonoBehaviour
 
             yield return new WaitForSeconds(coolTime);
         }
+
+        onSkill = false;
     }
 }
