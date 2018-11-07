@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4136894828291422}
   - component: {fileID: 61498724260519254}
-  - component: {fileID: 114659851358778710}
+  - component: {fileID: 114607605110489220}
   - component: {fileID: 50955676120973602}
   m_Layer: 9
   m_Name: Box
@@ -52,7 +52,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1100380538514222}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4566859422664956}
@@ -91,7 +91,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &61498724260519254
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -117,7 +117,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &114659851358778710
+--- !u!114 &114607605110489220
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,19 +125,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1100380538514222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23508053e0f0e204889edbaed67bab8d, type: 3}
+  m_Script: {fileID: 11500000, guid: bdaa8d27235160d4aae1cc8769b84f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
   moveSpeed: 5
-  fallSpeed: 5
-  accelSpeed: 5
-  state: 1
-  dir: 0
-  player_sprite:
+  accelAmount: 5
+  touched_obj: 0
+  box_dir: 0
+  box_state: 0
+  box_sprites:
   - {fileID: 21300002, guid: 78160bdb9d1839648a1cf8c19a02f90a, type: 3}
   - {fileID: 21300004, guid: 78160bdb9d1839648a1cf8c19a02f90a, type: 3}
-  box: {fileID: 212050099445509794}
+  spriteRenderer: {fileID: 212050099445509794}
+  accelCount: 0
 --- !u!212 &212050099445509794
 SpriteRenderer:
   m_ObjectHideFlags: 1

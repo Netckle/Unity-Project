@@ -6,7 +6,8 @@ public class CameraShake : MonoBehaviour {
 
     Vector3 originPos;
 
-    public float _amount, _duration;
+    public float amount;
+    public float duration;
 
     void Start()
     {
@@ -16,14 +17,13 @@ public class CameraShake : MonoBehaviour {
     public IEnumerator Shake()
     {
         float timer = 0;
-        while (timer <= _duration)
+        while (timer <= duration)
         {
-            transform.localPosition = (Vector3)Random.insideUnitCircle * _amount + originPos;
+            transform.localPosition = (Vector3)Random.insideUnitCircle * amount + originPos;
 
             timer += Time.deltaTime;
             yield return null;
         }
         transform.localPosition = originPos;
-
     }
 }
