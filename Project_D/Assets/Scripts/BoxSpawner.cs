@@ -5,7 +5,7 @@ using UnityEngine;
 public class BoxSpawner : MonoBehaviour {
 
     public GameObject box;
-    public bool canSpawn = true;
+    public bool isSpawned = true;
 
     void Start()
     {
@@ -14,18 +14,11 @@ public class BoxSpawner : MonoBehaviour {
 
     void Update()
     {
-        if (canSpawn)
-            StartCoroutine(SpawnBox());
+        if (isSpawned)
+        {
+            isSpawned = false;
+            Instantiate(box, transform);
+        }
     }
 
-    IEnumerator SpawnBox()
-    {
-        canSpawn = false;
-
-        GameObject BoxObj = Instantiate(box, transform.position, Quaternion.identity) as GameObject;
-
-        yield return new WaitForSeconds(0.5F);
-
-        canSpawn = true;
-    }
 }

@@ -2,115 +2,128 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BOXSTATE
+public enum TOUNCHED_OBJ
 {
-    IDLE,
-    FALLING,
-    THROWING
+	NONE,
+	PLAYER,
+	ENEMY
+}
+public enum BOX_STATE
+{
+	IDLE,
+	HOLDING,
+	FLYING
+}
+public enum MOVE_DIR
+{
+	IDLE,
+	RIGHT,
+	LEFT
 }
 
-public enum BOXDIR
+public class BOX : MonoBehaviour 
 {
-    RIGHT,
-    LEFT
-}
+	// Public
+	public float damage;
+	public float moveSpeed;
+	public float accelAmount;
 
-public class Box : MonoBehaviour
-{
-    private int accelCount = 0;
+	public TOUNCHED_OBJ touched_obj 	= TOUNCHED_OBJ.NONE;
+	public MOVE_DIR box_dir 			= MOVE_DIR.IDLE;
+	public BOX_STATE box_state			= BOX_STATE.IDLE;
 
-    public float damage;
-    public float moveSpeed;
-    public float fallSpeed;
-    public float accelSpeed;
+	public Sprite[] box_sprites;
+	public SpriteRenderer spriteRenderer;
+	// Private
+	public int accelCount = 0;
+	private float moveSpeedBackUp = 0;
 
-    private float preMoveSpeed = 0;
+	private Vector3 movement;
 
-    public BOXSTATE state = BOXSTATE.FALLING;
-    public BOXDIR dir = BOXDIR.RIGHT;
+	private Rigidbody2D rigidbody;
+	private Collider2D collider;
 
-    private Rigidbody2D rigid;
-    private Collider2D collide;
+	void Start()
+	{
+		rigidbody = GetComponent<Rigidbody2D>();
+		collider = GetComponent<Collider2D>();
 
-    private Vector3 movement;
+		moveSpeedBackUp = moveSpeed;
+	}
 
-    public Sprite[] player_sprite;
+	void FixedUpdate()
+	{
+		OnMove();
+	}
+	// 박스의 움직임 관련 함수 (IDLE, FLYING, HOLDING)
+	void OnMove()
+	{
+		switch(box_state)
+		{
+			case BOX_STATE.IDLE: // 박스가 스폰되서 떨어질 때
+			{
+				// 중력 물리값 적용, 콜라이더 충돌 활성화
+				collider.isTrigger = false;
+				rigidbody.isKinematic = false;				
+			} break;
+			case BOX_STATE.FLYING:
+			{
+				// 방향 확인 후 벡터 설정
+				switch(box_dir)
+				{
+					case MOVE_DIR.RIGHT:
+					{
+						movement = Vector3.right * moveSpeed;
+					} break;
+					case MOVE_DIR.LEFT:
+					{
+						movement = Vector3.left * moveSpeed;
+					} break;					
+				}
+				// 중력 물리값 비적용, 콜라이더 충돌 활성화
+				collider.isTrigger = true;
+				rigidbody.isKinematic = true;
+				rigidbody.velocity = movement;
+			} break;
+			case BOX_STATE.HOLDING:
+			{
+				// 가속 횟수 초기화, 초기 속도로 롤백
+				accelCount = 0;
+				moveSpeed = moveSpeedBackUp;
+				// 중력 물리값 비적용, 콜라이더 충돌 비활성화
+				collider.isTrigger = true;
+				rigidbody.isKinematic = true;
+			} break;
+		}
+	}
+	// 박스를 공격할 때 외부에서 불러낼 함수 (RIGHT, LEFT)
+	public void OnHit(TOUNCHED_OBJ other_touched_obj, MOVE_DIR other_move_dir)
+	{
+		touched_obj = other_touched_obj; // 만진 오브젝트 정보 저장
+		box_state = BOX_STATE.FLYING;	 // 박스 상태 [날라감]
 
-    public SpriteRenderer box;
+		switch(touched_obj)
+		{
+			case TOUNCHED_OBJ.PLAYER:
+				spriteRenderer.sprite = box_sprites[0];
+				break;
+			case TOUNCHED_OBJ.ENEMY:
+				spriteRenderer.sprite = box_sprites[1];
+				break;
+		}
 
-    void Start()
-    {
-        rigid = GetComponent<Rigidbody2D>();
-        collide = GetComponent<Collider2D>();
+		if (box_dir == MOVE_DIR.IDLE)
+			box_dir = other_move_dir;
+		// 박스 방향 전환
+		if (box_dir == MOVE_DIR.LEFT)
+			box_dir = MOVE_DIR.RIGHT;
+		else if (box_dir == MOVE_DIR.RIGHT)
+			box_dir = MOVE_DIR.LEFT;
 
-        preMoveSpeed = moveSpeed;
-    }
-
-    void Update()
-    {
-        switch(state)
-        {
-            case BOXSTATE.IDLE:
-                {
-                    moveSpeed = preMoveSpeed;
-                    accelCount = 0;
-                    collide.isTrigger = true;
-                    rigid.isKinematic = true;
-                }
-            break;
-            case BOXSTATE.FALLING:
-                {
-                    collide.isTrigger = true;
-                    rigid.isKinematic = true;
-
-                    rigid.velocity = new Vector2(0, -transform.localScale.y) * fallSpeed;
-                }
-                break;
-            case BOXSTATE.THROWING:
-                {
-                    collide.isTrigger = true;
-                    rigid.isKinematic = true;
-
-                    if (dir == BOXDIR.RIGHT)
-                        rigid.velocity = new Vector2(transform.localScale.x, 0) * moveSpeed;
-                    else if (dir == BOXDIR.LEFT)
-                        rigid.velocity = new Vector2(-transform.localScale.x, 0) * moveSpeed;
-                    
-                }
-                break;
-        }
-    }
-
-    public void ChangeMoveDir()
-    {
-        if (dir == BOXDIR.RIGHT)
-            dir = BOXDIR.LEFT;
-
-        else if (dir == BOXDIR.LEFT)
-            dir = BOXDIR.RIGHT;
-    }
-
-    public void AccelBoxSpeed()
-    {
-        if (accelCount >= 3)
-            return;
-
-        moveSpeed += accelSpeed;
-        accelCount += 1;
-    }
-
-    public float GetRigid()
-    {
-        float returnValue = rigid.velocity.x;
-
-        return returnValue;
-    }
-
-    public void ChangeSprite(GameObject obj)
-    {
-        if (obj.gameObject.tag == "Player")
-        {
-            box.sprite = player_sprite[0];
-        }
-    }
+		if (accelCount < 3)
+		{
+			moveSpeed += accelAmount;
+			accelCount++;
+		}
+	}
 }

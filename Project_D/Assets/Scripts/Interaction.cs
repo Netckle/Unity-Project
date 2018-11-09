@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Temp3 : MonoBehaviour 
+public class Interaction : MonoBehaviour 
 {
-	private Temp2 player_inform;
+	private PlayerMovement player_inform;
 	private bool isAttacked = false;
 	private bool isGrabbed 	= false;
 
@@ -12,7 +12,7 @@ public class Temp3 : MonoBehaviour
 
 	void Start()
 	{
-		player_inform = GetComponentInParent<Temp2>();
+		player_inform = GetComponentInParent<PlayerMovement>();
 	}
 
 	void Update()
@@ -46,7 +46,7 @@ public class Temp3 : MonoBehaviour
 		{
 			Debug.Log("Box와 충돌함");
 
-			Temp boxData = collider.gameObject.GetComponent<Temp>();			
+			BOX boxData = collider.gameObject.GetComponent<BOX>();			
 			
 			if (boxData.box_dir != player_inform.playerDir)
 			{
