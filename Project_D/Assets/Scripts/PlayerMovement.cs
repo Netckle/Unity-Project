@@ -16,10 +16,10 @@ public class PlayerMovement : MonoBehaviour
 
 	public MOVE_DIR playerDir = MOVE_DIR.IDLE;
 
+    public Animator animator;
 
-
-	// Private
-	private float moveInput;
+    // Private
+    private float moveInput;
 
 	private bool isGrounded = false;
 	private bool isJumping 	= false;
@@ -51,19 +51,37 @@ public class PlayerMovement : MonoBehaviour
 		// 방향 전환
 		if (moveInput > 0)
 		{
-			playerDir = MOVE_DIR.RIGHT;
+            animator.SetBool("isMoving", true);
+
+            playerDir = MOVE_DIR.RIGHT;
 			transform.localScale = new Vector3(1, 1, 1);
 		}
 		else if (moveInput < 0)
 		{
-			playerDir = MOVE_DIR.LEFT;
+            animator.SetBool("isMoving", true);
+
+            playerDir = MOVE_DIR.LEFT;
 			transform.localScale = new Vector3(-1, 1, 1);
 		}
+
+        else if (moveInput == 0)
+        {
+            animator.SetBool("isMoving", false);
+        }
 	}
 	// 플레이어 점프 함수
 	void OnJump()
 	{
 		isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
+
+        if (!isGrounded)
+        {
+            animator.SetBool("isJumping", true);
+        }
+        else if (isGrounded)
+        {
+            animator.SetBool("isJumping", false);
+        }
 
 		if (isGrounded == true && Input.GetButtonDown("Jump"))
 		{
