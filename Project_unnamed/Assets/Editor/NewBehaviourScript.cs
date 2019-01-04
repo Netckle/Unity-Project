@@ -12,12 +12,12 @@ public class NewBehaviourScript :EditorWindow
 
     void OnGUI ()
     {
-        var normal = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/나눔고딕.ttf", typeof(Font));
-        var small = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/나눔고딕.ttf", typeof(Font));
-        var big = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/나눔고딕.ttf", typeof(Font));
-        var bold = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/나눔고딕Bold.ttf", typeof(Font));
-        var bold_small = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/나눔고딕Bold.ttf", typeof(Font));
-        var warning = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/나눔고딕.ttf", typeof(Font));
+        var normal = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/NanumGothic.ttf", typeof(Font));
+        var small = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/NanumGothic.ttf", typeof(Font));
+        var big = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/NanumGothic.ttf", typeof(Font));
+        var bold = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/NanumGothicBold.ttf", typeof(Font));
+        var bold_small = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/NanumGothicBold.ttf", typeof(Font));
+        var warning = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/NanumGothic.ttf", typeof(Font));
         var skin = GUI.skin;
         var so = new SerializedObject (skin);
         so.Update ();

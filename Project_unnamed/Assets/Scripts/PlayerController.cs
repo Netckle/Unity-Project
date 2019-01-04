@@ -7,21 +7,31 @@ public class PlayerController : MonoBehaviour
     //Public 변수
     public float moveSpeed = 1.0f;
     //Private 변수
-    Rigidbody2D rigid;
-    Vector3 movement;
+    private Rigidbody2D rigid;
+    private Vector3 movement;
+    public bool isTalking = false;
 
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
     }
+
     void Update()
     {
-        
+        if (isTalking)
+        {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                FindObjectOfType<DialogueManager>().DisplayNextSentence();
+            }
+        }
     }
+
     void FixedUpdate()
     {
         Move();
     }
+
     void Move()
     {
         Vector3 moveVelocity = Vector3.zero;
@@ -37,5 +47,10 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.position += moveVelocity * moveSpeed * Time.deltaTime;
+    }
+
+    public void SetTalkFlags(bool isTrue)
+    {
+        isTalking = isTrue;
     }
 }
