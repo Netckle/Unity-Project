@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class temp : MonoBehaviour
 {   
-    public float padding_space = 0.0f;
-    public float move_speed = 0.0f;
-    private bool collide_with_npc = false;
-    private bool is_right = true;
-    private bool is_talking = false;
-    private Vector3 target_pos;
-    private Rigidbody2D rigid;
+    public float horPaddingSpace = 0.0f;
+    public float moveSpeed = 0.0f;
+    private bool isRight = true;
+    private bool isTalking = false;
+    private int[] dialogueIndexRange = { -1, -1 };
+    private Vector3 targetPos;
     private Vector3 movement;
-
-    private int start_dialogue_index = -1;
-    private int end_dialogue_index = -1;
+    private Rigidbody2D rigid;
+    private TYPE dialogueType = TYPE.NORMAL;   
 
     void Start()
     {
@@ -22,28 +20,22 @@ public class temp : MonoBehaviour
     }
 
     void Update()
-    {
-        if ((collide_with_npc) && (Input.GetKeyDown(KeyCode.I)))
-        {
-            is_talking = true;
-            Debug.Log("코루틴 시작 : MoveToPlayerForTalk");
-            StartCoroutine("MoveToPlayerForTalk");
+    {      
 
-            FindObjectOfType<DialogueManager>().
-            StartDialogue(GameObject.Find("LoadCSV").GetComponent<LoadCSV>().GetDialogueData(),
-            start_dialogue_index,
-            end_dialogue_index);
+        if ((isTalking) && (Input.GetKeyDown(KeyCode.O)))
+        {
+            FindObjectOfType<DialogueManager>().DisplayNextSentence(dialogueType);
         }
 
-        if ((is_talking) && (Input.GetKeyDown(KeyCode.O)))
+        if (FindObjectOfType<DialogueManager>().GetDialogueEnd())
         {
-            FindObjectOfType<DialogueManager>().DisplayNextSentence();
+            isTalking = false;
         }
     }
 
     void FixedUpdate()
     {
-        Move();
+        if (!isTalking) Move();
     }
 
     void Move()
@@ -59,7 +51,7 @@ public class temp : MonoBehaviour
             move_velocity = Vector3.right;
         }
 
-        transform.position += move_velocity * move_speed * Time.deltaTime;
+        transform.position += move_velocity * moveSpeed * Time.deltaTime;
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -67,19 +59,35 @@ public class temp : MonoBehaviour
         if (collider.gameObject.tag == "NPC")
         {
             NPCController temp = collider.gameObject.GetComponent<NPCController>();
-            start_dialogue_index = temp.start_dialogue_index;
-            end_dialogue_index = temp.end_dialogue_index;
+            dialogueIndexRange[0] = temp.normalIndexRange[0];
+            dialogueIndexRange[1] = temp.normalIndexRange[1];
 
-            Debug.Log(collider.gameObject.name);
-            collide_with_npc = true;
+            dialogueType = temp.dialogueType;
 
-            target_pos = collider.gameObject.transform.position;
-            Debug.Log(target_pos);
+            Debug.Log(collider.gameObject.name + "와 충돌함");
 
-            if (is_right)        
-                target_pos.x -= padding_space;
-            else if (!is_right)
-                target_pos.x += padding_space;            
+            targetPos = collider.gameObject.transform.position;
+
+            if (isRight)        
+                targetPos.x -= horPaddingSpace;
+            else if (!isRight)
+                targetPos.x += horPaddingSpace;            
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == "NPC" && (Input.GetKeyDown(KeyCode.I)))
+        {
+            isTalking = true;
+            
+            Debug.Log(collider.gameObject.name + "와 대화를 시작합니다.");
+
+            StartCoroutine("MoveToPlayerForTalk");           
+
+            FindObjectOfType<DialogueManager>().            
+            StartDialogue(GameObject.Find("LoadCSV").GetComponent<LoadCSV>().GetDialogueData(),
+            dialogueIndexRange, dialogueType);
         }
     }
 
@@ -87,20 +95,17 @@ public class temp : MonoBehaviour
     {
         if (collider.gameObject.tag == "NPC")
         {
-            start_dialogue_index = -1;
-            end_dialogue_index = -1;
-            
-            collide_with_npc = false;
+            dialogueIndexRange[0] = -1;
+            dialogueIndexRange[1] = -1;
         }
     }
 
     IEnumerator MoveToPlayerForTalk()
     {
-        while((transform.position.x >= target_pos.x))
+        while((transform.position.x >= targetPos.x))
         {
-            if (is_right)
-                transform.position += Vector3.left * move_speed * Time.deltaTime;
-            
+            if (isRight)
+                transform.position += Vector3.left * moveSpeed * Time.deltaTime;            
 
             yield return null;
         }
