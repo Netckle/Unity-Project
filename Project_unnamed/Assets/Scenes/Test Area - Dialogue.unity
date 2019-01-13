@@ -1741,6 +1741,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 975047376966812722}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &632926687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632926686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95bdafc8793beb549a617552bceee981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeScale: 0.5
 --- !u!70 &632926692
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1770,7 +1783,7 @@ GameObject:
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1791,7 +1804,6 @@ MonoBehaviour:
   bigDiaSentence: {fileID: 1401097988}
   smallDiaPanel: {fileID: 528849235}
   bigDiaPanel: {fileID: 1680470159}
-  animator: {fileID: 1680470162}
 --- !u!4 &694904928
 Transform:
   m_ObjectHideFlags: 0
@@ -2697,6 +2709,11 @@ PrefabInstance:
         type: 3}
       propertyPath: horPaddingSpace
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151635498075062369, guid: f05a75b15f2a3a640926af8432ae4c02,
+        type: 3}
+      propertyPath: jumpPower
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1033516196563743973, guid: f05a75b15f2a3a640926af8432ae4c02,
         type: 3}

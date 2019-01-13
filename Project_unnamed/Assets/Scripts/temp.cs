@@ -6,8 +6,10 @@ public class temp : MonoBehaviour
 {   
     public float horPaddingSpace = 0.0f;
     public float moveSpeed = 0.0f;
+    public float jumpPower = 0.0f;
     private bool isRight = true;
     private bool isTalking = false;
+    private bool isJumping = false;
     private int[] dialogueIndexRange = { -1, -1 };
     private Vector3 targetPos;
     private Vector3 movement;
@@ -31,11 +33,33 @@ public class temp : MonoBehaviour
         {
             isTalking = false;
         }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            isJumping = true;
+        }
     }
 
     void FixedUpdate()
     {
-        if (!isTalking) Move();
+        if (!isTalking) 
+        {
+            Move();
+            Jump();
+        }
+    }
+
+    void Jump()
+    {
+        if (!isJumping)
+            return;
+
+        rigid.velocity = Vector2.zero;
+
+        Vector2 jumpVelocity = new Vector2 (0, jumpPower);
+        rigid.AddForce(jumpVelocity, ForceMode2D.Impulse);
+
+        isJumping = false;
     }
 
     void Move()
