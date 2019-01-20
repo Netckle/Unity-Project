@@ -2,28 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // Text Mesh Pro를 사용하기 위해 필요하다.
+using TMPro; 
 
-public enum TYPE
-{
-	NORMAL, SMALL
-}
+// 대화상자의 타입 결정
+public enum TYPE { NORMAL, SMALL };
 
 public class DialogueManager : MonoBehaviour 
 {
-	private Queue<Dictionary<string,object>> sentences;
+	// Private 변수
+	private Queue<Dictionary<string,object>> sentences = null;
 	private bool isEnd = false;
 
-	/*
-		<필요요소>
-		큰 대화창   : 이름, 문장  
-		작은 대화창 : 문장
-	 */ 
+	// Public 변수
 	public TextMeshProUGUI smallDiaSentence; 
 	public TextMeshProUGUI bigDiaName; 
 	public TextMeshProUGUI bigDiaSentence; 
-	public Image smallDiaPanel = null;
-	public Image bigDiaPanel = null;
+	public Image smallDiaPanel 	= null;
+	public Image bigDiaPanel 	= null;
 
 	void Start () 
 	{
@@ -33,7 +28,8 @@ public class DialogueManager : MonoBehaviour
 		bigDiaPanel.gameObject.SetActive(false);
 	}
 
-	public void StartDialogue (List<Dictionary<string,object>> data, int[] normalIndexRange, TYPE dialogueType)
+	public void StartDialogue (List<Dictionary<string,object>> data, 
+	int[] normalIndexRange, TYPE dialogueType)
 	{	
 		isEnd = false;
 
@@ -50,10 +46,10 @@ public class DialogueManager : MonoBehaviour
 
 		sentences.Clear();
 
-		for (int i = normalIndexRange[0]; i < normalIndexRange[1]; i++)
+		for (int i = 0; i < normalIndexRange.Length; i++)
 		{
 			sentences.Enqueue(data[i]);
-		}	
+		}
 
 		DisplayNextSentence(dialogueType);
 	}
@@ -67,6 +63,12 @@ public class DialogueManager : MonoBehaviour
 		}
 
 		Dictionary<string, object> sentence = sentences.Dequeue();
+
+		if ((int)sentence["NextIndex"] != -1)
+		{
+			
+		}
+
 		StopAllCoroutines();
 		StartCoroutine(TypeSentence(sentence, dialogueType));
 	}
@@ -76,7 +78,6 @@ public class DialogueManager : MonoBehaviour
 		switch (dialogueType)
 		{
 			case TYPE.NORMAL: 
-			// bigDiaPanel.GetComponent<UpdateDialoguePanel>().SetTarget(sentence["Name"].ToString());
 			bigDiaName.text = sentence["Name"].ToString();
 			bigDiaSentence.text = "";		
 			break;
@@ -87,10 +88,11 @@ public class DialogueManager : MonoBehaviour
 			break;
 		}
 
+		
+
 		foreach (char letter in sentence["Text"].ToString().ToCharArray())
 		{
-			if (dialogueType == TYPE.NORMAL) bigDiaSentence.text += letter;
-			
+			if (dialogueType == TYPE.NORMAL) bigDiaSentence.text += letter;			
 			else if (dialogueType == TYPE.SMALL) smallDiaSentence.text += letter;
 
 			yield return null;

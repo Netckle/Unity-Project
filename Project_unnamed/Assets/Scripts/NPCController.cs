@@ -7,8 +7,8 @@ public class NPCController : MonoBehaviour
 {
     private Vector3 buttonPos;
     
-    public float verPaddingSpace = 0.0f;
-    public int[] normalIndexRange = new int[2];
+    public float verticalPadding = 0.0f;
+    public int[] normalIndexRange;
     public TYPE dialogueType = TYPE.NORMAL;
     public GameObject interactButton = null;
 
@@ -25,7 +25,7 @@ public class NPCController : MonoBehaviour
             interactButton.SetActive(true);
 
             buttonPos = transform.position;
-            buttonPos.y += verPaddingSpace;
+            buttonPos.y += verticalPadding;
 
             interactButton.transform.position = buttonPos;
         }
