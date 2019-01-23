@@ -72,6 +72,7 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
+        Debug.Log("대화가 종료되었습니다.");
         count = 0;
     }
 

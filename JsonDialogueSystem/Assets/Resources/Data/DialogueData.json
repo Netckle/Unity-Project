@@ -1,0 +1,98 @@
+﻿[
+  {
+    "CurrentKey": 0,
+    "Name": "수수께끼의 인물",
+    "Sentence": "오오! 이게 얼마만에 인간인가!",
+    "Category": "일반",
+    "EventNum": -1,
+    "NextKey": 1
+  },
+  {
+    "CurrentKey": 1,
+    "Name": "블루넷",
+    "Sentence": "...누구세요? 어딨는거죠?",
+    "Category": "일반",
+    "EventNum": -1,
+    "NextKey": 2
+  },
+  {
+    "CurrentKey": 2,
+    "Name": "수수께끼의 인물",
+    "Sentence": "일단 진정하고 불이라도 켜보게나.",
+    "Category": "퀘스트",
+    "EventNum": 0,
+    "NextKey": -1
+  },
+  {
+    "CurrentKey": 3,
+    "Name": "블루넷",
+    "Sentence": "엄마야!!!...어라 아무도 없네?",
+    "Category": "일반",
+    "EventNum": -1,
+    "NextKey": 4
+  },
+  {
+    "CurrentKey": 4,
+    "Name": "수수께끼의 인물",
+    "Sentence": "크흠. 아래쪽일세...",
+    "Category": "일반",
+    "EventNum": -1,
+    "NextKey": 5
+  },
+  {
+    "CurrentKey": 5,
+    "Name": "블루넷",
+    "Sentence": "아...죄송합니다.",
+    "Category": "일반",
+    "EventNum": -1,
+    "NextKey": 6
+  },
+  {
+    "CurrentKey": 6,
+    "Name": "수수께끼의 인물",
+    "Sentence": "일단 진정이 좀 된 모양이군. 자! 뭐든지 물어보게나.",
+    "Category": "질문",
+    "EventNum": 2,
+    "NextKey": -1
+  },
+  {
+    "CurrentKey": 7,
+    "Name": "없음",
+    "Sentence": "당신은 누구죠?",
+    "Category": "대답",
+    "EventNum": -1,
+    "NextKey": 9
+  },
+  {
+    "CurrentKey": 8,
+    "Name": "없음",
+    "Sentence": "아뇨. 딱히...",
+    "Category": "대답",
+    "EventNum": -1,
+    "NextKey": 11
+  },
+  {
+    "CurrentKey": 9,
+    "Name": "볼린",
+    "Sentence": "내 이름은 볼린. 볼린일세. 이 던전식당의 주인...이라고 할까...일단은 말일세.",
+    "Category": "일반",
+    "EventNum": -1,
+    "NextKey": 10
+  },
+  {
+    "CurrentKey": 10,
+    "Name": "볼린",
+    "Sentence": "사실 주인이 한 명 더 있었는데, 이미 죽은지 꽤 되었다네.",
+    "Category": "종료",
+    "EventNum": -1,
+    "NextKey": -1
+  },
+  {
+    "CurrentKey": 11,
+    "Name": "볼린",
+    "Sentence": "흐음..삐딱한 사내인지고...이름이라도 물어보는게 예의아닌가?",
+    "Category": "일반",
+    "EventNum": -1,
+    "NextKey": 9
+  }
+]
