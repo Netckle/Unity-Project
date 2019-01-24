@@ -10,7 +10,6 @@ public class temp2 : MonoBehaviour
     public string collideObjectN = "";
 
     private temp dialogueAndQuestM = null;
-    private bool IsComplete = false;
     private int count = 0;
 
     void Start()
@@ -20,11 +19,6 @@ public class temp2 : MonoBehaviour
 
     void Update()
     {
-        if (dialogueAndQuestM.GetQuestComplete(questIndex))
-            IsComplete = true;
-        else
-            IsComplete = false;
-
         if (Input.GetKeyDown(KeyCode.P)) dialogueAndQuestM.DisplayNextSentence();
     }
 
@@ -32,30 +26,33 @@ public class temp2 : MonoBehaviour
     {
         if (collision.gameObject.name == collideObjectN)
         {
-            count++;
+            
         }
     }
 
     void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.name == collideObjectN)
+        if (collision.gameObject.name == collideObjectN && Input.GetKeyDown(KeyCode.O))
         {            
-            if (Input.GetKeyDown(KeyCode.O))
+            if (count == 0)
             {
-                if (count > 1)
-                {
-                    dialogueAndQuestM.CompleteQuest(questIndex);
-                }
-
-                if (IsComplete)
-                {
-                    TriggerDialogue(clearStartIndex);
-                }
-                else if (!IsComplete)
-                {
-                    TriggerDialogue(normalStartIndex);
-                }
+                //dialogueAndQuestM.UnlockQuest(questIndex); Debug.Log(questIndex + "번 퀘스트 언락됨.");
             }
+            else if (count == 1)
+            {
+                dialogueAndQuestM.CompleteQuest(questIndex); Debug.Log(questIndex + "번 퀘스트 클리어함.");
+            }
+
+            if (dialogueAndQuestM.GetQuestComplete(questIndex))
+            {
+                TriggerDialogue(clearStartIndex);
+            }
+            else
+            {
+                TriggerDialogue(normalStartIndex);
+            }       
+            
+            ++count;            
         }
     }
 

@@ -50,6 +50,8 @@ public class temp : MonoBehaviour
     public TextMeshProUGUI questNameT = null;
     public TextMeshProUGUI questSentenceT = null;
 
+    public Animator questAC = null;
+
     private int nextIndex = 0;    
 
     private JsonData dialogueData = null; // 대화 데이터 파일
@@ -254,21 +256,77 @@ public class temp : MonoBehaviour
 
     // ----- 퀘스트 관련 함수들
 
-    /// <summary>
-    /// 퀘스트를 표시해야 할 때 호출되는 함수입니다.
-    /// </summary>
-    /// <param name="index">출력되어야 하는 데이터의 위치값.</param>
-    public void DisplayQuestPanel(int index, QUESTTYPE questType)
+    public IEnumerator CheckAnimationState(Animator AC, string animName, bool isEnd)
     {
-        questP.SetActive(true);
-
-        if (questType == QUESTTYPE.CLEAR)
+        while (!AC.GetCurrentAnimatorStateInfo(0).IsName(animName))
         {
-            questP.GetComponent<Image>().color = Color.green;
+            isEnd = false;
+            yield return null;
         }
 
-        questNameT.text = questData[index]["Name"].ToString();
-        questSentenceT.text = questData[index]["Text"].ToString();
+        while (AC.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            isEnd = false;
+            yield return null;
+        }
+
+        // 애니메이션 완료
+
+        isEnd = true;
+        yield return null;
+    }
+
+    public IEnumerator DisplayQuestPanel(int index, QUESTTYPE type)
+    {
+        bool animEnd = new bool();
+
+        questP.SetActive(true);
+
+        if (type == QUESTTYPE.NORMAL)
+        {
+            questAC.SetBool("isCompleted", false);
+
+            questAC.SetBool("isEnd", false);
+
+            questNameT.text = questData[index]["Name"].ToString();
+            questSentenceT.text = questData[index]["Text"].ToString();
+
+            //StartCoroutine(CheckAnimationState(questAC, "Open", animEnd));
+
+            //yield return new WaitUntil(() => animEnd);
+
+            yield return new WaitForSeconds(2.0f);
+
+            questAC.SetBool("isEnd", true);
+            StartCoroutine(CheckAnimationState(questAC, "Close", animEnd));
+
+            yield return new WaitUntil(() => animEnd);
+
+            questP.SetActive(false);
+        }
+
+        else if (type == QUESTTYPE.CLEAR)
+        {
+            questAC.SetBool("isCompleted", true);
+
+            questAC.SetBool("isEnd", false);
+
+            questNameT.text = questData[index]["Name"].ToString();
+            questSentenceT.text = questData[index]["Text"].ToString();
+
+            //StartCoroutine(CheckAnimationState(questAC, "Open_Completed", animEnd));
+
+            //yield return new WaitUntil(() => animEnd);
+
+            yield return new WaitForSeconds(2.0f);
+
+            questAC.SetBool("isEnd", true);
+            StartCoroutine(CheckAnimationState(questAC, "Close_Completed", animEnd));
+
+            yield return new WaitUntil(() => animEnd);
+
+            questP.SetActive(false);
+        }                        
     }
 
     /// <summary>
@@ -286,7 +344,7 @@ public class temp : MonoBehaviour
     {
         questData[index]["Unlock"] = "True";
 
-        DisplayQuestPanel(index, QUESTTYPE.NORMAL);
+        StartCoroutine(DisplayQuestPanel(index, QUESTTYPE.NORMAL));
     }
 
     public void CompleteQuest(int index)
@@ -298,7 +356,7 @@ public class temp : MonoBehaviour
         }
         questData[index]["IsComplete"] = "Completed";
 
-        DisplayQuestPanel(index, QUESTTYPE.CLEAR);
+        StartCoroutine(DisplayQuestPanel(index, QUESTTYPE.CLEAR));
     }
 
     public void CompleteQuest(int index, int dialogueStartIndex)
@@ -310,7 +368,7 @@ public class temp : MonoBehaviour
         }
         questData[index]["IsComplete"] = "Completed";
 
-        DisplayQuestPanel(index, QUESTTYPE.CLEAR);
+        StartCoroutine(DisplayQuestPanel(index, QUESTTYPE.CLEAR));
 
         StartDialogue(dialogueStartIndex);
     }
