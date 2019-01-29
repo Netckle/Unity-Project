@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MovingObject : MonoBehaviour
 {
+    private BoxCollider2D boxCollider;
+    public LayerMask layerMask;
+
     public float speed;
 
     private Vector3 vector;
@@ -27,6 +30,7 @@ public class MovingObject : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     IEnumerator MoveCoroutine()
@@ -54,6 +58,23 @@ public class MovingObject : MonoBehaviour
 
             animator.SetFloat("DirX", vector.x);
             animator.SetFloat("DirY", vector.y);
+
+            RaycastHit2D hit;
+            // A지점, B지점
+            // 레이저
+            // hit = Null;
+            // hit = 방해물
+
+            Vector2 start = transform.position; // A지점. 캐릭터의 현재 위치 값
+            Vector2 end = start + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount); // B지점. 캐릭터가 이동하고자 하는 위치 값
+
+            hit = Physics2D.Linecast(start, end, layerMask);
+            Debug.DrawRay(start, end);
+            boxCollider.enabled = true;
+
+            if (hit.transform != null)
+                break;
+
             animator.SetBool("Walking", true);
 
             while(currentWalkCount < walkCount)
