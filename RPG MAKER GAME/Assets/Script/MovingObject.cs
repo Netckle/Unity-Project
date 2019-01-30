@@ -32,6 +32,9 @@ public class MovingObject : MonoBehaviour
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
     }
+    private RaycastHit2D hit;
+    private Vector2 startPos;
+    private Vector2 endPos;
 
     IEnumerator MoveCoroutine()
     {
@@ -59,17 +62,20 @@ public class MovingObject : MonoBehaviour
             animator.SetFloat("DirX", vector.x);
             animator.SetFloat("DirY", vector.y);
 
-            RaycastHit2D hit;
+            
             // A지점, B지점
             // 레이저
             // hit = Null;
             // hit = 방해물
 
-            Vector2 start = transform.position; // A지점. 캐릭터의 현재 위치 값
-            Vector2 end = start + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount); // B지점. 캐릭터가 이동하고자 하는 위치 값
+            //Vector2 start = transform.position; // A지점. 캐릭터의 현재 위치 값
+            //Vector2 end = start + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount); // B지점. 캐릭터가 이동하고자 하는 위치 값
 
-            hit = Physics2D.Linecast(start, end, layerMask);
-            Debug.DrawRay(start, end);
+            startPos = transform.position;
+            endPos = startPos + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount);
+
+            hit = Physics2D.Linecast(startPos, endPos, layerMask);
+            
             boxCollider.enabled = true;
 
             if (hit.transform != null)
@@ -106,6 +112,8 @@ public class MovingObject : MonoBehaviour
 
     void Update()
     {        
+        Debug.DrawLine(startPos, endPos);
+
         if (canMove)
         {
             if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
