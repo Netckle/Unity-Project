@@ -204,6 +204,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 256
+  speed: 0.1
   runSpeed: 0.1
   walkCount: 10
 --- !u!212 &228037529
