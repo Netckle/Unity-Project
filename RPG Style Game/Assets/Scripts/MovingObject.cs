@@ -7,7 +7,14 @@ public class MovingObject : MonoBehaviour
     static public MovingObject instance;
     public string currentMapName; // transferMap 스크립트에 있는 transferMapName 변수의 값을 저장.
     private BoxCollider2D boxCollider;
-    public LayerMask layerMask;
+    public LayerMask layerMask;  
+
+    public string walkSound_1;
+    public string walkSound_2;
+    public string walkSound_3;
+    public string walkSound_4;
+
+    private AudioManager theAudio;
 
     public float speed;
 
@@ -36,6 +43,8 @@ public class MovingObject : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
             animator = GetComponent<Animator>();
             boxCollider = GetComponent<BoxCollider2D>();
+            // audioSource = GetComponent<AudioSource>();
+            theAudio = FindObjectOfType<AudioManager>();
             instance = this;
         }
         else
@@ -92,7 +101,26 @@ public class MovingObject : MonoBehaviour
             if (hit.transform != null)           
                 break;
 
-            animator.SetBool("Walking", true);
+            animator.SetBool("Walking", true);            
+            
+            int temp = Random.Range(1, 5);
+            switch (temp)
+            {
+                case 1:
+                    theAudio.Play(walkSound_1);
+                    break;
+                case 2:
+                    theAudio.Play(walkSound_2);
+                    break;
+                case 3:
+                    theAudio.Play(walkSound_3);
+                    break;
+                case 4:
+                    theAudio.Play(walkSound_4);
+                    break;
+            }     
+
+            // theAudio.SetVolumn(walkSound_2, 0.5f); 2번 사운드 소리를 반으로 줄임      
 
             while(currentWalkCount < walkCount)
             {
@@ -111,7 +139,7 @@ public class MovingObject : MonoBehaviour
                 }
 
                 currentWalkCount++;
-                yield return new WaitForSeconds(0.01f);
+                yield return new WaitForSeconds(0.01f);                
             }
 
             currentWalkCount = 0;       
