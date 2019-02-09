@@ -7,58 +7,131 @@ using UnityEngine;
 ///</summary>
 public class MovingObject : MonoBehaviour
 {
+    public string characterName;
+
     public float speed;
     public int walkCount;
     protected int currentWalkCount;
 
-    protected bool npcCanMove = true;
+    //protected bool npcCanMove = true;
+    private bool notCoroutine = false;
 
     protected Vector3 vector;
 
+    public Queue<string> queue;
+    
     public BoxCollider2D boxCollider;
     public LayerMask layerMask;
-    public Animator animator;
+    public Animator animator;  
     
-    protected void Move(string _dir, int _frequency)
+    public void Move(string _dir, int _frequency = 5)
     {
-        StartCoroutine(MoveCoroutine(_dir, _frequency));
+        queue.Enqueue(_dir);
+        if (!notCoroutine)
+        {
+            notCoroutine = true;
+            StartCoroutine(MoveCoroutine(_dir, _frequency));
+        }
+    }
+
+    public bool CheckCollision()
+    {
+        Vector2 startPos = transform.position;
+        Vector2 endPos = startPos + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount);
+
+        boxCollider.enabled = false; // Ray를 쏘는 자기자신이 맞을 수 있기 때문에 꺼야한다.
+        RaycastHit2D hit = Physics2D.Linecast(startPos, endPos, layerMask);   
+        boxCollider.enabled = true;        
+
+        Debug.DrawLine(startPos, endPos, Color.red);
+        Debug.Log(hit.transform);
+
+        if (hit.transform != null) return true;      
+        else return false;
     }
 
     IEnumerator MoveCoroutine(string _dir, int _frequency)
     {
-        npcCanMove = false;
-
-        vector.Set(0, 0, vector.z);
-        switch(_dir)
+        switch(_frequency)
         {
-            case "UP":
-                vector.y = 1f;
+            case 1:
+                yield return new WaitForSeconds(4f);
                 break;
-            case "DOWN":
-                vector.y = -1f;
+            case 2:
+                yield return new WaitForSeconds(3f);
                 break;
-            case "RIGHT":
-                vector.x = 1f;
+            case 3:
+                yield return new WaitForSeconds(2f);
                 break;
-            case "LEFT":
-                vector.x = -1f;
+            case 4:
+                yield return new WaitForSeconds(1f);
+                break;
+            case 5:
                 break;
         }
 
-        animator.SetFloat("DirX", vector.x);
-        animator.SetFloat("DirY", vector.y);
-        animator.SetBool("Walking", true);
-
-        while(currentWalkCount < walkCount)
+        while(queue.Count != 0)
         {
-            transform.Translate(vector.x * speed, vector.y * speed, 0);
+            string direction = queue.Dequeue();          
+            vector.Set(0, 0, vector.z);
 
-            currentWalkCount++;
-            yield return new WaitForSeconds(0.01f);                
-        } 
-        currentWalkCount = 0;
-        if (_frequency != 5)
-            animator.SetBool("Walking", false); 
-        npcCanMove = true;      
+            switch(direction)
+            {
+                case "UP":
+                    vector.y = 1f;
+                    break;
+                case "DOWN":
+                    vector.y = -1f;
+                    break;
+                case "RIGHT":
+                    vector.x = 1f;
+                    break;
+                case "LEFT":
+                    vector.x = -1f;
+                    break;
+            }
+
+            animator.SetFloat("DirX", vector.x);
+            animator.SetFloat("DirY", vector.y);
+
+            while(true)
+            {
+                bool checkCollisionFlag = CheckCollision();
+                
+                if (checkCollisionFlag) 
+                {
+                    animator.SetBool("Walking", false);
+                    yield return new WaitForSeconds(1f);
+                }
+                else
+                {
+                    break;
+                }
+            }           
+
+            animator.SetBool("Walking", true);
+
+            boxCollider.offset = new Vector2(vector.x * 0.7f * speed * walkCount,
+            vector.y * 0.7f * speed * walkCount);
+
+            while(currentWalkCount < walkCount)
+            {
+                transform.Translate(vector.x * speed, vector.y * speed, 0);
+
+                currentWalkCount++;
+
+                if (currentWalkCount == 12)
+                    boxCollider.offset = Vector2.zero;
+
+                yield return new WaitForSeconds(0.01f);                
+            } 
+
+            currentWalkCount = 0;
+
+            if (_frequency != 5)
+                animator.SetBool("Walking", false); 
+        }         
+        animator.SetBool("Walking", false);  
+        notCoroutine = false;
     }
 }

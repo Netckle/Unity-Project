@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MovingObject
-{
-    static public PlayerManager instance;
+{    
     public string currentMapName; // transferMap 스크립트에 있는 transferMapName 변수의 값을 저장.
 
     public string walkSound_1;
@@ -20,25 +19,13 @@ public class PlayerManager : MovingObject
     private bool canMove = true;
     private bool applyRunFlag = false;
 
-    private RaycastHit2D hit;
-    private Vector2 startPos;
-    private Vector2 endPos;
-
     void Start()
-    {
-        if (instance == null)
-        {
-            DontDestroyOnLoad(this.gameObject);
-            animator = GetComponent<Animator>();
-            boxCollider = GetComponent<BoxCollider2D>();            
-            theAudio = FindObjectOfType<AudioManager>();
-            instance = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }        
-    }    
+    {        
+        queue = new Queue<string>();
+        animator = GetComponent<Animator>();
+        boxCollider = GetComponent<BoxCollider2D>();            
+        theAudio = FindObjectOfType<AudioManager>();           
+    }        
 
     IEnumerator MoveCoroutine()
     {
@@ -64,27 +51,11 @@ public class PlayerManager : MovingObject
                 vector.z = 0;
 
             animator.SetFloat("DirX", vector.x);
-            animator.SetFloat("DirY", vector.y);
-
+            animator.SetFloat("DirY", vector.y);       
             
-            // A지점, B지점
-            // 레이저
-            // hit = Null;
-            // hit = 방해물
-
-            //Vector2 start = transform.position; // A지점. 캐릭터의 현재 위치 값
-            //Vector2 end = start + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount); // B지점. 캐릭터가 이동하고자 하는 위치 값
-
-            startPos = transform.position;
-            endPos = startPos + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount);
-
-            hit = Physics2D.Linecast(startPos, endPos, layerMask);
-            
-            boxCollider.enabled = true;
-
-            if (hit.transform != null)           
-                break;
-
+            bool checkCollisionFlag = base.CheckCollision();            
+            if (checkCollisionFlag) break;   
+                        
             animator.SetBool("Walking", true);            
             
             int temp = Random.Range(1, 5);
@@ -102,9 +73,10 @@ public class PlayerManager : MovingObject
                 case 4:
                     theAudio.Play(walkSound_4);
                     break;
-            }     
+            }      
 
-            // theAudio.SetVolumn(walkSound_2, 0.5f); 2번 사운드 소리를 반으로 줄임      
+            boxCollider.offset = new Vector2(vector.x * 0.7f * speed * walkCount,
+            vector.y * 0.7f * speed * walkCount);   
 
             while(currentWalkCount < walkCount)
             {
@@ -123,6 +95,9 @@ public class PlayerManager : MovingObject
                 }
 
                 currentWalkCount++;
+
+                if (currentWalkCount == 12)
+                    boxCollider.offset = Vector2.zero;
                 yield return new WaitForSeconds(0.01f);                
             }
 
@@ -134,9 +109,7 @@ public class PlayerManager : MovingObject
     }
 
     void Update()
-    {        
-        Debug.DrawLine(startPos, endPos);
-
+    {                
         if (canMove)
         {
             if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
