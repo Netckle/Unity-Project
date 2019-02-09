@@ -10,13 +10,13 @@ public class TransferMap : MonoBehaviour
     public Transform target;
     public BoxCollider2D targetBound;
     
-    private MovingObject thePlayer;
+    private PlayerManager thePlayer;
     private CameraManager theCamera;
     
     void Start()
     {
         theCamera = FindObjectOfType<CameraManager>();
-        thePlayer = FindObjectOfType<MovingObject>();
+        thePlayer = FindObjectOfType<PlayerManager>();
     }
 
     // 같은 씬에서 이동이 이루어질 때 bound를 바꾸는 방법.

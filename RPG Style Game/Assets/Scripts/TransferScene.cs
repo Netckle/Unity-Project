@@ -6,11 +6,11 @@ using UnityEngine.SceneManagement;
 public class TransferScene : MonoBehaviour
 {
     public string TransferMapName;
-    private MovingObject thePlayer;
+    private PlayerManager thePlayer;
 
     void Start()
     {
-        thePlayer = FindObjectOfType<MovingObject>();
+        thePlayer = FindObjectOfType<PlayerManager>();
     }
 
     void OnTriggerEnter2D(Collider2D collision)
