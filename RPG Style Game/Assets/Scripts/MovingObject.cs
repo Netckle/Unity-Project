@@ -44,7 +44,6 @@ public class MovingObject : MonoBehaviour
         boxCollider.enabled = true;        
 
         Debug.DrawLine(startPos, endPos, Color.red);
-        Debug.Log(hit.transform);
 
         if (hit.transform != null) return true;      
         else return false;

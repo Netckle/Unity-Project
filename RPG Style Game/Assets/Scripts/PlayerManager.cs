@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MovingObject
-{    
+{   
+    public static PlayerManager instance; 
+
     public string currentMapName; // transferMap 스크립트에 있는 transferMapName 변수의 값을 저장.
 
     public string walkSound_1;
@@ -18,6 +20,19 @@ public class PlayerManager : MovingObject
 
     private bool canMove = true;
     private bool applyRunFlag = false;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            DontDestroyOnLoad(this.gameObject);
+            instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     void Start()
     {        
