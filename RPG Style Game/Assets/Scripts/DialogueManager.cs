@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour {
 
-    public static DialogueManager instance;
+    static public DialogueManager instance;
 
-    #region Singleton
+#region Singleton
     private void Awake()
     {
         if (instance == null)
@@ -20,7 +20,7 @@ public class DialogueManager : MonoBehaviour {
             Destroy(this.gameObject);
         }
     }
-    #endregion Singleton
+#endregion Singleton
 
     public Text text;
     public SpriteRenderer rendererSprite;
@@ -45,12 +45,12 @@ public class DialogueManager : MonoBehaviour {
 
     void Start () 
     {
-        count = 0;
-        text.text = "";
-        listSentences = new List<string>();
-        listSprites = new List<Sprite>();
+        count               = 0;
+        text.text           = "";
+        listSentences       = new List<string>();
+        listSprites         = new List<Sprite>();
         listDialogueWindows = new List<Sprite>();
-        theAudio = FindObjectOfType<AudioManager>();
+        theAudio            = FindObjectOfType<AudioManager>();
     }
 	
     public void ShowDialogue(Dialogue dialogue)
@@ -130,7 +130,8 @@ public class DialogueManager : MonoBehaviour {
 
     }
 
-	void Update () {
+	void Update () 
+    {
         if (talking && keyActivated)
         {
             if (Input.GetKeyDown(KeyCode.Z))

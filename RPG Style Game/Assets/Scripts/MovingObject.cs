@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-///<summary>
-///Player와 NPC의 공통부분이 들어있는 클래스입니다.
-///</summary>
+// 플레이어와 NPC의 부모 클래스
 public class MovingObject : MonoBehaviour
 {
     public string characterName;
@@ -13,7 +11,6 @@ public class MovingObject : MonoBehaviour
     public int walkCount;
     protected int currentWalkCount;
 
-    //protected bool npcCanMove = true;
     private bool notCoroutine = false;
 
     protected Vector3 vector;
@@ -23,16 +20,6 @@ public class MovingObject : MonoBehaviour
     public BoxCollider2D boxCollider;
     public LayerMask layerMask;
     public Animator animator;  
-    
-    public void Move(string _dir, int _frequency = 5)
-    {
-        queue.Enqueue(_dir);
-        if (!notCoroutine)
-        {
-            notCoroutine = true;
-            StartCoroutine(MoveCoroutine(_dir, _frequency));
-        }
-    }
 
     public bool CheckCollision()
     {
@@ -48,29 +35,39 @@ public class MovingObject : MonoBehaviour
         if (hit.transform != null) return true;      
         else return false;
     }
+    
+    public void Move(string _dir, int _frequency = 5)
+    {
+        queue.Enqueue(_dir);
+        if (!notCoroutine)
+        {
+            notCoroutine = true;
+            StartCoroutine(MoveCoroutine(_dir, _frequency));
+        }
+    }
 
     IEnumerator MoveCoroutine(string _dir, int _frequency)
-    {
-        switch(_frequency)
-        {
-            case 1:
-                yield return new WaitForSeconds(4f);
-                break;
-            case 2:
-                yield return new WaitForSeconds(3f);
-                break;
-            case 3:
-                yield return new WaitForSeconds(2f);
-                break;
-            case 4:
-                yield return new WaitForSeconds(1f);
-                break;
-            case 5:
-                break;
-        }
-
+    {    
         while(queue.Count != 0)
         {
+            switch(_frequency)
+            {
+                case 1:
+                    yield return new WaitForSeconds(4f);
+                    break;
+                case 2:
+                    yield return new WaitForSeconds(3f);
+                    break;
+                case 3:
+                    yield return new WaitForSeconds(2f);
+                    break;
+                case 4:
+                    yield return new WaitForSeconds(1f);
+                    break;
+                case 5:
+                    break;
+            }
+
             string direction = queue.Dequeue();          
             vector.Set(0, 0, vector.z);
 

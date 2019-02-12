@@ -5,46 +5,30 @@ using UnityEngine;
 [System.Serializable]
 public class Sound
 {
-    public string name; // 사운드 이름
-    public AudioClip clip; // 사운드 파일
-    private AudioSource source; // 사운드 플레이어
+    public string name;             // 사운드 이름
+    public AudioClip clip;          // 사운드 파일
+    private AudioSource source;     // 사운드 플레이어
 
-    public float Volumn;
+    public float volume;
     public bool loop;
 
     public void SetSource(AudioSource _source)
     {
-        source = _source;
+        source      = _source;
         source.clip = clip;
         source.loop = loop;
     }
 
-    public void SetVolumn()
-    {
-        source.volume = Volumn;
-    }
+    public void SetVolume() { source.volume = volume; }
 
-    public void Play()
-    {
-        source.Play();
-    }
+    public void Play() { source.Play(); }
 
-    public void Stop()
-    {
-        source.Stop();
-    }
+    public void Stop() { source.Stop(); }
 
-    public void SetLoop()
-    {
-        source.loop = true;
-    }
-
-    public void SetLoopCancel()
-    {
-        source.loop = false;
-    }
+    public void SetLoop(bool isLoop) { source.loop = isLoop; }
 }
 
+// 주로 효과음을 관리하는 클래스
 public class AudioManager : MonoBehaviour
 {
     static public AudioManager instance;
@@ -52,6 +36,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     public Sound[] sounds;
 
+#region Singleton
     void Awake()
     {
         if (instance != null)
@@ -64,6 +49,7 @@ public class AudioManager : MonoBehaviour
             instance = this;
         }
     }
+#endregion Singleton
 
     void Start()
     {
@@ -99,38 +85,26 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void SetLoop(string _name)
+    public void SetLoop(string _name, bool _isLoop)
     {
         for (int i = 0; i < sounds.Length; i++)
         {
             if (_name == sounds[i].name)
             {
-                sounds[i].SetLoop();
+                sounds[i].SetLoop(_isLoop);
                 return;
             }
         }
     }
 
-    public void SetLoopCancel(string _name)
+    public void SetVolume(string _name, float _volume)
     {
         for (int i = 0; i < sounds.Length; i++)
         {
             if (_name == sounds[i].name)
             {
-                sounds[i].SetLoopCancel();
-                return;
-            }
-        }
-    }
-
-    public void SetVolumn(string _name, float _Volumn)
-    {
-        for (int i = 0; i < sounds.Length; i++)
-        {
-            if (_name == sounds[i].name)
-            {
-                sounds[i].Volumn = _Volumn;
-                sounds[i].SetVolumn();
+                sounds[i].volume = _volume;
+                sounds[i].SetVolume();
                 return;
             }
         }

@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class NPCMove
 {
-    [Tooltip("NPCMove를 체크하면 NPC가 움직임")]
-    public bool NPCmove;
+    [Tooltip("canMove를 체크하면 NPC가 움직임")]
+    public bool canMove;
 
     public string[] direction; // npc가 움직일 방향 설정.
 
@@ -25,24 +25,16 @@ public class NpcManager : MovingObject
         SetMove();  
     }
 
-    public void SetMove()
-    {
-        StartCoroutine(MoveCoroutine());
-    }
+    public void SetMove() { if (npc.canMove) { StartCoroutine(MoveCoroutine()); } }
     
-    public void SetNotMove()
-    {
-        StopAllCoroutines();
-    }
+    public void SetNotMove() { StopAllCoroutines(); }
 
     IEnumerator MoveCoroutine()
     {
         if (npc.direction.Length != 0)
         {
             for (int i = 0; i < npc.direction.Length; i++)
-            {
-                
-
+            {              
                 yield return new WaitUntil(() => queue.Count < 2);
                 base.Move(npc.direction[i], npc.frequency);
 

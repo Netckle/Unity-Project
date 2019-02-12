@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class OrderManager : MonoBehaviour
 {
-    private PlayerManager thePlayer; // 이벤트 도중에 키입력 처리 방식
-    private List<MovingObject> characters;
-    // 배열의 크기가 고정되면 수정 불가
+    private PlayerManager thePlayer;        // 이벤트 도중에 키입력 처리를 담당한다.
+    private List<MovingObject> characters;  // 크기의 변동이 있으므로 배열은 힘들다.
 
     void Start()
     {
         thePlayer = FindObjectOfType<PlayerManager>();
     }
 
+    // 씬에 있는 MovingObject의 정보들을 받아오기 위해 사용한다. 명령을 내리기 전에 실행해야 한다. 
     public void PreLoadCharacter()
     {
         characters = ToList();
@@ -30,7 +30,7 @@ public class OrderManager : MonoBehaviour
         return tempList;
     }
 
-    public void SetThorought(string _name)
+    public void SetPassingStatus(string _name)
     {
         for (int i = 0; i < characters.Count; i++)
         {

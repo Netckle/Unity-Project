@@ -5,25 +5,27 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     static public CameraManager instance;
-    public GameObject target; // 카메라가 따라갈 대상.
-    public float moveSpeed; // 카메라의 속도.
+
+    public GameObject target;       // 카메라가 따라갈 대상.
+    public float moveSpeed;         // 카메라의 속도.
     private Vector3 targetPosition; // 대상의 현재 위치.
+
+    // 박스 콜라이더 영역의 최소 최대 좌표값을 지닙니다.
 
     public BoxCollider2D bound;
     private Vector3 minBound;
     private Vector3 maxBound;
 
-    // 박스 콜라이더 영역의 최소 최대 XYZ값을 지님.
-
-    private float halfWidth;
-    private float halfHeight;
-
     // 카메라의 반너비, 반높이 값을 지닐 변수.
 
-    private Camera theCamera;
+    private float halfWidth;
+    private float halfHeight;    
 
     // 카메라의 반높이값을 구할 속성을 이용하기 위한 변수.
 
+    private Camera theCamera;   
+
+#region Singleton
     void Awake()
     {
         if (instance != null)
@@ -36,15 +38,15 @@ public class CameraManager : MonoBehaviour
             instance = this;
         }
     }
+#endregion Singleton
 
     void Start()
     {
-        theCamera = GetComponent<Camera>();
-        minBound = bound.bounds.min;
-        maxBound = bound.bounds.max;
-        halfHeight = theCamera.orthographicSize;
-        halfWidth = halfHeight * Screen.width / Screen.height;
-        // bound : 영역
+        theCamera   = GetComponent<Camera>();
+        minBound    = bound.bounds.min;
+        maxBound    = bound.bounds.max;
+        halfHeight  = theCamera.orthographicSize;
+        halfWidth   = halfHeight * Screen.width / Screen.height;
     }
 
     void Update()

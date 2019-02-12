@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 주로 배경음을 관리하는 클래스
 public class BGMManager : MonoBehaviour
 {
     static public BGMManager instance;
 
-    public AudioClip[] clips; // 배경음악들
+    public AudioClip[] clips; // 배경음악 파일
     
     private AudioSource source;
 
     private WaitForSeconds waitTime = new WaitForSeconds(0.01f);
 
+#region Singleton
     void Awake()
     {
         if (instance != null)
@@ -24,6 +26,7 @@ public class BGMManager : MonoBehaviour
             instance = this;
         }
     }
+#endregion Singleton
 
     void Start()
     {
@@ -32,30 +35,18 @@ public class BGMManager : MonoBehaviour
 
     public void Play(int _playMusicTrack)
     {
-        source.volume = 1f;
-        source.clip = clips[_playMusicTrack];
+        source.volume   = 1f;
+        source.clip     = clips[_playMusicTrack];
         source.Play();
     }
 
-    public void Stop()
-    {
-        source.Stop();
-    }    
+    public void Stop() { source.Stop(); }    
 
-    public void Pause()
-    {
-        source.Pause();
-    }
+    public void Pause() { source.Pause(); }
 
-    public void UnPause()
-    {
-        source.UnPause();
-    }
+    public void UnPause() { source.UnPause(); }
 
-    public void SetVolumn(float _volumn)
-    {
-        source.volume = _volumn;
-    }
+    public void SetVolume(float _volume) { source.volume = _volume; }
 
     public void FadeOutMusic()
     {

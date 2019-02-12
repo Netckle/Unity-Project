@@ -8,10 +8,7 @@ public class PlayerManager : MovingObject
 
     public string currentMapName; // transferMap 스크립트에 있는 transferMapName 변수의 값을 저장.
 
-    public string walkSound_1;
-    public string walkSound_2;
-    public string walkSound_3;
-    public string walkSound_4;
+    public string[] walkSound = new string[4];
 
     private AudioManager theAudio;
 
@@ -21,6 +18,7 @@ public class PlayerManager : MovingObject
     private bool canMove = true;
     private bool applyRunFlag = false;
 
+#region Singleton
     void Awake()
     {
         if (instance == null)
@@ -33,18 +31,19 @@ public class PlayerManager : MovingObject
             Destroy(this.gameObject);
         }
     }
+#endregion Singleton
 
     void Start()
     {        
-        queue = new Queue<string>();
-        animator = GetComponent<Animator>();
+        queue       = new Queue<string>();
+        animator    = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();            
-        theAudio = FindObjectOfType<AudioManager>();           
+        theAudio    = FindObjectOfType<AudioManager>();           
     }        
 
     IEnumerator MoveCoroutine()
     {
-        while(Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0)
+        while(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
             if (Input.GetKey(KeyCode.LeftShift))
             {
@@ -77,17 +76,13 @@ public class PlayerManager : MovingObject
             switch (temp)
             {
                 case 1:
-                    theAudio.Play(walkSound_1);
-                    break;
+                    theAudio.Play(walkSound[0]); break;
                 case 2:
-                    theAudio.Play(walkSound_2);
-                    break;
+                    theAudio.Play(walkSound[1]); break;
                 case 3:
-                    theAudio.Play(walkSound_3);
-                    break;
+                    theAudio.Play(walkSound[2]); break;
                 case 4:
-                    theAudio.Play(walkSound_4);
-                    break;
+                    theAudio.Play(walkSound[3]); break;
             }      
 
             boxCollider.offset = new Vector2(vector.x * 0.7f * speed * walkCount,
