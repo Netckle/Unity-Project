@@ -21,6 +21,8 @@ public class MovingObject : MonoBehaviour
     public LayerMask layerMask;
     public Animator animator;  
 
+    public bool canMove = true;
+
     public bool CheckCollision()
     {
         Vector2 startPos = transform.position;
@@ -38,6 +40,9 @@ public class MovingObject : MonoBehaviour
     
     public void Move(string _dir, int _frequency = 5)
     {
+        if (!canMove)
+            return;
+            
         queue.Enqueue(_dir);
         if (!notCoroutine)
         {

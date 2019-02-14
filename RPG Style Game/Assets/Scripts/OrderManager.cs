@@ -30,6 +30,28 @@ public class OrderManager : MonoBehaviour
         return tempList;
     }
 
+    public void Move()
+    {
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (characters[i].characterName == "player")
+            {
+                characters[i].canMove = true;
+            }
+        }
+    }
+
+    public void NotMove()
+    {
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (characters[i].characterName == "player")
+            {
+                characters[i].canMove = false;
+            }
+        }
+    }
+
     public void SetPassingStatus(string _name)
     {
         for (int i = 0; i < characters.Count; i++)

@@ -39,6 +39,7 @@ public class DialogueManager : MonoBehaviour {
     public string enterSound;
 
     private AudioManager theAudio;
+    //private OrderManager theOrder;
 
     public bool talking = false;
     private bool keyActivated = false;
@@ -51,11 +52,14 @@ public class DialogueManager : MonoBehaviour {
         listSprites         = new List<Sprite>();
         listDialogueWindows = new List<Sprite>();
         theAudio            = FindObjectOfType<AudioManager>();
+        //theOrder            = FindObjectOfType<OrderManager>();
     }
 	
     public void ShowDialogue(Dialogue dialogue)
     {
         talking = true;
+
+        //theOrder.NotMove();
 
         for(int i = 0; i < dialogue.sentences.Length; i++)
         {
@@ -79,6 +83,7 @@ public class DialogueManager : MonoBehaviour {
         animSprite.SetBool("Appear", false);
         animDialogueWindow.SetBool("Appear", false);
         talking = false;
+        //theOrder.Move();
     }
 
     IEnumerator StartDialogueCoroutine()
@@ -143,6 +148,7 @@ public class DialogueManager : MonoBehaviour {
 
                 if (count == listSentences.Count - 1)
                 {
+                    Debug.Log("실행해 제발!");
                     StopAllCoroutines();
                     ExitDialogue();
                 }
