@@ -9,7 +9,7 @@ public class PlayerManager : MovingObject
     public string               currentMapName;
 
     public string[]             walkSound = new string[4];
-    // private AudioManager theAudio;
+    private AudioManager        theAudio;
 
     public float                runSpeed;
     private float               applyRunSpeed;
@@ -35,7 +35,7 @@ public class PlayerManager : MovingObject
         queue       = new Queue<string>();
         animator    = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
-        // theAudio = GetComponent<AudioManager>();
+        theAudio    = GetComponent<AudioManager>();
     }
 
     void Update()
@@ -86,20 +86,23 @@ public class PlayerManager : MovingObject
 
             // 발걸음 소리 발생
             int temp = Random.Range(1, 5); // 1 ~ 4
-            /*
+            
             switch (temp)
             {
                 case 1:
-                    theAudio.Play(walkSound[0]); break;
+                    theAudio.Play(walkSound[0]); 
+                    break;
                 case 2:
-                    theAudio.Play(walkSound[1]); break;
+                    theAudio.Play(walkSound[1]); 
+                    break;
                 case 3:
-                    theAudio.Play(walkSound[2]); break;
+                    theAudio.Play(walkSound[2]); 
+                    break;
                 case 4:
-                    theAudio.Play(walkSound[3]); break;
+                    theAudio.Play(walkSound[3]); 
+                    break;
             }
-            */
-
+            
             // 콜라이더를 앞으로 내밀어 다른 MovingObject와의 충돌을 방지함. 
             boxCollider.offset = new Vector2(vector.x * 0.7F * speed * walkCount, vector.y * 0.7F * speed * walkCount);
 
