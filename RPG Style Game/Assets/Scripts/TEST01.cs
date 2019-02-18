@@ -9,13 +9,16 @@ public class TEST01 : MonoBehaviour
 
     private OrderManager theOrder;
     private ChoiceManager theChoice;
+    private DialogueManager theDM;
 
     public bool flag;
+    public string[] texts;
 
     void Start()
     {
         theOrder = FindObjectOfType<OrderManager>();
         theChoice = FindObjectOfType<ChoiceManager>();
+        theDM = FindObjectOfType<DialogueManager>();
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -31,8 +34,9 @@ public class TEST01 : MonoBehaviour
         flag = true;
         theOrder.PreLoadCharacter();
         theOrder.NotMove();
+        theDM.ShowText(texts);
         theChoice.ShowChoice(choice);
-
+        yield return new WaitUntil(() => !theDM.talking);
         yield return new WaitUntil(() => !theChoice.choiceIng);
         
         theOrder.Move();

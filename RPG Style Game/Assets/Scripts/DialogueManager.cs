@@ -43,6 +43,7 @@ public class DialogueManager : MonoBehaviour {
 
     public bool talking = false;
     private bool keyActivated = false;
+    private bool onlyText = false;
 
     void Start () 
     {
@@ -54,10 +55,38 @@ public class DialogueManager : MonoBehaviour {
         theAudio            = FindObjectOfType<AudioManager>();
         //theOrder            = FindObjectOfType<OrderManager>();
     }
+
+    public void ShowText(string[] _sentences)
+    {
+        talking = true;
+        onlyText = true;
+
+        for(int i = 0; i < _sentences.Length; i++)
+        {
+            listSentences.Add(_sentences[i]);
+        }
+
+        StartCoroutine(StartTextCoroutine());
+    }
+
+    IEnumerator StartTextCoroutine()
+    {        
+        keyActivated = true;
+        for(int i = 0; i < listSentences[count].Length; i++)
+        {
+            text.text += listSentences[count][i]; // 1글자씩 출력.
+            if(i % 7 == 1)
+            {
+                theAudio.Play(typeSound);
+            }
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
 	
     public void ShowDialogue(Dialogue dialogue)
     {
         talking = true;
+        onlyText = false;
 
         //theOrder.NotMove();
 
@@ -155,7 +184,10 @@ public class DialogueManager : MonoBehaviour {
                 else
                 {
                     StopAllCoroutines();
-                    StartCoroutine(StartDialogueCoroutine());
+                    if (onlyText)
+                        StartCoroutine(StartTextCoroutine());
+                    else
+                        StartCoroutine(StartDialogueCoroutine());
                 }
             }
         }

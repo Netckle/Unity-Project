@@ -74,7 +74,7 @@ public class OrderManager : MonoBehaviour
         }
     }
 
-    public void SetTransparent(string _name, string _dir)
+    public void SetTransparent(string _name)
     {
         for (int i = 0; i < characters.Count; i++)
         {
@@ -85,7 +85,7 @@ public class OrderManager : MonoBehaviour
         }
     }
 
-    public void SetUnTransparent(string _name, string _dir)
+    public void SetUnTransparent(string _name)
     {
         for (int i = 0; i < characters.Count; i++)
         {
