@@ -19,16 +19,14 @@ public class MovingObject : MonoBehaviour
     
     public BoxCollider2D boxCollider;
     public LayerMask layerMask;
-    public Animator animator;  
-
-    public bool canMove = true;
+    public Animator animator;
 
     public bool CheckCollision()
     {
         Vector2 startPos = transform.position;
         Vector2 endPos = startPos + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount);
 
-        boxCollider.enabled = false; // Ray를 쏘는 자기자신이 맞을 수 있기 때문에 꺼야한다.
+        boxCollider.enabled = false; // Ray를 쏘는 자기자신이 맞을 수 있기 때문에 꺼야함.
         RaycastHit2D hit = Physics2D.Linecast(startPos, endPos, layerMask);   
         boxCollider.enabled = true;        
 
@@ -39,10 +37,7 @@ public class MovingObject : MonoBehaviour
     }
     
     public void Move(string _dir, int _frequency = 5)
-    {
-        if (!canMove)
-            return;
-            
+    {            
         queue.Enqueue(_dir);
         if (!notCoroutine)
         {

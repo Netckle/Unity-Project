@@ -6,7 +6,7 @@ public class PlayerManager : MovingObject
 {   
     public static PlayerManager instance; 
 
-    public string currentMapName; // transferMap 스크립트에 있는 transferMapName 변수의 값을 저장.
+    public string currentMapName; 
 
     public string[] walkSound = new string[4];
 
@@ -15,7 +15,7 @@ public class PlayerManager : MovingObject
     public float runSpeed;
     private float applyRunSpeed;
 
-    private bool canMove = true;
+    public bool canMove = true;
     private bool applyRunFlag = false;
 
 #region Singleton
@@ -35,10 +35,10 @@ public class PlayerManager : MovingObject
 
     void Start()
     {        
-        queue       = new Queue<string>();
-        animator    = GetComponent<Animator>();
+        queue = new Queue<string>();
+        animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();            
-        theAudio    = FindObjectOfType<AudioManager>();           
+        theAudio = FindObjectOfType<AudioManager>();           
     }        
 
     IEnumerator MoveCoroutine()

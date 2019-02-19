@@ -39,7 +39,7 @@ public class TEST01 : MonoBehaviour
         yield return new WaitUntil(() => !theDM.talking);
         yield return new WaitUntil(() => !theChoice.choiceIng);
         
-        theOrder.Move();
+        theOrder.canMove();
         Debug.Log(theChoice.GetResult());
     }
 }

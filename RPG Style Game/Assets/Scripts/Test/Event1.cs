@@ -41,7 +41,7 @@ public class Event1 : MonoBehaviour
 
         yield return new WaitUntil(()=>!theDM.talking);
 
-        theOrder.Move();
+        theOrder.canMove();
 
         theOrder.Move("player", "RIGHT");
         theOrder.Move("player", "RIGHT");
@@ -50,10 +50,11 @@ public class Event1 : MonoBehaviour
         yield return new WaitUntil(()=>thePlayer.queue.Count == 0);
 
         theFade.Flash();
+        theOrder.NotMove();
         theDM.ShowDialogue(dialogue_02);
 
         yield return new WaitUntil(()=>!theDM.talking);
 
-        theOrder.Move();
+        theOrder.canMove();
     }
 }

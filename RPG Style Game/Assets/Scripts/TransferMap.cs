@@ -31,11 +31,11 @@ public class TransferMap : MonoBehaviour
     {
         theCamera = FindObjectOfType<CameraManager>();
         thePlayer = FindObjectOfType<PlayerManager>();
-        theFade   = FindObjectOfType<FadeManager>();
+        theFade = FindObjectOfType<FadeManager>();
         theOrder = FindObjectOfType<OrderManager>();
     }
 
-    // 같은 씬에서 이동이 이루어질 때 bound를 바꾸는 방법.
+    // 같은 씬에서 이동이 이루어질 때, Bound를 교체하는 함수.
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (!door)
@@ -119,6 +119,6 @@ public class TransferMap : MonoBehaviour
         theCamera.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, theCamera.transform.position.z);
         thePlayer.transform.position = target.transform.position;
         theFade.FadeIn();
-        theOrder.Move();
+        theOrder.canMove();
     }
 }
