@@ -18,6 +18,13 @@ public class PlayerManager : MovingObject
     public bool canMove = true;
     private bool applyRunFlag = false;
 
+    public bool transferMap = true;
+
+    public bool notMove = false;
+    private bool attacking = false;
+    public float attackDelay;
+    private float currentAttackDelay;
+
 #region Singleton
     void Awake()
     {
@@ -43,7 +50,7 @@ public class PlayerManager : MovingObject
 
     IEnumerator MoveCoroutine()
     {
-        while(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        while(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0 && !notMove && !attacking)
         {
             if (Input.GetKey(KeyCode.LeftShift))
             {
@@ -120,13 +127,34 @@ public class PlayerManager : MovingObject
 
     void Update()
     {                
-        if (canMove)
+        if (canMove && !notMove && !attacking)
         {
             if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
             {
                 canMove = false;
                 StartCoroutine(MoveCoroutine());        
             }
-        }        
+        }  
+
+        if (!notMove && !attacking)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                currentAttackDelay = attackDelay;
+                attacking = true;
+                animator.SetBool("Attacking", true);
+            }
+        }    
+
+        if (attacking)
+        {
+            currentAttackDelay -= Time.deltaTime;
+
+            if (currentAttackDelay <= 0)
+            {
+                animator.SetBool("Attacking", false);
+                attacking = false;
+            }
+        }  
     }
 }

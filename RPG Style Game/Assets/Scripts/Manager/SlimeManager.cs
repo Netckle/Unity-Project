@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SlimeManager : MovingObject
 {
-    public int atk; // 슬라임 공격력.
+    //public int atk; // 슬라임 공격력.
     public float attackDelay; // 공격 유예.
     public string atkSound;
 
@@ -64,7 +64,9 @@ public class SlimeManager : MovingObject
         yield return new WaitForSeconds(attackDelay);
         AudioManager.instance.Play(atkSound);
         if (NearPlayer())
-            Debug.Log("슬라임이 플레이어에게 " + atk + "만큼의 데미지를 입혔습니다.");
+            PlayerStat.instance.Hit(GetComponent<EnemyStat>().atk);
+            //PlayerStat.instance.Hit(atk);
+            //Debug.Log("슬라임이 플레이어에게 " + atk + "만큼의 데미지를 입혔습니다.");
     }
 
     private bool NearPlayer()

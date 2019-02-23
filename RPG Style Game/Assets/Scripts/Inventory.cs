@@ -10,6 +10,7 @@ public class Inventory : MonoBehaviour
     private DataBaseManager theDatabase;
     private OrderManager theOrder;
     private AudioManager theAudio;
+    private OkOrCancel theOOC;
 
     public string key_sound;
     public string enter_sound;
@@ -29,6 +30,8 @@ public class Inventory : MonoBehaviour
 
     public GameObject go; // 인벤토리 활성화 비활성화.
     public GameObject[] selectedTabImages;
+    public GameObject go_OOC; // 선택지 활성화 비활성화.
+    public GameObject prefab_floating_text;
 
     private int selectedItem; // 선택한 아이템.
     private int selectedTab; // 선택된 탭.
@@ -47,16 +50,48 @@ public class Inventory : MonoBehaviour
         theAudio = FindObjectOfType<AudioManager>();
         theOrder = FindObjectOfType<OrderManager>();
         theDatabase = FindObjectOfType<DataBaseManager>();
+        theOOC = FindObjectOfType<OkOrCancel>();
 
         inventoryItemList = new List<Item>();
         inventoryTabList = new List<Item>();
         slots = tf.GetComponentsInChildren<InventorySlot>();
+    }
 
-        inventoryItemList.Add(new Item(10001, "빨간 포션", "체력을 50 체워주는 마법의 물약", Item.ItemType.Use));
-        inventoryItemList.Add(new Item(10001, "빨간 포션", "체력을 50 체워주는 마법의 물약", Item.ItemType.Use));
-        inventoryItemList.Add(new Item(10001, "빨간 포션", "체력을 50 체워주는 마법의 물약", Item.ItemType.Use));
-        inventoryItemList.Add(new Item(10001, "빨간 포션", "체력을 50 체워주는 마법의 물약", Item.ItemType.Use));
-        inventoryItemList.Add(new Item(10001, "빨간 포션", "체력을 50 체워주는 마법의 물약", Item.ItemType.Use));
+    public void GetAnItem(int _itemID, int _count = 1)
+    {
+        for (int i = 0; i < theDatabase.itemList.Count; i++) // 데이터베이스 아이템 검색.
+        {
+            if (_itemID == theDatabase.itemList[i].itemID) // 데이터베이스에 아이템 발견.
+            {
+                var clone = Instantiate(prefab_floating_text, PlayerManager.instance.transform.position, Quaternion.Euler(Vector3.zero));
+                clone.gameObject.SetActive(true);
+                
+                clone.GetComponent<FloatingText>().text.text = theDatabase.itemList[i].itemName + " " + _count + "개 획득";
+                clone.transform.SetParent(this.transform);
+                clone.gameObject.transform.localScale = new Vector3(1, 1, 1);
+
+                for (int j = 0; j < inventoryItemList.Count; j++) // 소지품에 같은 아이템이 있는지 검색.
+                {
+                    if (theDatabase.itemList[j].itemID == _itemID) // 소지품에 같은 아이템이 있다 -> 개수만 증감시켜줌.
+                    {
+                        if (inventoryItemList[j].itemType == Item.ItemType.Use)
+                        {
+                            inventoryItemList[j].itemCount += _count;
+                            
+                        }
+                        else
+                        {
+                            inventoryItemList.Add(theDatabase.itemList[i]);
+                        }
+                        return;
+                    }
+                }
+                inventoryItemList.Add(theDatabase.itemList[i]); // 소지품에 해당 아이템 추가.
+                inventoryItemList[inventoryItemList.Count - 1].itemCount = _count;
+                return;
+            }
+        }
+        Debug.LogError("데이터베이스에 해당 ID값을 가진 아이템이 존재하지 않습니다."); // 데이터베이스에 ItemID 없음.
     }
 
     // 인벤토리 슬롯 초기화
@@ -313,6 +348,8 @@ public class Inventory : MonoBehaviour
                                 theAudio.Play(enter_sound);
                                 stopKeyInput = true;
                                 // 물약을 마실 거냐? 같은 선택지 호출.
+
+                                StartCoroutine(OOCCoroutine());
                             }
                             else if (selectedTab == 1)
                             {
@@ -339,5 +376,36 @@ public class Inventory : MonoBehaviour
                     preventExec = false;
             }     
         }
+    }
+
+    IEnumerator OOCCoroutine() // Okay or Cancel
+    {
+        go_OOC.SetActive(true);
+        theOOC.ShowTwoChoice("사용", "취소");
+
+        yield return new WaitUntil(() => !theOOC.activated);
+        if (theOOC.GetResult())
+        {
+            for (int i = 0; i < inventoryItemList.Count; i++)
+            {
+                if (inventoryItemList[i].itemID == inventoryTabList[selectedItem].itemID)
+                {
+                    theDatabase.UseItem(inventoryItemList[i].itemID);
+
+                    if (inventoryItemList[i].itemCount > 1)
+                        inventoryItemList[i].itemCount--;
+                    else
+                        inventoryItemList.RemoveAt(i);
+
+                    //theAudio 아이템 먹는 소리 출력.                    
+
+                    ShowItem();
+                    break;
+                }                
+            }
+        }
+
+        stopKeyInput = false;
+        go_OOC.SetActive(false);
     }
 }
