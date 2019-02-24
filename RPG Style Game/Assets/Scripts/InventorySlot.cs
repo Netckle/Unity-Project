@@ -6,28 +6,28 @@ using UnityEngine.UI;
 public class InventorySlot : MonoBehaviour
 {
     public Image icon;
-    public Text itemName_Text;
-    public Text itemCount_Text;
+    public Text item_name_text;
+    public Text item_count_text;
     public GameObject selected_item;
     
     public void AddItem(Item _item)
     {
-        itemName_Text.text = _item.itemName;
-        icon.sprite = _item.itemIcon;
+        item_name_text.text = _item.item_name;
+        icon.sprite = _item.item_icon;
 
-        if (Item.ItemType.Use == _item.itemType)
+        if (Item.ItemType.USE == _item.item_type)
         {
-            if (_item.itemCount > 0)
-                itemCount_Text.text = "x " + _item.itemCount.ToString();
+            if (_item.item_count > 0)
+                item_count_text.text = "x " + _item.item_count.ToString();
             else
-                itemCount_Text.text = "";
+                item_count_text.text = "";
         }
     }
 
     public void RemoveItem()
     {
-        itemName_Text.text = "";
-        itemCount_Text.text = "";
+        item_name_text.text = "";
+        item_count_text.text = "";
         icon.sprite = null;
     }
 }

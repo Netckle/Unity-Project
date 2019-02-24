@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class DataBaseManager : MonoBehaviour
 {
-    // 01. 씬 이동
-    // 02. 세이브와 로드
-    // 03. 아이템
     static public DataBaseManager instance;
 
-    private PlayerStat thePlayerStat;
+    private PlayerStat the_player_stat;
 
-    public GameObject prefabs_Floating_Text;
-    public GameObject parent;
+    private FloatingTextTrigger floating_text_trigger;
 
     public string[] var_name;
     public float[] var;
@@ -21,45 +17,6 @@ public class DataBaseManager : MonoBehaviour
     public bool[] switches; 
 
     public List<Item> itemList = new List<Item>();
-
-    private void FloatText(int number, string color)
-    {
-        Vector3 vector = thePlayerStat.transform.position;
-        vector.y += 60;
-
-        GameObject clone = Instantiate(prefabs_Floating_Text, vector, Quaternion.Euler(Vector3.zero));
-        clone.GetComponent<FloatingText>().text.text = number.ToString();
-        if (color == "GREEN")
-            clone.GetComponent<FloatingText>().text.color = Color.green;
-        else if (color == "BLUE")
-            clone.GetComponent<FloatingText>().text.color = Color.blue;
-        clone.GetComponent<FloatingText>().text.fontSize = 25;
-        clone.transform.SetParent(parent.transform);
-
-    }
-
-    public void UseItem(int _itemID)
-    {
-        switch(_itemID)
-        {
-            case 10001:
-                if (thePlayerStat.hp >= thePlayerStat.currentHp + 50)
-                    thePlayerStat.currentHp += 50;
-                else
-                    thePlayerStat.currentHp += thePlayerStat.hp;
-
-                FloatText(50, "GREEN");
-                break;
-            case 10002:
-                if (thePlayerStat.mp >= thePlayerStat.currentMp + 50)
-                    thePlayerStat.currentMp += 15;
-                else
-                    thePlayerStat.currentMp += thePlayerStat.mp;
-
-                FloatText(50, "BLUE");
-                break;
-        }
-    }
 
 #region Singleton
     void Awake()
@@ -78,8 +35,32 @@ public class DataBaseManager : MonoBehaviour
     
     void Start()
     {
-        thePlayerStat = FindObjectOfType<PlayerStat>();
+        the_player_stat = FindObjectOfType<PlayerStat>();
+        floating_text_trigger = FindObjectOfType<FloatingTextTrigger>();
 
-        itemList.Add(new Item(10001, "빨간 포션", "체력을 50 체워주는 마법의 물약", Item.ItemType.Use));
+        itemList.Add(new Item(10001, "빨간 포션", "체력을 50 체워주는 마법의 물약", Item.ItemType.USE));
+    }
+    
+    public void UseItem(int _item_id)
+    {
+        switch(_item_id)
+        {
+            case 10001:
+                if (the_player_stat.hp >= the_player_stat.current_hp + 50)
+                    the_player_stat.current_hp += 50;
+                else
+                    the_player_stat.current_hp += the_player_stat.hp;
+
+                floating_text_trigger.TriggerFloatingText(the_player_stat.transform.position, 60, 50.ToString(), Color.green, 25);
+                break;
+            case 10002:
+                if (the_player_stat.mp >= the_player_stat.current_mp + 50)
+                    the_player_stat.current_mp += 15;
+                else
+                    the_player_stat.current_mp += the_player_stat.mp;
+
+                floating_text_trigger.TriggerFloatingText(the_player_stat.transform.position, 60, 50.ToString(), Color.blue, 25);
+                break;
+        }
     }
 }

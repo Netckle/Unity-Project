@@ -139,9 +139,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e09a481b2b80401469525818d4105101, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: npc1
-  speed: 0.05
-  walkCount: 20
+  characterName: npc_01
+  speed: 0.025
+  walkCount: 40
   boxCollider: {fileID: 62877730180516599}
   layerMask:
     serializedVersion: 2
@@ -154,4 +154,4 @@ MonoBehaviour:
     - UP
     - DOWN
     - DOWN
-    frequency: 5
+    frequency: 3

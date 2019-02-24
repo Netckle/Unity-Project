@@ -5,33 +5,34 @@ using UnityEngine;
 public class EnemyStat : MonoBehaviour
 {
     public int hp;
-    public int currentHp;
-    public int atk;
-    public int def;
+    public int current_hp;
+    public int attack;
+    public int defense;
     public int exp;
 
     void Start()
     {
-        currentHp = hp;
+        current_hp = hp;
     }
 
-    public int Hit(int _playerAtk)
+    public int DamagedByPlayer(int _player_attack)
     {
-        int playerAtk = _playerAtk;
-        int dmg;
-        if (def >= playerAtk)
-            dmg = 1;
+        int player_attack = _player_attack;
+        int damage;
+
+        if (defense >= player_attack)
+            damage = 1;
         else
-            dmg = playerAtk - def;
+            damage = player_attack - defense;
 
-        currentHp -= dmg;
+        current_hp -= damage;
 
-        if (currentHp <= 0)
+        if (current_hp <= 0)
         {
             Destroy(this.gameObject);
-            PlayerStat.instance.currentExp += exp;
+            PlayerStat.instance.current_exp += exp;
         }
 
-        return dmg;
+        return damage;
     }
 }

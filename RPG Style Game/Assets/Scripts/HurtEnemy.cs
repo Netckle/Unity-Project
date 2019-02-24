@@ -4,33 +4,25 @@ using UnityEngine;
 
 public class HurtEnemy : MonoBehaviour
 {
-    public GameObject prefabs_Floating_Text;
-    public GameObject parent;
+    public string attack_sound;
 
-    public string atkSound;
-
-    private PlayerStat thePlayerStat;
+    private PlayerStat the_player_state;
+    private FloatingTextTrigger floating_text_trigger;
 
     void Start()
     {
-        thePlayerStat = FindObjectOfType<PlayerStat>();
+        the_player_state = FindObjectOfType<PlayerStat>();
+        floating_text_trigger = FindObjectOfType<FloatingTextTrigger>();
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "enemy")
         {
-            int dmg = collision.gameObject.GetComponent<EnemyStat>().Hit(thePlayerStat.atk);
-            AudioManager.instance.Play(atkSound);
+            int damage = collision.gameObject.GetComponent<EnemyStat>().DamagedByPlayer(the_player_state.attack);
+            AudioManager.instance.Play(attack_sound);
 
-            Vector3 vector = collision.transform.position;
-            vector.y += 60;
-
-            GameObject clone = Instantiate(prefabs_Floating_Text, vector, Quaternion.Euler(Vector3.zero));
-            clone.GetComponent<FloatingText>().text.text = dmg.ToString();
-            clone.GetComponent<FloatingText>().text.color = Color.white;
-            clone.GetComponent<FloatingText>().text.fontSize = 25;
-            clone.transform.SetParent(parent.transform);
+            floating_text_trigger.TriggerFloatingText(collision.gameObject.transform.position, 60, damage.ToString(), Color.white, 25);
         }
     }
 }

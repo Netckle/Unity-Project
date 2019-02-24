@@ -6,91 +6,87 @@ public class PlayerStat : MonoBehaviour
 {
     public static PlayerStat instance;
 
-    public int characterLevel;
-    public int[] needExp;
-    public int currentExp;
+    public int character_level;
+    public int[] need_exp;
+    public int current_exp;
 
     public int hp;
-    public int currentHp;
+    public int current_hp;
     public int mp;
-    public int currentMp;
+    public int current_mp;
 
-    public int atk;
-    public int def;
+    public int attack;
+    public int defense;
 
-    public string dmgSound;
+    public string damaged_sound;
 
-    public GameObject prefabs_Floating_text;
-    public GameObject parent; // Canvas
+    private FloatingTextTrigger floating_text_trigger;
 
     void Start()
     {
         instance = this;
+        floating_text_trigger = FindObjectOfType<FloatingTextTrigger>();
     }
 
-    public void Hit(int _enemyAtk)
+    public void DamagedByEnemy(int _enemy_attack)
     {
-        int dmg;
+        int damage;
 
-        if (def >= _enemyAtk)
-            dmg = 1;
+        if (defense >= _enemy_attack)
+            damage = 1;
         else
-            dmg = _enemyAtk - def;
+            damage = _enemy_attack - defense;
 
-        currentHp -= dmg;
+        current_hp -= damage;
 
-        if (currentHp <= 0)
-            Debug.Log("체력 0 미만, 게임오버");
+        if (current_hp <= 0)
+            Debug.Log("체력이 0 미만입니다. 게임오버입니다.");
 
-        AudioManager.instance.Play(dmgSound);
+        AudioManager.instance.Play(damaged_sound);
 
-        Vector3 vector = this.transform.position;
-        vector.y += 60;
-
-        GameObject clone = Instantiate(prefabs_Floating_text, vector, Quaternion.Euler(Vector3.zero));
-        clone.GetComponent<FloatingText>().text.text = dmg.ToString();
-        clone.GetComponent<FloatingText>().text.color = Color.red;
-        clone.GetComponent<FloatingText>().text.fontSize = 25;
-        clone.transform.SetParent(parent.transform);
-
+        floating_text_trigger.TriggerFloatingText(this.transform.position, 60, damage.ToString(), Color.red, 25);
+        
         StopAllCoroutines();
-        StartCoroutine(HitCoroutine());
+        StartCoroutine(HitCoroutine(3));
     }
 
-    IEnumerator HitCoroutine()
+    IEnumerator HitCoroutine(int repeat_count)
     {
         Color color = GetComponent<SpriteRenderer>().color;
-        color.a = 0;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
-        color.a = 1f;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
         color.a = 0f;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
-        color.a = 1f;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
-        color.a = 0f;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
+
+        for (int i = 0; i < repeat_count; i++)
+        {
+            GetComponent<SpriteRenderer>().color = color;
+            yield return new WaitForSeconds(0.1f);
+
+            switch (color.a)
+            {
+                case 0f:
+                    color.a = 1f;
+                    break;
+                case 1f:
+                    color.a = 0f;
+                    break;
+            }
+        }
+
         color.a = 1f;
         GetComponent<SpriteRenderer>().color = color;
     }
 
     void Update()
     {
-        if (currentExp >= needExp[characterLevel])
+        if (current_exp >= need_exp[character_level])
         {
-            characterLevel++;
-            hp += characterLevel * 2;
-            mp += characterLevel + 2;
+            character_level++;
+            hp += character_level * 2;
+            mp += character_level + 2;
 
-            currentHp = hp;
-            currentMp = mp;
-            atk++;
-            def++;
+            current_hp = hp;
+            current_mp = mp;
+            attack++;
+            defense++;
         }
     }
 }

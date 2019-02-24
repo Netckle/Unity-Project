@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class SlimeManager : MovingObject
 {
-    //public int atk; // 슬라임 공격력.
-    public float attackDelay; // 공격 유예.
+    public float attackDelay;
     public string atkSound;
 
-    public float inter_MoveWaitTime; // 대기시간
+    public float inter_MoveWaitTime; // 대기시간.
     private float current_interMWT;
     
     private Vector2 playerPos; // 플레이어의 좌표값.
@@ -50,10 +49,12 @@ public class SlimeManager : MovingObject
     private void Flip()
     {
         Vector3 flip = transform.localScale;
+
         if (playerPos.x > this.transform.position.x)
             flip.x = -1.0f;
         else
             flip.x = 1.0f;
+
         this.transform.localScale = flip;
         animator.SetTrigger("Attack");
         StartCoroutine(WaitCoroutine());
@@ -62,11 +63,11 @@ public class SlimeManager : MovingObject
     IEnumerator WaitCoroutine()
     {
         yield return new WaitForSeconds(attackDelay);
+
         AudioManager.instance.Play(atkSound);
+
         if (NearPlayer())
-            PlayerStat.instance.Hit(GetComponent<EnemyStat>().atk);
-            //PlayerStat.instance.Hit(atk);
-            //Debug.Log("슬라임이 플레이어에게 " + atk + "만큼의 데미지를 입혔습니다.");
+            PlayerStat.instance.DamagedByEnemy(GetComponent<EnemyStat>().attack);
     }
 
     private bool NearPlayer()
@@ -95,8 +96,8 @@ public class SlimeManager : MovingObject
     private void RandomDirection()
     {
         vector.Set(0, 0, vector.z);
-        random_int = Random.Range(0, 4);
 
+        random_int = Random.Range(0, 4);
         switch(random_int)
         {
             case 0:
