@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class StartPoint : MonoBehaviour
 {
-    public string startPoint;
+    public string start_point;
 
-    private PlayerManager thePlayer;
-    private CameraManager theCamera;
+    private PlayerManager the_player;
+    private CameraManager the_camera;
 
     void Start()
     {
-        theCamera = FindObjectOfType<CameraManager>();
-        thePlayer = FindObjectOfType<PlayerManager>();
+        the_camera = FindObjectOfType<CameraManager>();
+        the_player = FindObjectOfType<PlayerManager>();
 
-        if (startPoint == thePlayer.currentMapName)
+        if (start_point == the_player.current_map_name)
         {
-            theCamera.transform.position = new Vector3(this.transform.position.x, this.transform.transform.position.y, -10);
-            thePlayer.transform.position = this.transform.position;
+            the_camera.transform.position = new Vector3(this.transform.position.x, this.transform.transform.position.y, -10);
+            the_player.transform.position = this.transform.position;
         }
     } 
 }

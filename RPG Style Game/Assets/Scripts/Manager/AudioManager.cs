@@ -37,7 +37,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     public Sound[] sounds;
 
-#region Singleton
+    #region Singleton
     void Awake()
     {
         if (instance != null)
@@ -50,7 +50,7 @@ public class AudioManager : MonoBehaviour
             instance = this;
         }
     }
-#endregion Singleton
+    #endregion Singleton
 
     void Start()
     {

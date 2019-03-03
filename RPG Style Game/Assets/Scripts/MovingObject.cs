@@ -5,30 +5,30 @@ using UnityEngine;
 // 플레이어와 NPC의 부모 클래스
 public class MovingObject : MonoBehaviour
 {
-    public string characterName;
+    public string character_name;
 
     public float speed;
-    public int walkCount;
-    protected int currentWalkCount;
+    public int walk_count;
+    protected int current_walk_count;
 
-    private bool notCoroutine = false;
+    private bool not_coroutine = false;
 
     protected Vector3 vector;
 
     public Queue<string> queue;
     
-    public BoxCollider2D boxCollider;
-    public LayerMask layerMask;
+    public BoxCollider2D box_collider;
+    public LayerMask layer_mask;
     public Animator animator;
 
     public bool CheckCollision()
     {
         Vector2 startPos = transform.position;
-        Vector2 endPos = startPos + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount);
+        Vector2 endPos = startPos + new Vector2(vector.x * speed * walk_count, vector.y * speed * walk_count);
 
-        boxCollider.enabled = false; // Ray를 쏘는 자기자신이 맞을 수 있기 때문에 꺼야함.
-        RaycastHit2D hit = Physics2D.Linecast(startPos, endPos, layerMask);   
-        boxCollider.enabled = true;        
+        box_collider.enabled = false; // Ray를 쏘는 자기자신이 맞을 수 있기 때문에 꺼야함.
+        RaycastHit2D hit = Physics2D.Linecast(startPos, endPos, layer_mask);   
+        box_collider.enabled = true;        
 
         Debug.DrawLine(startPos, endPos, Color.red);
 
@@ -39,9 +39,9 @@ public class MovingObject : MonoBehaviour
     public void Move(string _dir, int _frequency = 5)
     {            
         queue.Enqueue(_dir);
-        if (!notCoroutine)
+        if (!not_coroutine)
         {
-            notCoroutine = true;
+            not_coroutine = true;
             StartCoroutine(MoveCoroutine(_dir, _frequency));
         }
     }
@@ -107,27 +107,27 @@ public class MovingObject : MonoBehaviour
 
             animator.SetBool("Walking", true);
 
-            boxCollider.offset = new Vector2(vector.x * 0.7f * speed * walkCount,
-            vector.y * 0.7f * speed * walkCount);
+            box_collider.offset = new Vector2(vector.x * 0.7f * speed * walk_count,
+            vector.y * 0.7f * speed * walk_count);
 
-            while(currentWalkCount < walkCount)
+            while(current_walk_count < walk_count)
             {
                 transform.Translate(vector.x * speed, vector.y * speed, 0);
 
-                currentWalkCount++;
+                current_walk_count++;
 
-                if (currentWalkCount == walkCount * 0.5f + 2)
-                    boxCollider.offset = Vector2.zero;
+                if (current_walk_count == walk_count * 0.5f + 2)
+                    box_collider.offset = Vector2.zero;
 
                 yield return new WaitForSeconds(0.01f);                
             } 
 
-            currentWalkCount = 0;
+            current_walk_count = 0;
 
             if (_frequency != 5)
                 animator.SetBool("Walking", false); 
         }         
         animator.SetBool("Walking", false);  
-        notCoroutine = false;
+        not_coroutine = false;
     }
 }

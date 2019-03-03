@@ -20,30 +20,50 @@ public class NewBehaviourScript :EditorWindow
         var warning = (Font)AssetDatabase.LoadAssetAtPath ("Assets/Fonts/NanumGothicBold.ttf", typeof(Font));
         var skin = GUI.skin;
         var so = new SerializedObject (skin);
+
         so.Update ();
         var prop = so.GetIterator ();
 
         while (prop.Next(true)) {
 
             if (prop.propertyType == SerializedPropertyType.ObjectReference) {
-                if (prop.type == "PPtr<Font>") {
-                    if (prop.objectReferenceValue) {
+                if (prop.type == "PPtr<Font>") 
+                {
+                    if (prop.objectReferenceValue) 
+                    {
                         var fontName = prop.objectReferenceValue.name;
-                        if (fontName == "Lucida Grande") {
-                        } else if (fontName == "Lucida Grande") {
+
+                        if (fontName == "Lucida Grande") 
+                        {
+
+                        } 
+                        else if (fontName == "Lucida Grande") 
+                        {
                             prop.objectReferenceValue = normal;
-                        } else if (fontName == "Lucida Grande small") {
+                        } 
+                        else if (fontName == "Lucida Grande small") 
+                        {
                             prop.objectReferenceValue = small;
-                        } else if (fontName == "Lucida Grande Bold") {
+                        }
+                        else if (fontName == "Lucida Grande Bold") 
+                        {
                             prop.objectReferenceValue = bold;
-                        } else if (fontName == "Lucida Grande Big") {
+                        }
+                        else if (fontName == "Lucida Grande Big") 
+                        {
                             prop.objectReferenceValue = big;
-                        } else if (fontName == "Lucida Grande small bold") {
+                        }
+                        else if (fontName == "Lucida Grande small bold") 
+                        {
                             prop.objectReferenceValue = bold_small;
-                        } else if (fontName == "Lucida Grande Warning") {
+                        } 
+                        else if (fontName == "Lucida Grande Warning") 
+                        {
                             prop.objectReferenceValue = warning;
                         }
-                    } else {
+                    } 
+                    else 
+                    {
                         prop.objectReferenceValue = normal;
                     }
                 }

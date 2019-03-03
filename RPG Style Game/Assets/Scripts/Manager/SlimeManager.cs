@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class SlimeManager : MovingObject
 {
-    public float attackDelay;
-    public string atkSound;
+    public float attack_delay;
+    public string attack_sound;
 
-    public float inter_MoveWaitTime; // 대기시간.
-    private float current_interMWT;
+    public float intermediate_MWT; // Move Wait Time 대기시간.
+    private float current_intermediate_MWT;
     
-    private Vector2 playerPos; // 플레이어의 좌표값.
+    private Vector2 player_pos; // 플레이어의 좌표값.
     
     private int random_int;
     private string direction;
@@ -18,16 +18,16 @@ public class SlimeManager : MovingObject
     void Start()
     {
         queue = new Queue<string>();
-        current_interMWT = inter_MoveWaitTime;
+        current_intermediate_MWT = intermediate_MWT;
     }
 
     void Update()
     {
-        current_interMWT -= Time.deltaTime;
+        current_intermediate_MWT -= Time.deltaTime;
 
-        if (current_interMWT <= 0)
+        if (current_intermediate_MWT <= 0)
         {
-            current_interMWT = inter_MoveWaitTime;
+            current_intermediate_MWT = intermediate_MWT;
 
             if (NearPlayer())
             {
@@ -50,21 +50,22 @@ public class SlimeManager : MovingObject
     {
         Vector3 flip = transform.localScale;
 
-        if (playerPos.x > this.transform.position.x)
+        if (player_pos.x > this.transform.position.x)
             flip.x = -1.0f;
         else
             flip.x = 1.0f;
 
         this.transform.localScale = flip;
+
         animator.SetTrigger("Attack");
-        StartCoroutine(WaitCoroutine());
+        StartCoroutine(WaitAndAttackCoroutine());
     }
 
-    IEnumerator WaitCoroutine()
+    IEnumerator WaitAndAttackCoroutine()
     {
-        yield return new WaitForSeconds(attackDelay);
+        yield return new WaitForSeconds(attack_delay);
 
-        AudioManager.instance.Play(atkSound);
+        AudioManager.instance.Play(attack_sound);
 
         if (NearPlayer())
             PlayerStat.instance.DamagedByEnemy(GetComponent<EnemyStat>().attack);
@@ -72,19 +73,19 @@ public class SlimeManager : MovingObject
 
     private bool NearPlayer()
     {
-        playerPos = PlayerManager.instance.transform.position;
+        player_pos = PlayerManager.instance.transform.position;
 
-        if (Mathf.Abs(Mathf.Abs(playerPos.x) - Mathf.Abs(this.transform.position.x)) <= speed * walkCount * 1.01f)
+        if (Mathf.Abs(Mathf.Abs(player_pos.x) - Mathf.Abs(this.transform.position.x)) <= speed * walk_count * 1.01f)
         {
-            if (Mathf.Abs(Mathf.Abs(playerPos.y) - Mathf.Abs(this.transform.position.y)) <= speed * walkCount * 0.5f)
+            if (Mathf.Abs(Mathf.Abs(player_pos.y) - Mathf.Abs(this.transform.position.y)) <= speed * walk_count * 0.5f)
             {
                 return true;
             }
         }
 
-        if (Mathf.Abs(Mathf.Abs(playerPos.y) - Mathf.Abs(this.transform.position.y)) <= speed * walkCount * 1.01f)
+        if (Mathf.Abs(Mathf.Abs(player_pos.y) - Mathf.Abs(this.transform.position.y)) <= speed * walk_count * 1.01f)
         {
-            if (Mathf.Abs(Mathf.Abs(playerPos.x) - Mathf.Abs(this.transform.position.x)) <= speed * walkCount * 0.5f)
+            if (Mathf.Abs(Mathf.Abs(player_pos.x) - Mathf.Abs(this.transform.position.x)) <= speed * walk_count * 0.5f)
             {
                 return true;
             }

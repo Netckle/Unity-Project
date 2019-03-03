@@ -5,6 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class Choice
 {
-    public string question; // 질문
-    public string[] answers; // 답변, (최대 1~4 허용)
+    public string question; 
+    public string[] answers; // 4 is max count.
 }

@@ -6,12 +6,12 @@ public class Bound : MonoBehaviour
 {
     private BoxCollider2D bound;
 
-    private CameraManager theCamera;
+    private CameraManager the_camera; 
 
     void Start()
     {
         bound = GetComponent<BoxCollider2D>();
-        theCamera = FindObjectOfType<CameraManager>();
-        theCamera.SetBound(bound);
+        the_camera = FindObjectOfType<CameraManager>();
+        the_camera.SetBound(bound);
     }
 }

@@ -5,9 +5,32 @@ using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour {
 
-    static public DialogueManager instance;
+    static public DialogueManager instance;   
 
-#region Singleton
+    public Text text;
+    public SpriteRenderer renderer_sprite;
+    public SpriteRenderer renderer_dialogue_window;
+
+    private List<string> list_sentences;
+    private List<Sprite> list_sprites;
+    private List<Sprite> list_dialogue_windows;
+
+    private int count; // 대화 진행 상황 카운트.
+
+    public Animator anim_sprite;
+    public Animator anim_dialogue_window;
+
+    public string type_sound;
+    public string enter_sound;
+
+    private AudioManager the_audio;
+    private OrderManager the_order;
+
+    public bool is_talking = false;
+    private bool key_activated = false;
+    private bool only_text = false; // 대화가 아닌 단순 텍스트 표현 여부.
+
+    #region Singleton
     private void Awake()
     {
         if (instance == null)
@@ -20,50 +43,28 @@ public class DialogueManager : MonoBehaviour {
             Destroy(this.gameObject);
         }
     }
-#endregion Singleton
-
-    public Text text;
-    public SpriteRenderer rendererSprite;
-    public SpriteRenderer rendererDialogueWindow;
-
-    private List<string> listSentences;
-    private List<Sprite> listSprites;
-    private List<Sprite> listDialogueWindows;
-
-    private int count; // 대화 진행 상황 카운트.
-
-    public Animator animSprite;
-    public Animator animDialogueWindow;
-
-    public string typeSound;
-    public string enterSound;
-
-    private AudioManager theAudio;
-    //private OrderManager theOrder;
-
-    public bool talking = false;
-    private bool keyActivated = false;
-    private bool onlyText = false;
+    #endregion Singleton
 
     void Start () 
     {
-        count               = 0;
-        text.text           = "";
-        listSentences       = new List<string>();
-        listSprites         = new List<Sprite>();
-        listDialogueWindows = new List<Sprite>();
-        theAudio            = FindObjectOfType<AudioManager>();
-        //theOrder            = FindObjectOfType<OrderManager>();
+        count = 0;
+        text.text = "";
+        list_sentences = new List<string>();
+        list_sprites = new List<Sprite>();
+        list_dialogue_windows = new List<Sprite>();
+
+        the_audio = FindObjectOfType<AudioManager>();
+        the_order = FindObjectOfType<OrderManager>();
     }
 
     public void ShowText(string[] _sentences)
     {
-        talking = true;
-        onlyText = true;
+        is_talking = true;
+        only_text = true;
 
         for(int i = 0; i < _sentences.Length; i++)
         {
-            listSentences.Add(_sentences[i]);
+            list_sentences.Add(_sentences[i]);
         }
 
         StartCoroutine(StartTextCoroutine());
@@ -71,13 +72,14 @@ public class DialogueManager : MonoBehaviour {
 
     IEnumerator StartTextCoroutine()
     {        
-        keyActivated = true;
-        for(int i = 0; i < listSentences[count].Length; i++)
+        key_activated = true;
+
+        for(int i = 0; i < list_sentences[count].Length; i++)
         {
-            text.text += listSentences[count][i]; // 1글자씩 출력.
+            text.text += list_sentences[count][i]; // 1글자씩 출력.
             if(i % 7 == 1)
             {
-                theAudio.Play(typeSound);
+                the_audio.Play(type_sound);
             }
             yield return new WaitForSeconds(0.01f);
         }
@@ -85,20 +87,21 @@ public class DialogueManager : MonoBehaviour {
 	
     public void ShowDialogue(Dialogue dialogue)
     {
-        talking = true;
-        onlyText = false;
+        is_talking = true;
+        only_text = false;
 
-        //theOrder.NotMove();
+        the_order.NotMove(); // 대화 중에 움직이는 것 방지.
 
         for(int i = 0; i < dialogue.sentences.Length; i++)
         {
-            listSentences.Add(dialogue.sentences[i]);
-            listSprites.Add(dialogue.sprites[i]);
-            listDialogueWindows.Add(dialogue.dialogueWindows[i]);
+            list_sentences.Add(dialogue.sentences[i]);
+            list_sprites.Add(dialogue.sprites[i]);
+            list_dialogue_windows.Add(dialogue.dialogueWindows[i]);
         }
 
-        animSprite.SetBool("Appear", true);
-        animDialogueWindow.SetBool("Appear", true);
+        anim_sprite.SetBool("Appear", true);
+        anim_dialogue_window.SetBool("Appear", true);
+
         StartCoroutine(StartDialogueCoroutine());
     }
 
@@ -106,37 +109,43 @@ public class DialogueManager : MonoBehaviour {
     {
         text.text = "";
         count = 0;
-        listSentences.Clear();
-        listSprites.Clear();
-        listDialogueWindows.Clear();
-        animSprite.SetBool("Appear", false);
-        animDialogueWindow.SetBool("Appear", false);
-        talking = false;
-        //theOrder.Move();
+        list_sentences.Clear();
+        list_sprites.Clear();
+        list_dialogue_windows.Clear();
+        anim_sprite.SetBool("Appear", false);
+        anim_dialogue_window.SetBool("Appear", false);
+        is_talking = false;
+
+        the_order.canMove();
     }
 
     IEnumerator StartDialogueCoroutine()
     {
         if(count > 0)
         {
-            if (listDialogueWindows[count] != listDialogueWindows[count - 1])
+            if (list_dialogue_windows[count] != list_dialogue_windows[count - 1])
             {
-                animSprite.SetBool("Change", true);
-                animDialogueWindow.SetBool("Appear", false);
+                anim_sprite.SetBool("Change", true);
+                anim_dialogue_window.SetBool("Appear", false);
+
                 yield return new WaitForSeconds(0.2f);
-                rendererDialogueWindow.GetComponent<SpriteRenderer>().sprite = listDialogueWindows[count];
-                rendererSprite.GetComponent<SpriteRenderer>().sprite = listSprites[count];
-                animDialogueWindow.SetBool("Appear", true);
-                animSprite.SetBool("Change", false);
+
+                renderer_dialogue_window.GetComponent<SpriteRenderer>().sprite = list_dialogue_windows[count];
+                renderer_sprite.GetComponent<SpriteRenderer>().sprite = list_sprites[count];
+
+                anim_dialogue_window.SetBool("Appear", true);
+                anim_sprite.SetBool("Change", false);
             }
             else
             {
-                if (listSprites[count] != listSprites[count - 1])
+                if (list_sprites[count] != list_sprites[count - 1])
                 {
-                    animSprite.SetBool("Change", true);
+                    anim_sprite.SetBool("Change", true);
+
                     yield return new WaitForSeconds(0.1f);
-                    rendererSprite.GetComponent<SpriteRenderer>().sprite = listSprites[count];
-                    animSprite.SetBool("Change", false);
+
+                    renderer_sprite.GetComponent<SpriteRenderer>().sprite = list_sprites[count];
+                    anim_sprite.SetBool("Change", false);
                 }
                 else
                 {
@@ -148,16 +157,17 @@ public class DialogueManager : MonoBehaviour {
         else
         {
             yield return new WaitForSeconds(0.05f);
-            rendererDialogueWindow.GetComponent<SpriteRenderer>().sprite = listDialogueWindows[count];
-            rendererSprite.GetComponent<SpriteRenderer>().sprite = listSprites[count];
+
+            renderer_dialogue_window.GetComponent<SpriteRenderer>().sprite = list_dialogue_windows[count];
+            renderer_sprite.GetComponent<SpriteRenderer>().sprite = list_sprites[count];
         }
-        keyActivated = true;
-        for(int i = 0; i < listSentences[count].Length; i++)
+        key_activated = true;
+        for(int i = 0; i < list_sentences[count].Length; i++)
         {
-            text.text += listSentences[count][i]; // 1글자씩 출력.
+            text.text += list_sentences[count][i]; // 1글자씩 출력.
             if(i % 7 == 1)
             {
-                theAudio.Play(typeSound);
+                the_audio.Play(type_sound);
             }
             yield return new WaitForSeconds(0.01f);
         }
@@ -166,25 +176,24 @@ public class DialogueManager : MonoBehaviour {
 
 	void Update () 
     {
-        if (talking && keyActivated)
+        if (is_talking && key_activated)
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                keyActivated = false;
+                key_activated = false;
                 count++;
                 text.text = "";
-                theAudio.Play(enterSound);
+                the_audio.Play(enter_sound);
 
-                if (count == listSentences.Count - 1)
+                if (count == list_sentences.Count)
                 {
-                    Debug.Log("실행해 제발!");
                     StopAllCoroutines();
-                    ExitDialogue();
+                    ExitDialogue();                    
                 }
                 else
                 {
                     StopAllCoroutines();
-                    if (onlyText)
+                    if (only_text)
                         StartCoroutine(StartTextCoroutine());
                     else
                         StartCoroutine(StartDialogueCoroutine());

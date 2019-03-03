@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class LightController : MonoBehaviour
 {
-    private PlayerManager   thePlayer;  // 플레이어가 바라보고 있는 방향.
+    private PlayerManager   the_player;  // 플레이어가 바라보고 있는 방향.
     private Vector2         vector;
 
     private Quaternion      rotation;   // 회전(각도)을 담당하는 Vector4 x y z w
 
 	void Start () 
     {
-        thePlayer = FindObjectOfType<PlayerManager>();
+        the_player = FindObjectOfType<PlayerManager>();
 	}
 	
 	void Update () 
     {
-        this.transform.position = thePlayer.transform.position;
+        this.transform.position = the_player.transform.position;
 
-        vector.Set(thePlayer.animator.GetFloat("DirX"), thePlayer.animator.GetFloat("DirY"));
+        vector.Set(the_player.animator.GetFloat("DirX"), the_player.animator.GetFloat("DirY"));
 
         if(vector.x == 1.0F)
         {

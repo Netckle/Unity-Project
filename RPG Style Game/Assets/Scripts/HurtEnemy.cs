@@ -22,7 +22,7 @@ public class HurtEnemy : MonoBehaviour
             int damage = collision.gameObject.GetComponent<EnemyStat>().DamagedByPlayer(the_player_state.attack);
             AudioManager.instance.Play(attack_sound);
 
-            floating_text_trigger.TriggerFloatingText(collision.gameObject.transform.position, 60, damage.ToString(), Color.white, 25);
+            floating_text_trigger.TriggerFloatingText(collision.gameObject.transform.position, 100, damage.ToString(), Color.white, 25);
         }
     }
 }

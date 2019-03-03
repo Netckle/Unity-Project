@@ -5,19 +5,19 @@ using UnityEngine.UI;
 
 public class InputField : MonoBehaviour
 {
-    private PlayerManager thePlayer;
+    private PlayerManager the_player;
     public Text text;
 
     void Start()
     {
-        thePlayer = FindObjectOfType<PlayerManager>();
+        the_player = FindObjectOfType<PlayerManager>();
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            thePlayer.characterName = text.text;
+            the_player.character_name = text.text;
             Destroy(this.gameObject);
         }
     }

@@ -12,18 +12,15 @@ public class FloatingTextTrigger : MonoBehaviour
     public void TriggerFloatingText(Vector3 start_pos, float padding_size, string text, Color text_color, int text_size)
     {
         GameObject clone = Instantiate(prefabs_floating_text, start_pos, Quaternion.Euler(Vector3.zero));
-        clone.gameObject.SetActive(true);
-
-        // 클론 세부사항 설정.
-        start_pos.y += padding_size;
+        clone.gameObject.SetActive(true);        
 
         clone.GetComponent<FloatingText>().text.text = text;
         clone.GetComponent<FloatingText>().text.color = text_color;
         clone.GetComponent<FloatingText>().text.fontSize = text_size;
 
-        clone.transform.SetParent(parent_canvas.transform);
+        clone.transform.SetParent(parent_canvas.transform);        
         
-        clone.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0); // UI 에서의 중심 위치.
-        clone.gameObject.transform.localScale = vector_size_one;
+        clone.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0 + padding_size); // UI 에서의 중심 위치.
+        clone.gameObject.transform.localScale = vector_size_one;       
     }
 }

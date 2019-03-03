@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class OkOrCancel : MonoBehaviour
 {
-    private AudioManager theAudio;
+    private AudioManager the_audio;
     public string key_sound;
     public string enter_sound;
     public string cancel_sound;
@@ -17,17 +17,17 @@ public class OkOrCancel : MonoBehaviour
     public Text down_Text;
 
     public bool activated;
-    private bool keyInput;
+    private bool key_input;
     private bool result = true;
 
     void Start()
     {
-        theAudio = FindObjectOfType<AudioManager>();
+        the_audio = FindObjectOfType<AudioManager>();
     }
 
     public void Selected()
     {
-        theAudio.Play(key_sound);
+        the_audio.Play(key_sound);
         result = !result;
 
         if (result)
@@ -63,12 +63,12 @@ public class OkOrCancel : MonoBehaviour
     IEnumerator ShowTwoChoiceCoroutine()
     {
         yield return new WaitForSeconds(0.01f);
-        keyInput = true;
+        key_input = true;
     }
 
     void Update()
     {
-        if (keyInput)
+        if (key_input)
         {
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {                
@@ -80,14 +80,14 @@ public class OkOrCancel : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.Z))
             {
-                theAudio.Play(enter_sound);
-                keyInput = false;
+                the_audio.Play(enter_sound);
+                key_input = false;
                 activated = false;
             }
             else if (Input.GetKeyDown(KeyCode.X))
             {
-                theAudio.Play(cancel_sound);
-                keyInput = false;
+                the_audio.Play(cancel_sound);
+                key_input = false;
                 activated = false;
                 result = false;
             }

@@ -7,7 +7,31 @@ public class ChoiceManager : MonoBehaviour
 {
     public static ChoiceManager instance;
 
-#region Singleton
+    private AudioManager the_audio;
+
+    private string question; // choice.question 복사.
+    private List<string> answer_list; // choice.answer 배열 복사.
+
+    public GameObject go; // 평소에 비활성화.
+
+    public Text question_text;
+    public Text[] answer_text;
+    public GameObject[] answer_panel;
+
+    public Animator anim;
+
+    public string key_sound; 
+    public string enter_sound;
+
+    public bool is_choicing; // 람다식 대기를 위한 조건.
+    private bool key_input; // 선택창이 없으면, 키입력 불가.
+
+    private int count; // 추가 선택지의 갯수. (기본은 1개)
+    private int result; // 선택한 선택창.
+
+    private WaitForSeconds  wait_time = new WaitForSeconds(0.01f);
+
+    #region Singleton
     private void Awake()
     {
         if (instance == null)
@@ -20,149 +44,29 @@ public class ChoiceManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-#endregion Singleton
-
-    private AudioManager    theAudio; // 클릭시 사운드 재생.
-
-    private string          question;  //Choice.question내용 복사
-    private List<string>    answerList;//마찬가지
-
-    public GameObject       go; // 자신을 평소에 비활성화 시킬 목적으로 선언. setActive.
-
-    public Text             question_Text;
-    public Text[]           answer_Text;
-    public GameObject[]     answer_Panel;
-
-    public Animator         anim;
-
-    public string           keySound; // the Audio 와 연동
-    public string           enterSound;
-
-    public bool             choiceIng; // 대기. ()=> !choiceIng
-    private bool            keyInput; // 키처리 활성화, 선택창 사라지면 비 활성화.
-
-    private int             count; // 배열의 크기
-    private int             result; // 선택한 선택창.
-
-    private WaitForSeconds waitTime = new WaitForSeconds(0.01f);
+    #endregion Singleton
 
     void Start () 
     {
-        theAudio = FindObjectOfType<AudioManager>();
-        answerList = new List<string>();
-        for(int i = 0; i < answer_Text.Length; i++)
+        the_audio = FindObjectOfType<AudioManager>();
+        answer_list = new List<string>();
+
+        for(int i = 0; i < answer_text.Length; i++)
         {
-            answer_Text[i].text = "";
-            answer_Panel[i].SetActive(false);
+            answer_text[i].text = "";
+            answer_panel[i].SetActive(false);
         }
-        question_Text.text = "";
+        
+        question_text.text = "";
     }
 
-    public void ShowChoice(Choice _choice)
+    void Update()
     {
-        choiceIng = true;
-        go.SetActive(true);
-        result = 0;
-        question = _choice.question;
-        for(int i = 0; i< _choice.answers.Length; i++)
-        {
-            answerList.Add(_choice.answers[i]);
-            answer_Panel[i].SetActive(true);
-            count = i;
-        }
-        anim.SetBool("Appear", true);
-        Selection();
-        StartCoroutine(ChoiceCoroutine());
-    }
-
-    public int GetResult()
-    {
-        return result;
-    }
-
-    public void ExitChoice()
-    {
-        question_Text.text = "";
-        for (int i = 0; i <= count; i++)
-        {
-            answer_Text[i].text = "";
-            answer_Panel[i].SetActive(false);
-        }
-        answerList.Clear();
-        anim.SetBool("Appear", false);
-        choiceIng = false;
-        go.SetActive(false);
-    }
-
-    IEnumerator ChoiceCoroutine()
-    {
-        yield return new WaitForSeconds(0.2f);
-
-        StartCoroutine(TypingQuestion());
-        StartCoroutine(TypingAnswer_0());
-        if(count >= 1)
-            StartCoroutine(TypingAnswer_1());
-        if (count >= 2)
-            StartCoroutine(TypingAnswer_2());
-        if (count >= 3)
-            StartCoroutine(TypingAnswer_3());
-
-        yield return new WaitForSeconds(0.5f);
-        keyInput = true;
-    }
-
-    IEnumerator TypingQuestion()
-    {
-        for(int i = 0; i < question.Length; i++)
-        {
-            question_Text.text += question[i];
-            yield return waitTime;
-        }
-    }
-    IEnumerator TypingAnswer_0()
-    {
-        yield return new WaitForSeconds(0.4f);
-        for (int i = 0; i < answerList[0].Length; i++)
-        {
-            answer_Text[0].text += answerList[0][i];
-            yield return waitTime;
-        }
-    }
-    IEnumerator TypingAnswer_1()
-    {
-        yield return new WaitForSeconds(0.5f);
-        for (int i = 0; i < answerList[1].Length; i++)
-        {
-            answer_Text[1].text += answerList[1][i];
-            yield return waitTime;
-        }
-    }
-    IEnumerator TypingAnswer_2()
-    {
-        yield return new WaitForSeconds(0.6f);
-        for (int i = 0; i < answerList[2].Length; i++)
-        {
-            answer_Text[2].text += answerList[2][i];
-            yield return waitTime;
-        }
-    }
-    IEnumerator TypingAnswer_3()
-    {
-        yield return new WaitForSeconds(0.7f);
-        for (int i = 0; i < answerList[3].Length; i++)
-        {
-            answer_Text[3].text += answerList[3][i];
-            yield return waitTime;
-        }
-    }
-    // Update is called once per frame
-    void Update(){
-
-        if (keyInput)
+        if (key_input)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                theAudio.Play(keySound);
+                the_audio.Play(key_sound);
                 if (result > 0)
                     result--;
                 else
@@ -171,7 +75,7 @@ public class ChoiceManager : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                theAudio.Play(keySound);
+                the_audio.Play(key_sound);
                 if (result < count)
                     result++;
                 else
@@ -180,23 +84,140 @@ public class ChoiceManager : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.Z))
             {
-                theAudio.Play(enterSound);
-                keyInput = false;
+                the_audio.Play(enter_sound);
+                key_input = false;
                 ExitChoice();
             }
         }
+    }  
 
+    public void ShowChoice(Choice _choice)
+    {
+        is_choicing = true;
+
+        go.SetActive(true);
+        result = 0;
+        question = _choice.question;
+
+        for(int i = 0; i< _choice.answers.Length; i++)
+        {
+            answer_list.Add(_choice.answers[i]);
+            answer_panel[i].SetActive(true);
+            count = i;
+        }
+
+        anim.SetBool("Appear", true);
+        Selection();
+        StartCoroutine(ChoiceCoroutine());
+    }
+
+    public void ExitChoice()
+    {
+        question_text.text = "";
+
+        for (int i = 0; i <= count; i++)
+        {
+            answer_text[i].text = "";
+            answer_panel[i].SetActive(false);
+        }
+
+        answer_list.Clear();
+        anim.SetBool("Appear", false);
+
+        is_choicing = false;
+        go.SetActive(false);
+    }
+
+    public int GetResult()
+    {
+        return result;
     }
 
     public void Selection()
     {
-        Color color = answer_Panel[0].GetComponent<Image>().color;
+        Color color = answer_panel[0].GetComponent<Image>().color;
         color.a = 0.75f;
         for(int i = 0; i <= count; i++)
         {
-            answer_Panel[i].GetComponent<Image>().color = color;
+            answer_panel[i].GetComponent<Image>().color = color;
         }
         color.a = 1f;
-        answer_Panel[result].GetComponent<Image>().color = color;
+        answer_panel[result].GetComponent<Image>().color = color;
+    }
+
+    IEnumerator ChoiceCoroutine()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        StartCoroutine(TypingQuestion());
+
+        StartCoroutine(TypingAnswer_0());
+
+        if(count >= 1)
+        {
+            StartCoroutine(TypingAnswer_1());
+        }
+        if (count >= 2)
+        {
+            StartCoroutine(TypingAnswer_2());
+        }
+        if (count >= 3)
+        {
+            StartCoroutine(TypingAnswer_3());
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        key_input = true;
+    }
+
+    // Typing Coroutine
+
+    IEnumerator TypingQuestion()
+    {
+        for(int i = 0; i < question.Length; i++)
+        {
+            question_text.text += question[i];
+            yield return wait_time;
+        }
+    }
+
+    IEnumerator TypingAnswer_0()
+    {
+        yield return new WaitForSeconds(0.4f);
+        for (int i = 0; i < answer_list[0].Length; i++)
+        {
+            answer_text[0].text += answer_list[0][i];
+            yield return wait_time;
+        }
+    }
+
+    IEnumerator TypingAnswer_1()
+    {
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < answer_list[1].Length; i++)
+        {
+            answer_text[1].text += answer_list[1][i];
+            yield return wait_time;
+        }
+    }
+
+    IEnumerator TypingAnswer_2()
+    {
+        yield return new WaitForSeconds(0.6f);
+        for (int i = 0; i < answer_list[2].Length; i++)
+        {
+            answer_text[2].text += answer_list[2][i];
+            yield return wait_time;
+        }
+    }
+
+    IEnumerator TypingAnswer_3()
+    {
+        yield return new WaitForSeconds(0.7f);
+        for (int i = 0; i < answer_list[3].Length; i++)
+        {
+            answer_text[3].text += answer_list[3][i];
+            yield return wait_time;
+        }
     }
 }

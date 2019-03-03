@@ -6,27 +6,24 @@ public class PlayerManager : MovingObject
 {   
     public static PlayerManager instance; 
 
-    public string currentMapName; 
+    public string current_map_name; 
+    public bool transferMap = true;    
 
-    public string[] walkSound = new string[4];
+    private AudioManager the_audio;
+    public string[] walk_sound = new string[4];    
 
-    private AudioManager theAudio;
+    public float run_speed;
+    private float apply_run_speed;
 
-    public float runSpeed;
-    private float applyRunSpeed;
-
-    public bool canMove = true;
-    private bool applyRunFlag = false;
-
-    public bool transferMap = true;
-
-    public bool notMove = false;
+    public bool can_move = true;
+    public bool do_not_move = false;
+    private bool apply_run_flag = false;    
     
     private bool attacking = false;
-    public float attackDelay;
-    private float currentAttackDelay;
+    public float attack_delay;
+    private float current_attack_delay;
 
-#region Singleton
+    #region Singleton
     void Awake()
     {
         if (instance == null)
@@ -39,29 +36,29 @@ public class PlayerManager : MovingObject
             Destroy(this.gameObject);
         }
     }
-#endregion Singleton
+    #endregion Singleton
 
     void Start()
     {        
         queue = new Queue<string>();
         animator = GetComponent<Animator>();
-        boxCollider = GetComponent<BoxCollider2D>();            
-        theAudio = FindObjectOfType<AudioManager>();          
+        box_collider = GetComponent<BoxCollider2D>();            
+        the_audio = FindObjectOfType<AudioManager>();          
     }        
 
     IEnumerator MoveCoroutine()
     {
-        while (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0 && !notMove && !attacking)
+        while (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0 && !do_not_move && !attacking)
         {
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                applyRunSpeed = runSpeed;
-                applyRunFlag = true;
+                apply_run_speed = run_speed;
+                apply_run_flag = true;
             }
             else
             {
-                applyRunSpeed = 0;
-                applyRunFlag = false;
+                apply_run_speed = 0;
+                apply_run_flag = false;
             }
 
             vector.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), transform.position.z);
@@ -85,80 +82,80 @@ public class PlayerManager : MovingObject
             switch (temp)
             {
                 case 1:
-                    theAudio.Play(walkSound[0]); 
+                    the_audio.Play(walk_sound[0]); 
                     break;
                 case 2:
-                    theAudio.Play(walkSound[1]); 
+                    the_audio.Play(walk_sound[1]); 
                     break;
                 case 3:
-                    theAudio.Play(walkSound[2]); 
+                    the_audio.Play(walk_sound[2]); 
                     break;
                 case 4:
-                    theAudio.Play(walkSound[3]); 
+                    the_audio.Play(walk_sound[3]); 
                     break;
             }      
 
-            boxCollider.offset = new Vector2(vector.x * 0.7f * speed * walkCount, vector.y * 0.7f * speed * walkCount);   
+            box_collider.offset = new Vector2(vector.x * 0.7f * speed * walk_count, vector.y * 0.7f * speed * walk_count);   
 
-            while(currentWalkCount < walkCount)
+            while(current_walk_count < walk_count)
             {
                 if(vector.x != 0)
                 {
-                    transform.Translate(vector.x * (speed + applyRunSpeed), 0, 0);
+                    transform.Translate(vector.x * (speed + apply_run_speed), 0, 0);
                 }
                 else if (vector.y != 0)
                 {
-                    transform.Translate(0, vector.y * (speed + applyRunSpeed), 0);
+                    transform.Translate(0, vector.y * (speed + apply_run_speed), 0);
                 }
 
-                if (applyRunFlag) 
+                if (apply_run_flag) 
                 {
-                    currentWalkCount++;
+                    current_walk_count++;
                 }
 
-                currentWalkCount++;
+                current_walk_count++;
 
-                if (currentWalkCount == 12)
-                    boxCollider.offset = Vector2.zero;
+                if (current_walk_count == 12)
+                    box_collider.offset = Vector2.zero;
 
                 yield return new WaitForSeconds(0.01f);                
             }
-            currentWalkCount = 0;       
+            current_walk_count = 0;       
         }   
 
         animator.SetBool("Walking", false);
-        canMove = true;  
+        can_move = true;  
     }
 
     void Update()
     {      
-        // 이동          
-        if (canMove && !notMove && !attacking)
+        // 이동.          
+        if (can_move && !do_not_move && !attacking)
         {
             if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
             {
-                canMove = false;
+                can_move = false;
                 StartCoroutine(MoveCoroutine());        
             }
         }  
 
-        // 공격
-        if (!notMove && !attacking)
+        // 공격.
+        if (!do_not_move && !attacking)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                currentAttackDelay = attackDelay;
+                current_attack_delay = attack_delay;
                 attacking = true;
                 animator.SetBool("Attacking", true);
             }
         }    
 
-        // 공격 딜레이만큼의 시간이 지나면 다시 공격 가능하게 만듭니다.
+        // 공격 딜레이만큼의 시간이 지나면 다시 공격 가능.
         if (attacking)
         {
-            currentAttackDelay -= Time.deltaTime;
+            current_attack_delay -= Time.deltaTime;
 
-            if (currentAttackDelay <= 0)
+            if (current_attack_delay <= 0)
             {
                 animator.SetBool("Attacking", false);
                 attacking = false;

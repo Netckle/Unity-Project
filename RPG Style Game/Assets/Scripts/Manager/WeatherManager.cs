@@ -6,7 +6,11 @@ public class WeatherManager : MonoBehaviour
 {
     static public WeatherManager instance;
 
-#region Singleton
+    private AudioManager the_audio;
+    public ParticleSystem rain_particle;
+    public string rain_sound;
+
+    #region Singleton
     void Awake()
     {
         if (instance == null)
@@ -19,36 +23,27 @@ public class WeatherManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-#endregion Singleton
-
-    private AudioManager theAudio;
-    public ParticleSystem rain;
-    public string rain_sound;
+    #endregion Singleton
 
     void Start()
     {
-        theAudio = FindObjectOfType<AudioManager>();
+        the_audio = FindObjectOfType<AudioManager>();
     }
 
-    void Update()
+    public void RainStart() 
     {
-
-    }
-
-    public void Rain() 
-    {
-        theAudio.Play(rain_sound);
-        rain.Play(); 
+        the_audio.Play(rain_sound);
+        rain_particle.Play(); 
     }
 
     public void RainStop() 
     {
-        theAudio.Stop(rain_sound);
-        rain.Stop(); 
+        the_audio.Stop(rain_sound);
+        rain_particle.Stop(); 
     }
 
     public void RainDrop()
     {
-        rain.Emit(10);
+        rain_particle.Emit(10);
     }
 }

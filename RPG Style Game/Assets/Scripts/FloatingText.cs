@@ -5,22 +5,21 @@ using UnityEngine.UI;
 
 public class FloatingText : MonoBehaviour
 {
-    public float moveSpeed;
-    public float destroyTime;
+    public float move_speed;
+    public float destroy_time;
 
-    public Text text;
+    public Text text; // text prefabs.
 
     private Vector3 vector;
 
     void Update()
     {
-        // 1초에 moveSpeed만큼
-        vector.Set(text.transform.position.x, text.transform.position.y + (moveSpeed * Time.deltaTime), text.transform.position.z);
+        vector.Set(text.transform.position.x, text.transform.position.y + (move_speed * Time.deltaTime), text.transform.position.z);
         text.transform.position = vector;
 
-        destroyTime -= Time.deltaTime;
+        destroy_time -= Time.deltaTime;
 
-        if (destroyTime <= 0)
+        if (destroy_time <= 0)
             Destroy(this.gameObject);
     }
 }
