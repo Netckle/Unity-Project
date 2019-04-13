@@ -1,0 +1,38 @@
+[
+  {
+    "Category": "Event",
+    "EnemyCount": 0,
+    "EventNum": 5,
+    "QuestNum": -1
+  },
+  {
+    "Category": "Quest",
+    "EnemyCount": 0,
+    "EventNum": -1,
+    "QuestNum": 3
+  },
+  {
+    "Category": "Quest",
+    "EnemyCount": 0,
+    "EventNum": -1,
+    "QuestNum": 2
+  },
+  {
+    "Category": "Event",
+    "EnemyCount": 0,
+    "EventNum": 1,
+    "QuestNum": -1
+  },
+  {
+    "Category": "Monster",
+    "EnemyCount": 3,
+    "EventNum": -1,
+    "QuestNum": -1
+  },
+  {
+    "Category": "Monster",
+    "EnemyCount": 2,
+    "EventNum": -1,
+    "QuestNum": -1
+  }
+]
