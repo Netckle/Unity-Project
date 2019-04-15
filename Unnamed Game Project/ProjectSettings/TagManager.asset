@@ -4,10 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Attack
   - PlayerAttack
-  - Panel
   - NPC
+  - Attack
+  - Panel
   layers:
   - Default
   - TransparentFX
@@ -19,8 +19,8 @@ TagManager:
   - 
   - Floor
   - Platform
-  - a
   - Character
+  - 
   - 
   - 
   - 
@@ -44,7 +44,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Floor AND Platform
-    uniqueID: 3582245373
     locked: 0

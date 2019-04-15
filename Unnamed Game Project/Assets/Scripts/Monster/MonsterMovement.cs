@@ -19,17 +19,18 @@ public class MonsterMovement : MonoBehaviour
 
     public bool canMove = true;
 
-    private Rigidbody2D rigidbody;
-    public SpriteRenderer renderer;
+    private Rigidbody2D rigid;
+    public SpriteRenderer render;
 
     public int maxHealth = 6;
     public int health = 6;
     private bool isUnBeatTime = false;
 
+    private string dist;
+
     // Change Movement Coroutine
     private IEnumerator ChangeMovement()
     {
-        Debug.Log("ChangeMovement 시작합니다.");
         // Random Change Movement
         movementFlag = Random.Range (0, 3);
 
@@ -75,11 +76,11 @@ public class MonsterMovement : MonoBehaviour
             // Alpha Effect
             if (countTime % 2 == 0)
             {
-                renderer.color = new Color32(255, 255, 255, 90);
+                render.color = new Color32(255, 255, 255, 90);
             }
             else
             {
-                renderer.color = new Color32(255, 255, 255, 180);
+                render.color = new Color32(255, 255, 255, 180);
             }
 
             // Wait Update Frame
@@ -89,7 +90,7 @@ public class MonsterMovement : MonoBehaviour
         }
 
         // Alpha Effect End
-        renderer.color = new Color32(255, 255, 255, 255);
+        render.color = new Color32(255, 255, 255, 255);
 
         // UnBeatTime Off
         isUnBeatTime = false;
@@ -100,8 +101,8 @@ public class MonsterMovement : MonoBehaviour
     void Start()
     {
         animator = gameObject.GetComponentInChildren<Animator>();
-        rigidbody = gameObject.GetComponent<Rigidbody2D>();
-
+        rigid = gameObject.GetComponent<Rigidbody2D>();
+        dist = "";
         StartCoroutine("ChangeMovement");
     }
 
@@ -119,7 +120,7 @@ public class MonsterMovement : MonoBehaviour
     void Move()
     {
         Vector3 moveVelocity = Vector3.zero;
-        string dist = "";
+        dist = "";
 
         // Trace or Random
         if (!isTracing)
@@ -183,7 +184,7 @@ public class MonsterMovement : MonoBehaviour
                 attackedVelocity = new Vector2(2f, 2f);
             }
 
-            rigidbody.AddForce(attackedVelocity, ForceMode2D.Impulse);
+            rigid.AddForce(attackedVelocity, ForceMode2D.Impulse);
 
             // Health Down
             health--;

@@ -13,28 +13,31 @@ public class GenerateMap : MonoBehaviour // StageManager
     public int mapMaxCount;
     private GameObject[] maps;
     
-    public JsonManager test;
+    private JsonManager jsonManager;
     private List<JsonData> mapDataFromJson;
 
     public int currentMapNum = 0;
-    public GameObject player;
+    private GameObject player;
 
-    public GameObject door;
-    public bool isOpen = false;
+    //private GameObject door;
+    //public bool isOpen = false;
 
     void Start()
     {
-        door.SetActive(false);
+        jsonManager = GameObject.Find("Json Manager").GetComponent<JsonManager>();
+
+        //door = GameObject.Find("Door");
+        //door.SetActive(false);
 
         player = GameObject.FindWithTag("Player");
-        player.GetComponent<PlayerMovement>().currentRoomNum = currentMapNum;
+        player.GetComponent<Player>().currentRoomNum = currentMapNum;
 
         MakeMap();        
     }
 
     void MakeMap()
     {
-        mapDataFromJson = test.LoadMapDataJson();
+        mapDataFromJson = jsonManager.LoadMapDataJson();
         maps = new GameObject[mapMaxCount];
 
         mapMaxCount = mapDataFromJson.Count;
@@ -48,6 +51,9 @@ public class GenerateMap : MonoBehaviour // StageManager
             
             maps[i].GetComponent<GenerateMonster>().monsterMaxCount = mapDataFromJson[i].EnemyCount;
         }
+
+        Camera.main.transform.position = new Vector3(maps[0].transform.position.x, maps[0].transform.position.y, -10);
+        player.transform.position = new Vector3(maps[0].transform.position.x, maps[0].transform.position.y - 3, 0);
     }
 
     public void MoveNextRoom()
@@ -56,7 +62,7 @@ public class GenerateMap : MonoBehaviour // StageManager
             return;
 
         currentMapNum += 1;
-        player.GetComponent<PlayerMovement>().currentRoomNum = currentMapNum;
+        player.GetComponent<Player>().currentRoomNum = currentMapNum;
 
         Vector3 to = new Vector3(maps[currentMapNum].transform.position.x, maps[currentMapNum].transform.position.y + 3, maps[currentMapNum].transform.position.z);
         player.transform.position = to;
@@ -73,15 +79,15 @@ public class GenerateMap : MonoBehaviour // StageManager
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SpawnDoor();
+            //SpawnDoor();
         }
     }
 
+    /*
     void SpawnDoor()
     {
         if (isOpen)
         {
-            Debug.Log(currentMapNum + "는 입니");
             door.transform.position = new Vector2(-0.5f, -(currentMapNum * 12) + 3f);
             door.SetActive(true);
         }
@@ -90,4 +96,5 @@ public class GenerateMap : MonoBehaviour // StageManager
             door.SetActive(false);
         }
     }
+    */
 }

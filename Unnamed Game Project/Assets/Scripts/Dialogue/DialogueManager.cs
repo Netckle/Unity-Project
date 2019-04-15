@@ -9,6 +9,13 @@ public enum TYPE { NORMAL, SMALL };
 
 public class DialogueManager : MonoBehaviour 
 {
+	static DialogueManager instance = null;
+
+    public static DialogueManager Instance()
+    {
+        return instance;
+    }
+
 	// Private 변수
 	private Queue<Dictionary<string,object>> sentences = null;
 	private bool isEnd = false;
@@ -19,6 +26,11 @@ public class DialogueManager : MonoBehaviour
 	public TextMeshProUGUI bigDialogueSentence; 
 	public Image smallDialoguePanel = null;
 	public Image bigDialoguePanel = null;
+
+	void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
 
 	void Start () 
 	{

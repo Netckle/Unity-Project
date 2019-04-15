@@ -9,6 +9,20 @@ using Newtonsoft.Json.Linq;
 
 public class JsonManager : MonoBehaviour
 {
+    // Singleton
+    static JsonManager instance = null; 
+
+    public static JsonManager Instace()
+    {
+        return instance;
+    } 
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+    //-----
+
     public List<JsonData> mapData = new List<JsonData>();
 
     public void AddData(JsonData data)

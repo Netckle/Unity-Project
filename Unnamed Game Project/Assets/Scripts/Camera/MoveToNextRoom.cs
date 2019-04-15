@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class MoveToNextRoom : MonoBehaviour
 {
-    private Vector3 tempPos;
+    private Vector3 nextPos;
+    public float delayTime;
 
     public void MoveNext()
     {
@@ -15,11 +16,11 @@ public class MoveToNextRoom : MonoBehaviour
     {
         for (int i = 0; i < 12; i++)
         {
-            tempPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y + i, Camera.main.transform.position.z);
+            nextPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y + i, Camera.main.transform.position.z);
 
-            Camera.main.transform.position = tempPos;
+            Camera.main.transform.position = nextPos;
 
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(delayTime);
         }
     }
 }

@@ -54,7 +54,6 @@ public class ChasePlayer : MonoBehaviour
         {
             monster.isTracing = false;
 
-            //monster.StopAllCoroutines();
             monster.StartCoroutine("ChangeMovement");
         }
     }

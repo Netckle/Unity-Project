@@ -2,14 +2,14 @@
   {
     "Category": "Event",
     "EnemyCount": 0,
-    "EventNum": 5,
+    "EventNum": 1,
     "QuestNum": -1
   },
   {
-    "Category": "Quest",
+    "Category": "Event",
     "EnemyCount": 0,
-    "EventNum": -1,
-    "QuestNum": 3
+    "EventNum": 5,
+    "QuestNum": -1
   },
   {
     "Category": "Quest",
@@ -18,10 +18,10 @@
     "QuestNum": 2
   },
   {
-    "Category": "Event",
+    "Category": "Quest",
     "EnemyCount": 0,
-    "EventNum": 1,
-    "QuestNum": -1
+    "EventNum": -1,
+    "QuestNum": 3
   },
   {
     "Category": "Monster",
