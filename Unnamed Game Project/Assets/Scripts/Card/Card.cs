@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class JsonData
 {
-    public string Category;
-    public int EnemyCount;
-    public int EventNum;
-    public int QuestNum;
+    public string   MapCategory; // 맵 카테고리
+    public int      EnemyCount;  // 적 마릿수
+    public int      NPCIndex;    // 이벤트 번호
 
-    public JsonData(string category, int enemyCount, int eventNum, int questNum)
+    public JsonData(string mapCategory, int enemyCount, int npcIndex)
     {
-        Category = category;
-        EnemyCount = enemyCount;
-        EventNum = eventNum;
-        QuestNum = questNum;
+        MapCategory = mapCategory;
+        EnemyCount  = enemyCount;
+        NPCIndex    = npcIndex;
     }
 }
 
@@ -23,13 +21,13 @@ public class Card : MonoBehaviour
     [HideInInspector]
     public JsonData data;
 
-    public string category;
-    public int enemyCount;
-    public int evenetNum;
-    public int questNum;
+    public string   mapCategory;
+    public int      enemyCount;
+    public int      npcIndex;
 
     void Start()
     {
-        data = new JsonData(category, enemyCount, evenetNum, questNum);
+        // 단순 저장.
+        data = new JsonData(mapCategory, enemyCount, npcIndex);
     }
 }

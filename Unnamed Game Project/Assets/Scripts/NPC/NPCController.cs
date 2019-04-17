@@ -5,30 +5,6 @@ using UnityEngine.UI;
 
 public class NPCController : MonoBehaviour
 {
-    public int[] normalIndexRange;
-    public TYPE dialogueType = TYPE.NORMAL;
-
-    void Start()
-    {
-        
-    }
-
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.tag == "Player")
-        {
-            
-
-
-            
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D collider)
-    {
-        if (collider.gameObject.tag == "Player")
-        {
-            
-        }
-    }
+    public int[] normalIndexRange;          // 출력할 대화의 범위입니다. 
+    public TYPE dialogueType = TYPE.NORMAL; // 출력할 대화 패널의 종류입니다.
 }

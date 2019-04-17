@@ -8,6 +8,7 @@ TagManager:
   - NPC
   - Attack
   - Panel
+  - Monster
   layers:
   - Default
   - TransparentFX

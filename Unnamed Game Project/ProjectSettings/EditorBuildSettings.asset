@@ -6,18 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/CardSelect.unity
+    path: 
     guid: 0521b5fe4eb5a2648a9339805ae38b3b
   - enabled: 0
-    path: Assets/Scenes/MainGame.unity
+    path: 
     guid: 56b9690541ac8ec408d2a9a730d85056
   - enabled: 0
-    path: Assets/Scenes/DialogueTest.unity
+    path: 
     guid: fc96774a5f0cdc24ca3b88c0f134af98
   - enabled: 1
-    path: Assets/Scenes/MainStage.unity
+    path: "Assets/Scenes/\uB358\uC804 \uD50C\uB808\uC774 \uB2E8\uACC4.unity"
     guid: 4c760932a94273a4f9c5c289b53d5c45
   - enabled: 1
-    path: Assets/Scenes/Test.unity
+    path: "Assets/Scenes/\uB358\uC804 \uAD6C\uC131 \uB2E8\uACC4.unity"
     guid: b9707c82befeb9c4ca7c782147fb915a
+  - enabled: 1
+    path: "Assets/Scenes/\uD018\uC2A4\uD2B8 \uB2E8\uACC4.unity"
+    guid: 986201f8463dd634689796043fffb01c
   m_configObjects: {}

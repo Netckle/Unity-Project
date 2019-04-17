@@ -163,6 +163,8 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+
+
         // Attacked by Creature
         if (other.gameObject.tag == "Attack" && !isUnBeatTime)
         {
