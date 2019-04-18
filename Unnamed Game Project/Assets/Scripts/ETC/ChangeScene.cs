@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 public class ChangeScene : MonoBehaviour
 {
     // Singleton
-    static Player instance = null; 
+    static ChangeScene instance = null; 
 
-    public static Player Instace()
+    public static ChangeScene Instace()
     {
         return instance;
     } 
@@ -18,8 +18,15 @@ public class ChangeScene : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
     }
-    //-----
 
+    void Start()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+    //-----
     public GameObject blackImagePrefabs;
     private GameObject blackImage;
     private SpriteRenderer render;
@@ -35,6 +42,7 @@ public class ChangeScene : MonoBehaviour
 
     public void SceneChange(string sceneName)
     {
+        CardSystem.SetActive(false);
         StartCoroutine(Fading(sceneName));
     }
 

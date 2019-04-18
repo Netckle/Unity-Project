@@ -16,5 +16,13 @@ public class CanvasSingleton : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
     }
+
+    void Start()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
     //-----
 }

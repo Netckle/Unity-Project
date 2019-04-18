@@ -12,10 +12,19 @@ public class SpawnManager : MonoBehaviour
     [HideInInspector]
     public GameObject portal;
 
+    static SpawnManager instance = null;
+
+    public static SpawnManager Instance()
+    {
+        return instance;
+    }
+
     //-----[Prefab Setting Start]
 
     void Awake()
     {
+        instance = this;
+
         portal = FindObjectOfType<Portal>().gameObject;
         portal.SetActive(false);
     }

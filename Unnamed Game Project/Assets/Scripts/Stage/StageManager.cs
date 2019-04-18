@@ -22,8 +22,17 @@ public class StageManager : MonoBehaviour
 
     private SpawnManager spawnManager;
 
+    static StageManager instance = null;
+
+    public static StageManager Instance()
+    {
+        return instance;
+    }
+
     void Awake()
     {
+        instance = this;
+
         jsonManager = FindObjectOfType<JsonManager>().GetComponent<JsonManager>();
         player = FindObjectOfType<Player>().GetComponent<Player>();
 
@@ -32,6 +41,14 @@ public class StageManager : MonoBehaviour
         spawnManager = FindObjectOfType<SpawnManager>().GetComponent<SpawnManager>();
 
         GenerateStage();
+    }
+
+    void Start()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
     }
 
     void GenerateStage()
@@ -73,6 +90,7 @@ public class StageManager : MonoBehaviour
 
         if (currentStageIndex == stageMaxCount - 1)
         {
+            player.transform.position = Vector3.zero;
             SceneManager.LoadScene("던전 구성 단계");
         }
 

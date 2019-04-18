@@ -19,7 +19,7 @@ public class Stage : MonoBehaviour
     private Vector3[] monsterSpawnPos;
     private int monsterFadingSpace;
     
-    SpawnManager spawnManager;
+    //SpawnManager spawnManager;
 
     public int npcIndex;
     private GameObject generatedNpc;
@@ -28,7 +28,7 @@ public class Stage : MonoBehaviour
 
     void Start()
     {
-        spawnManager = FindObjectOfType<SpawnManager>().GetComponent<SpawnManager>();
+        //spawnManager = FindObjectOfType<SpawnManager>().GetComponent<SpawnManager>();
 
         switch(stageType)
         {
@@ -71,10 +71,10 @@ public class Stage : MonoBehaviour
         }
     }
 
-    void SpawnBox()
+    public void SpawnBox()
     {
-        spawnManager.portal.transform.position = this.gameObject.transform.position;
-        spawnManager.portal.SetActive(true);
+        SpawnManager.Instance().portal.transform.position = this.gameObject.transform.position;
+        SpawnManager.Instance().portal.SetActive(true);
         portalSpawned = true;
     }
 
@@ -84,15 +84,15 @@ public class Stage : MonoBehaviour
 
         for (int i = 0; i < monsterMaxCount; i++)
         {
-            monsterRandomIndex = Random.Range(0, spawnManager.monsterPrefabs.Length);
-            monsterFadingSpace = Random.Range(spawnManager.spawnFadingRange[0], spawnManager.spawnFadingRange[1]);            
+            monsterRandomIndex = Random.Range(0, SpawnManager.Instance().monsterPrefabs.Length);
+            monsterFadingSpace = Random.Range(SpawnManager.Instance().spawnFadingRange[0], SpawnManager.Instance().spawnFadingRange[1]);            
 
             monsterSpawnPos[i] = new Vector3(transform.position.x + monsterFadingSpace, transform.position.y + 3, 0);
 
-            Debug.Log("이제" + spawnManager.monsterPrefabs[monsterRandomIndex].name + "를 추가합니다.");   
+            Debug.Log("이제" + SpawnManager.Instance().monsterPrefabs[monsterRandomIndex].name + "를 추가합니다.");   
             Debug.Log("그리고 " + monsterSpawnPos[i] + " 가 현재 벡터입니다.");        
 
-            GameObject temp = Instantiate(spawnManager.monsterPrefabs[monsterRandomIndex], monsterSpawnPos[i], Quaternion.identity) as GameObject;
+            GameObject temp = Instantiate(SpawnManager.Instance().monsterPrefabs[monsterRandomIndex], monsterSpawnPos[i], Quaternion.identity) as GameObject;
             temp.GetComponent<Monster>().key = i;
 
             generatedMonsters.Add(i, temp);
@@ -101,7 +101,7 @@ public class Stage : MonoBehaviour
 
     void GenerateNPC()
     {
-        generatedNpc = Instantiate(spawnManager.npcPrefabs[npcIndex], transform.position, Quaternion.identity);
+        generatedNpc = Instantiate(SpawnManager.Instance().npcPrefabs[npcIndex], new Vector3(transform.position.x - 3, transform.position.y, transform.position.z), Quaternion.identity);
     }
 
     public void DestroyMonster(int key)

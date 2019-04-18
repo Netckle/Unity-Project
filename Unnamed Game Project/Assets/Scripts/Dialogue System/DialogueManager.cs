@@ -27,6 +27,8 @@ public class DialogueManager : MonoBehaviour
 	public Image smallDialoguePanel = null;
 	public Image bigDialoguePanel = null;
 
+	private GameObject temp = null;
+
 	void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -41,8 +43,10 @@ public class DialogueManager : MonoBehaviour
 		bigDialoguePanel.gameObject.SetActive(false);
 	}
 
-	public void StartDialogue (List<Dictionary<string,object>> data, int[] dialogueIndexRange, TYPE dialogueType)
+	public void StartDialogue (GameObject dialogueObject, List<Dictionary<string,object>> data, int[] dialogueIndexRange, TYPE dialogueType)
 	{	
+		temp = dialogueObject;
+
 		isEnd = false;
 
 		if (dialogueType == TYPE.NORMAL) 
@@ -110,6 +114,16 @@ public class DialogueManager : MonoBehaviour
 		smallDialoguePanel.gameObject.SetActive(false);
 
 		isEnd = true;
+
+		switch(temp.tag)
+		{
+			case "NPC":
+				temp.GetComponent<DialogueTrigger>().isEnd = true;
+				temp = null;
+				break;
+			case "OBJ":
+				break;
+		}
 	}
 
 	public bool GetDialogueIsEnd()
