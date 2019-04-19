@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4521853815599719076}
-  - component: {fileID: 4521853815599719079}
+  - component: {fileID: 488576257}
   m_Layer: 0
-  m_Name: Generate Map
+  m_Name: Manager Stage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4521853815599719079
+--- !u!114 &488576257
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,16 +40,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4521853815599719078}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ae44d0633e348446a0130cdbf55a543, type: 3}
+  m_Script: {fileID: 11500000, guid: d84a6767f1ac8244c91eae447e3d1b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapPrefabs:
-  - {fileID: 2770820422630919283, guid: 939decada5a537648b2c9c8feca72983, type: 3}
-  - {fileID: 4638916370148744412, guid: 3a7a5f91a90de694a964b9c29bbc6ec1, type: 3}
-  - {fileID: 5639784231738925841, guid: 8b7539fd2147627478283716217efcd3, type: 3}
-  mapMaxCount: 8
-  test: {fileID: 0}
-  currentMapNum: 0
-  player: {fileID: 0}
-  door: {fileID: 0}
-  isOpen: 0
+  stagePrefabs:
+  - {fileID: 4352503303668163991, guid: 9891e8b75a3f0ac46963f5c0d946df32, type: 3}
+  - {fileID: 1062324969001756696, guid: 21df82211dd86aa499552b4491f5ec54, type: 3}
+  - {fileID: 1348717854914027841, guid: fe7fba9b6e1142145ae9b65765e65f0e, type: 3}
+  stageMaxCount: 8
+  generatedStages: []
+  currentStageIndex: 0

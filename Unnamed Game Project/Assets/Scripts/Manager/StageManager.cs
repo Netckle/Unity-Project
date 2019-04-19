@@ -83,15 +83,11 @@ public class StageManager : MonoBehaviour
     }
 
     public void MoveNextRoom()
-    {
-        Debug.Log (currentStageIndex+"가 현재 번호" + (stageMaxCount -1) +"가 최대번호");
-
-        
-
+    {    
         if (currentStageIndex == stageMaxCount - 1)
         {
             player.transform.position = Vector3.zero;
-            SceneManager.LoadScene("던전 구성 단계");
+            SceneManager.LoadScene("Dungeon Scene Select");
         }
 
         else if (currentStageIndex < stageMaxCount -1)

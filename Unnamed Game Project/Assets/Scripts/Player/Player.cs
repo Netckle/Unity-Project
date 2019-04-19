@@ -191,38 +191,11 @@ public class Player : MonoBehaviour
                 StartCoroutine("UnBeatTime");
             }
         }
-        /*
-        if (other.gameObject.tag == "NPC")
-        {
-            NPCController temp = other.gameObject.GetComponent<NPCController>();
-            dialogueIndexRange[0] = temp.normalIndexRange[0];
-            dialogueIndexRange[1] = temp.normalIndexRange[1];
-
-            dialogueType = temp.dialogueType;
-
-            targetPos = other.gameObject.transform.position;
-
-            if (isRight)        
-                targetPos.x -= horPaddingSpace;
-            else if (!isRight)
-                targetPos.x += horPaddingSpace;            
-        }
-        */
     }
 
     void OnTriggerStay2D(Collider2D collider)
     {
-        /*
-        if (collider.gameObject.tag == "NPC" && (Input.GetButtonDown("Interact")))
-        {
-            isTalking = true;
 
-            StartCoroutine("MoveToPlayerForTalk");           
-
-            FindObjectOfType<DialogueManager>().            
-            StartDialogue(GameObject.Find("Load CSV").GetComponent<LoadCSV>().GetData("Dialogue"), dialogueIndexRange, dialogueType);
-        }
-        */
     }
 
     void OnTriggerExit2D(Collider2D collider)

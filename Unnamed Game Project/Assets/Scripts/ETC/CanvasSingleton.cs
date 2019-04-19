@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CanvasSingleton : MonoBehaviour
 {
-    // Singleton
     static CanvasSingleton instance = null; 
 
     public static CanvasSingleton Instace()
@@ -24,5 +23,4 @@ public class CanvasSingleton : MonoBehaviour
         else
             Destroy(gameObject);
     }
-    //-----
 }

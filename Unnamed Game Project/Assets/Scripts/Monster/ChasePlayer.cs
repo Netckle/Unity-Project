@@ -41,7 +41,7 @@ public class ChasePlayer : MonoBehaviour
             }
 
             monster.isTracing = true;
-            monster.animator.SetBool("isMoving", true);
+            monster.SetAnimatorBool("isMoving", true);
         }
     }
 

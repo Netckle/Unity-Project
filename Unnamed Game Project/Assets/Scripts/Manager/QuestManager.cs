@@ -28,6 +28,11 @@ public class QuestManager : MonoBehaviour
 
     void Start()
     {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+
         csvLoader = GameObject.Find("Load CSV").GetComponent<LoadCSV>();
 
         quest = csvLoader.GetData("퀘스트");

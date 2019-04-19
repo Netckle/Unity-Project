@@ -275,57 +275,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4521853815599719079, guid: 1bdf7c128e4fc8e44bee4af1828cc31e,
-        type: 3}
-      propertyPath: mapPrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 4352503303668163991, guid: 9891e8b75a3f0ac46963f5c0d946df32,
-        type: 3}
-    - target: {fileID: 4521853815599719079, guid: 1bdf7c128e4fc8e44bee4af1828cc31e,
-        type: 3}
-      propertyPath: mapPrefabs.Array.data[1]
-      value: 
-      objectReference: {fileID: 1062324969001756696, guid: 21df82211dd86aa499552b4491f5ec54,
-        type: 3}
-    - target: {fileID: 4521853815599719079, guid: 1bdf7c128e4fc8e44bee4af1828cc31e,
-        type: 3}
-      propertyPath: mapPrefabs.Array.data[2]
-      value: 
-      objectReference: {fileID: 1348717854914027841, guid: fe7fba9b6e1142145ae9b65765e65f0e,
-        type: 3}
-    - target: {fileID: 4521853815599719079, guid: 1bdf7c128e4fc8e44bee4af1828cc31e,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4521853815599719079, guid: 1bdf7c128e4fc8e44bee4af1828cc31e, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1bdf7c128e4fc8e44bee4af1828cc31e, type: 3}
---- !u!1 &488576256 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4521853815599719078, guid: 1bdf7c128e4fc8e44bee4af1828cc31e,
-    type: 3}
-  m_PrefabInstance: {fileID: 488576255}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &488576257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 488576256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d84a6767f1ac8244c91eae447e3d1b96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stagePrefabs:
-  - {fileID: 4352503303668163991, guid: 9891e8b75a3f0ac46963f5c0d946df32, type: 3}
-  - {fileID: 1062324969001756696, guid: 21df82211dd86aa499552b4491f5ec54, type: 3}
-  - {fileID: 1348717854914027841, guid: fe7fba9b6e1142145ae9b65765e65f0e, type: 3}
-  stageMaxCount: 8
-  generatedStages: []
-  currentStageIndex: 0
 --- !u!1001 &509398567
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -49,11 +49,6 @@ public class Stage : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            Debug.Log(generatedMonsters[1].name);
-        }
-
         if (alreadyClear)
         {
             stageState = StageState.CLEARED;
@@ -80,17 +75,12 @@ public class Stage : MonoBehaviour
 
     void GenerateMonster()
     {
-        Debug.Log(monsterMaxCount);
-
         for (int i = 0; i < monsterMaxCount; i++)
         {
             monsterRandomIndex = Random.Range(0, SpawnManager.Instance().monsterPrefabs.Length);
             monsterFadingSpace = Random.Range(SpawnManager.Instance().spawnFadingRange[0], SpawnManager.Instance().spawnFadingRange[1]);            
 
-            monsterSpawnPos[i] = new Vector3(transform.position.x + monsterFadingSpace, transform.position.y + 3, 0);
-
-            Debug.Log("이제" + SpawnManager.Instance().monsterPrefabs[monsterRandomIndex].name + "를 추가합니다.");   
-            Debug.Log("그리고 " + monsterSpawnPos[i] + " 가 현재 벡터입니다.");        
+            monsterSpawnPos[i] = new Vector3(transform.position.x + monsterFadingSpace, transform.position.y + 3, 0);      
 
             GameObject temp = Instantiate(SpawnManager.Instance().monsterPrefabs[monsterRandomIndex], monsterSpawnPos[i], Quaternion.identity) as GameObject;
             temp.GetComponent<Monster>().key = i;

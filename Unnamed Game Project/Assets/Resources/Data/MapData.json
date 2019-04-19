@@ -5,13 +5,13 @@
     "NPCIndex": 0
   },
   {
-    "MapCategory": "이벤트",
-    "EnemyCount": 0,
+    "MapCategory": "몬스터",
+    "EnemyCount": 3,
     "NPCIndex": 0
   },
   {
-    "MapCategory": "몬스터",
-    "EnemyCount": 3,
+    "MapCategory": "이벤트",
+    "EnemyCount": 0,
     "NPCIndex": 0
   },
   {

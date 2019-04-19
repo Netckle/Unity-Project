@@ -29,5 +29,13 @@ public class SpawnManager : MonoBehaviour
         portal.SetActive(false);
     }
 
+    void Start()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
     //-----[Prefab Setting End]
 }

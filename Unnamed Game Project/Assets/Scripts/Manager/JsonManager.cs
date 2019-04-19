@@ -9,6 +9,8 @@ using Newtonsoft.Json.Linq;
 
 public class JsonManager : MonoBehaviour
 {
+    string path = Application.dataPath + "/StreamingAssets/Data/MapData.json";
+
     static JsonManager instance = null; 
 
     public static JsonManager Instace()
@@ -36,17 +38,17 @@ public class JsonManager : MonoBehaviour
     public void Save()
     {
         string data = JsonConvert.SerializeObject(mapData, Formatting.Indented);
-        File.WriteAllText(Application.dataPath + "/Resources/Data/MapData.json", data);
-        UnityEditor.AssetDatabase.Refresh(); 
+        File.WriteAllText(path, data);
+        //UnityEditor.AssetDatabase.Refresh(); 
     }
 
     public List<JsonData> LoadMapDataJson()
     {
         List<JsonData> mapDataTemp = new List<JsonData>();
 
-        if (File.Exists(Application.dataPath + "/Resources/Data/MapData.json"))
+        if (File.Exists(path))
         {
-            string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/Data/MapData.json");
+            string jsonStr = File.ReadAllText(path);
 
             mapDataTemp = JsonConvert.DeserializeObject<List<JsonData>>(jsonStr);
         }
@@ -57,5 +59,13 @@ public class JsonManager : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
+    }
+
+    void Start()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
     }
 }

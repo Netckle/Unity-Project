@@ -36,6 +36,11 @@ public class DialogueManager : MonoBehaviour
 
 	void Start () 
 	{
+		if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+
 		sentences = new Queue<Dictionary<string,object>>();
 
 		// 켜짐 방지.
