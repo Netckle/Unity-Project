@@ -73,10 +73,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c8a9a64cde4ab48be3fb6c641a5cc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueIndexRange: 0000000008000000
+  dialogueRangeBefore: 000000000a000000
+  dialogueRangeAfter: 080000000f000000
   dialogueType: 0
   questIndex: 0
-  isEnd: 0
 --- !u!50 &4546880102424954852
 Rigidbody2D:
   serializedVersion: 4
@@ -97,7 +97,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 5
 --- !u!61 &8670956628187728423
 BoxCollider2D:
   m_ObjectHideFlags: 0

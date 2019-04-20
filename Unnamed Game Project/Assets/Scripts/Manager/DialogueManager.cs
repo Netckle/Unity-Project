@@ -16,18 +16,15 @@ public class DialogueManager : MonoBehaviour
         return instance;
     }
 
-	// Private 변수
 	private Queue<Dictionary<string,object>> sentences = null;
-	private bool isEnd = false;
 
-	// Public 변수
 	public TextMeshProUGUI smallDialogueSentence; 
 	public TextMeshProUGUI bigDialogueName; 
 	public TextMeshProUGUI bigDialogueSentence; 
 	public Image smallDialoguePanel = null;
 	public Image bigDialoguePanel = null;
 
-	private GameObject temp = null;
+	private int willOpenQuestIndex = -1;
 
 	void Awake()
     {
@@ -43,16 +40,16 @@ public class DialogueManager : MonoBehaviour
 
 		sentences = new Queue<Dictionary<string,object>>();
 
-		// 켜짐 방지.
 		smallDialoguePanel.gameObject.SetActive(false);
 		bigDialoguePanel.gameObject.SetActive(false);
 	}
 
-	public void StartDialogue (GameObject dialogueObject, List<Dictionary<string,object>> data, int[] dialogueIndexRange, TYPE dialogueType)
+	public void StartDialogue (GameObject dialogueObject, List<Dictionary<string,object>> data, int[] dialogueIndexRange, TYPE dialogueType, int questIndex)
 	{	
-		temp = dialogueObject;
+		willOpenQuestIndex = questIndex;
 
-		isEnd = false;
+		Player.Instace().targetPos = new Vector3(dialogueObject.transform.position.x - 4, dialogueObject.transform.position.y, dialogueObject.transform.position.z);
+		Player.Instace().canMove = false;
 
 		if (dialogueType == TYPE.NORMAL) 
 		{
@@ -71,6 +68,8 @@ public class DialogueManager : MonoBehaviour
 		{
 			sentences.Enqueue(data[i]);
 		}
+
+		Player.Instace().StartCoroutine("MoveToPlayerForTalk");
 
 		DisplayNextSentence(dialogueType);
 	}
@@ -118,21 +117,11 @@ public class DialogueManager : MonoBehaviour
 		bigDialoguePanel.gameObject.SetActive(false);
 		smallDialoguePanel.gameObject.SetActive(false);
 
-		isEnd = true;
+		Player.Instace().canMove = true;
 
-		switch(temp.tag)
-		{
-			case "NPC":
-				temp.GetComponent<DialogueTrigger>().isEnd = true;
-				temp = null;
-				break;
-			case "OBJ":
-				break;
-		}
-	}
-
-	public bool GetDialogueIsEnd()
-	{
-		return isEnd;
+		if (!QuestManager.Instance().CheckQuestState(willOpenQuestIndex))
+			QuestManager.Instance().StartQuest(willOpenQuestIndex);
+			
+		willOpenQuestIndex = -1;
 	}
 }

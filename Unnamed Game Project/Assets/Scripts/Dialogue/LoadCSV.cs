@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LoadCSV : MonoBehaviour // TXT 파일에서 데이터를 읽어와 변수에 저장합니다.
 {
-    // Singleton
     static LoadCSV instance = null; 
 
     public static LoadCSV Instace()
@@ -22,7 +21,14 @@ public class LoadCSV : MonoBehaviour // TXT 파일에서 데이터를 읽어와 
         dialogueCheck = CheckFile(dialogueFileName, dialogueData);
         questCheck = CheckFile(questFileName, questData);
     }
-    //-----
+
+    void Start()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     private List<Dictionary<string, object>> dialogueData;
     private List<Dictionary<string, object>> questData;
@@ -45,22 +51,22 @@ public class LoadCSV : MonoBehaviour // TXT 파일에서 데이터를 읽어와 
             Debug.Log(fileName + "파일 로딩 성공.");
             return true;
         }
-        else return false;
+        else 
+            return false;
     }
 
     public List<Dictionary<string, object>> GetData(string dataType)
     {
         switch (dataType)
         {
-            case "대화":
+            case "Dialogue":
                 if (dialogueCheck) return dialogueData;
                 else break;
-            case "퀘스트":
+            case "Quest":
                 if (questCheck) return questData;
                 else break;
         }
-
-        Debug.LogError("내보낼 파일이 없습니다.");
+        Debug.LogError("얻을 파일이 없습니다.");
         return null;
     }
 }

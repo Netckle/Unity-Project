@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Singleton
     static Player instance = null; 
 
     public static Player Instace()
@@ -12,56 +11,53 @@ public class Player : MonoBehaviour
         return instance;
     } 
 
+    public int              currentRoomNum = 0;       
+
+    public SpriteRenderer   render;
+    public Animator         animator;
+    private Rigidbody2D     rigid;
+    private Collider2D      collide;
+
+    private Vector3         movement;
+    public bool             canMove = true;
+    private bool            isJumping = false;
+    private bool            isHanging = false;
+
+    public float            movePower = 1.0f;
+    public float            jumpPower = 1.0f;
+
+    private bool            isUnBeatTime = false;
+
+    // 점프 관련 변수
+    public Transform        groundCheck;
+    public LayerMask        whatIsGround;
+    public float            checkRadius;
+    private bool            isGrounded = false;
+    
+    public int              extraJumpsValue;
+    private int             extraJumps;
+
+    // 공격 관련 변수
+    public float            cooldown = 0.5f;   // Combo Attack Cooldown
+    public float            maxTime = 0.8f;    // Accepted Combo Limit Time
+    public int              maxCombo;          // Combo Attack Max Count
+    private int             combo = 0;         // Current Combo Count
+    private float           lastTime;          // Last Attack Time
+
+    public int              maxHealth = 6;
+    public int              health = 6;
+    
+    // 대화 관련 변수
+    public Vector3          targetPos;
+    public bool             isTalking = false;
+    public float            horPaddingSpace = 0.0f;
+
+    private TYPE            dialogueType = TYPE.NORMAL;   
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
     }
-    //-----
-
-    public int currentRoomNum;       
-
-    public SpriteRenderer render;
-    public Animator animator;
-    private Rigidbody2D rigid;
-    private Collider2D collide;
-
-    private Vector3 movement;
-    public bool canMove = true;
-    private bool isJumping = false;
-    private bool isHanging = false;
-
-    public float movePower = 1.0f;
-    public float jumpPower = 1.0f;
-
-    private bool isUnBeatTime = false;
-
-    // 점프 관련 변수
-    public Transform groundCheck;
-    public LayerMask whatIsGround;
-    public float checkRadius;
-    private bool isGrounded = false;
-    
-    public int extraJumpsValue;
-    private int extraJumps;
-
-    // 공격 관련 변수
-    public float cooldown = 0.5f;   // Combo Attack Cooldown
-    public float maxTime = 0.8f;    // Accepted Combo Limit Time
-    public int maxCombo;            // Combo Attack Max Count
-    private int combo = 0;          // Current Combo Count
-    private float lastTime;         // Last Attack Time
-
-    public int maxHealth = 6;
-    public int health = 6;
-
-    // 대화 관련 변수
-    private int[] dialogueIndexRange = { -1, -1 };
-    private Vector3 targetPos;
-    public bool isTalking = false;
-    public float horPaddingSpace = 0.0f;
-    private bool isRight = true;
-
-    private TYPE dialogueType = TYPE.NORMAL;   
 
     void Start()
     {
@@ -80,19 +76,18 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // 대화
+        // 대화중이고, 상호작용 키를 누르면 다음 대화로 넘어갑니다.
         if ((isTalking) && (Input.GetButtonDown("Interact")))
         {
             FindObjectOfType<DialogueManager>().DisplayNextSentence(dialogueType);
         }
-        if (FindObjectOfType<DialogueManager>().GetDialogueIsEnd())
-        {
-            isTalking = false;
-        }
 
-        if (canMove)
+        if (!canMove) // 움직일 수 없는 상태라면...
         {
-            // 이동 애니메이션
+            animator.SetBool("isMoving", false);
+        }
+        else if (canMove) // 움직일 수 있는 상태라면...
+        {
             if (Input.GetAxisRaw("Horizontal") == 0)
             {
                 animator.SetBool("isMoving", false);
@@ -101,7 +96,7 @@ public class Player : MonoBehaviour
             {
                 animator.SetBool("isMoving", true);
             }
-        }
+        }      
 
         // 일반 점프 & 추가 점프
         if (!isHanging && isGrounded && Input.GetButtonDown("Jump"))
@@ -110,6 +105,7 @@ public class Player : MonoBehaviour
             animator.SetBool("isJumping", true);    
             animator.SetTrigger("doJumping");        
         }
+
         else if (!isHanging && !isGrounded && Input.GetButtonDown("Jump") && extraJumps > 0)
         {
             isJumping = true;            
@@ -163,8 +159,6 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-
-
         // Attacked by Creature
         if (other.gameObject.tag == "Attack" && !isUnBeatTime)
         {
@@ -200,11 +194,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == "NPC")
-        {
-            dialogueIndexRange[0] = -1;
-            dialogueIndexRange[1] = -1;
-        }
+
     }
 
     // [행동 함수]
@@ -289,13 +279,11 @@ public class Player : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator MoveToPlayerForTalk() // 대화시 플레이어를 적당한 거리로 떨어뜨려 놓음.
+    public IEnumerator MoveToPlayerForTalk() // 대화시 플레이어를 적당한 거리로 떨어뜨려 놓음.
     {
         while((transform.position.x >= targetPos.x))
         {
-            if (isRight)
-                transform.position += Vector3.left * movePower * Time.deltaTime;            
-
+            transform.position += Vector3.left * movePower * Time.deltaTime;          
             yield return null;
         }
     }

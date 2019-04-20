@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 public class JsonManager : MonoBehaviour
 {
-    string path = Application.dataPath + "/StreamingAssets/Data/MapData.json";
+    string path = Application.streamingAssetsPath + "/Data/MapData.json";
 
     static JsonManager instance = null; 
 

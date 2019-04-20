@@ -14,13 +14,13 @@ public class StageManager : MonoBehaviour
     public int stageMaxCount;               // 맵 갯수를 제한합니다.
     public GameObject[] generatedStages;    // 생성될 맵이 저장되는 곳입니다.
 
-    private JsonManager jsonManager;        // Json 기능을 사용하기 위해 만들어둔 매니저를 불러옵니다.
+    //private JsonManager jsonManager;        // Json 기능을 사용하기 위해 만들어둔 매니저를 불러옵니다.
     private List<JsonData> stageData;       // 불러온 Json 데이터를 저장할 곳입니다.
 
     public int currentStageIndex = 0;       // 플레이어가 있는 방의 번호입니다.
-    private Player player;                  // 플레이어 데이터를 불러옵니다.
+    //private Player player;                  // 플레이어 데이터를 불러옵니다.
 
-    private SpawnManager spawnManager;
+    //private SpawnManager spawnManager;
 
     static StageManager instance = null;
 
@@ -33,12 +33,12 @@ public class StageManager : MonoBehaviour
     {
         instance = this;
 
-        jsonManager = FindObjectOfType<JsonManager>().GetComponent<JsonManager>();
-        player = FindObjectOfType<Player>().GetComponent<Player>();
+        //jsonManager = FindObjectOfType<JsonManager>().GetComponent<JsonManager>();
+        //player = FindObjectOfType<Player>().GetComponent<Player>();
 
-        player.currentRoomNum = currentStageIndex;
+        Player.Instace().currentRoomNum = currentStageIndex;
 
-        spawnManager = FindObjectOfType<SpawnManager>().GetComponent<SpawnManager>();
+        //spawnManager = FindObjectOfType<SpawnManager>().GetComponent<SpawnManager>();
 
         GenerateStage();
     }
@@ -53,7 +53,7 @@ public class StageManager : MonoBehaviour
 
     void GenerateStage()
     {
-        stageData = jsonManager.LoadMapDataJson();
+        stageData = JsonManager.Instace().LoadMapDataJson();
         generatedStages = new GameObject[stageMaxCount];
 
         stageMaxCount = stageData.Count;
@@ -79,14 +79,14 @@ public class StageManager : MonoBehaviour
         }
 
         Camera.main.transform.position = new Vector3(0, 0, -10);
-        player.transform.position = generatedStages[currentStageIndex].transform.position;
+        Player.Instace().transform.position = generatedStages[currentStageIndex].transform.position;
     }
 
     public void MoveNextRoom()
     {    
         if (currentStageIndex == stageMaxCount - 1)
         {
-            player.transform.position = Vector3.zero;
+            Player.Instace().transform.position = Vector3.zero;
             SceneManager.LoadScene("Dungeon Scene Select");
         }
 
@@ -94,7 +94,7 @@ public class StageManager : MonoBehaviour
         {
             currentStageIndex++;
             Camera.main.transform.position = new Vector3(generatedStages[currentStageIndex].transform.position.x, generatedStages[currentStageIndex].transform.position.y, -10);
-            player.transform.position = generatedStages[currentStageIndex].transform.position;
+            Player.Instace().transform.position = generatedStages[currentStageIndex].transform.position;
         }    
 
         for (int i = 0; i < currentStageIndex; i++)
@@ -102,6 +102,6 @@ public class StageManager : MonoBehaviour
             generatedStages[i].GetComponent<Stage>().alreadyClear = true;
         }    
 
-        spawnManager.portal.SetActive(false);
+        SpawnManager.Instance().portal.SetActive(false);
     }
 }

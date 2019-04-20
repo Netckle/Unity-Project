@@ -91,7 +91,7 @@ public class Stage : MonoBehaviour
 
     void GenerateNPC()
     {
-        generatedNpc = Instantiate(SpawnManager.Instance().npcPrefabs[npcIndex], new Vector3(transform.position.x - 3, transform.position.y, transform.position.z), Quaternion.identity);
+        generatedNpc = Instantiate(SpawnManager.Instance().npcPrefabs[npcIndex], new Vector3(transform.position.x + 3, transform.position.y, transform.position.z), Quaternion.identity);
     }
 
     public void DestroyMonster(int key)

@@ -35,7 +35,7 @@ public class QuestManager : MonoBehaviour
 
         csvLoader = GameObject.Find("Load CSV").GetComponent<LoadCSV>();
 
-        quest = csvLoader.GetData("퀘스트");
+        quest = csvLoader.GetData("Quest");
 
         questPanel.gameObject.SetActive(false);
     }
@@ -44,15 +44,42 @@ public class QuestManager : MonoBehaviour
     {
         Dictionary<string, object> loadedData = quest[questIndex];
 
-        if (loadedData["클리어 여부"].ToString() == "아님")
+        if (loadedData["isCleared"].ToString() == "no")
         {
-            questSentence.text = quest[questIndex]["내용"].ToString();
+            questSentence.text = quest[questIndex]["content"].ToString();
             StartCoroutine("ShowQuestPanel");
         }
-        else if (loadedData["클리어 여부"].ToString() != "아님")
+        else if (loadedData["isCleared"].ToString() != "no")
         {
-            Debug.Log("해당 번호의 퀘스트를 진행할 수 없습니다.");
+            Debug.Log("해당 퀘스트는 이미 클리어 되었습니다.");
         }
+    }
+
+    public void ClearQuest(int questIndex)
+    {
+        Debug.Log(questIndex + "번 퀘스트 클리어!");
+        Debug.Log(quest[questIndex]["isCleared"].ToString());
+        if (quest[questIndex]["isCleared"].ToString() == "no")
+        {
+            Debug.Log("들어왔는 데스웅");
+            quest[questIndex]["isCleared"] = "yes";
+            StartCoroutine("ShowQuestPanel");
+        }
+    }
+
+    public bool CheckQuestState(int questIndex)
+    {
+        bool temp = false;
+        switch (quest[questIndex]["isCleared"].ToString())
+        {
+            case "yes":
+                temp = true;
+                break;
+            case "no":
+                temp = false;
+                break;
+        }
+        return temp;
     }
 
     public void Update()
