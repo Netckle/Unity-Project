@@ -9,6 +9,9 @@ TagManager:
   - Attack
   - Panel
   - Monster
+  - Inventory
+  - DragImg
+  - tree
   layers:
   - Default
   - TransparentFX

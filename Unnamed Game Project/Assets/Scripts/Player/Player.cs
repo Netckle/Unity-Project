@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class Player : MonoBehaviour
 
     private bool            isUnBeatTime = false;
 
-    // 점프 관련 변수
+    // Jump
     public Transform        groundCheck;
     public LayerMask        whatIsGround;
     public float            checkRadius;
@@ -37,7 +38,9 @@ public class Player : MonoBehaviour
     public int              extraJumpsValue;
     private int             extraJumps;
 
-    // 공격 관련 변수
+    public Collider2D otherCollider;
+
+    // Attack
     public float            cooldown = 0.5f;   // Combo Attack Cooldown
     public float            maxTime = 0.8f;    // Accepted Combo Limit Time
     public int              maxCombo;          // Combo Attack Max Count
@@ -47,7 +50,7 @@ public class Player : MonoBehaviour
     public int              maxHealth = 6;
     public int              health = 6;
     
-    // 대화 관련 변수
+    // Dialogue
     public Vector3          targetPos;
     public bool             isTalking = false;
     public float            horPaddingSpace = 0.0f;
@@ -76,6 +79,14 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            otherCollider.enabled = true;
+        }
+        else if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            otherCollider.enabled = false;
+        }
         // 대화중이고, 상호작용 키를 누르면 다음 대화로 넘어갑니다.
         if ((isTalking) && (Input.GetButtonDown("Interact")))
         {
@@ -160,8 +171,9 @@ public class Player : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         // Attacked by Creature
-        if (other.gameObject.tag == "Attack" && !isUnBeatTime)
+        if ((other.gameObject.tag == "Monster" || other.gameObject.tag == "MonsterAttack") && !isUnBeatTime)
         {
+            canMove = false;
             Vector2 attackedVelocity = Vector2.zero;
 
             if (other.gameObject.transform.position.x > transform.position.x)
@@ -185,16 +197,6 @@ public class Player : MonoBehaviour
                 StartCoroutine("UnBeatTime");
             }
         }
-    }
-
-    void OnTriggerStay2D(Collider2D collider)
-    {
-
-    }
-
-    void OnTriggerExit2D(Collider2D collider)
-    {
-
     }
 
     // [행동 함수]
@@ -254,6 +256,11 @@ public class Player : MonoBehaviour
 
         while (countTime < 10)
         {
+            if (countTime >= 5)
+            {
+                canMove = true;
+            }
+
             // Alpha Effect
             if (countTime % 2 == 0)
             {
@@ -275,7 +282,7 @@ public class Player : MonoBehaviour
 
         // UnBeatTime Off
         isUnBeatTime = false;
-
+        //canMove = true;
         yield return null;
     }
 

@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 4676151942690171696}
   - component: {fileID: 4676151942690171702}
   - component: {fileID: 4676151942690171703}
+  - component: {fileID: 6270522085423986636}
   m_Layer: 0
   m_Name: Sprite
-  m_TagString: Untagged
+  m_TagString: PlayerAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,6 +100,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!58 &6270522085423986636
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4676151942690171697}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 1.15, y: -0.3}
+  serializedVersion: 2
+  m_Radius: 0.4
 --- !u!1 &4676151942861004094
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +174,7 @@ GameObject:
   - component: {fileID: 4676151942930220051}
   - component: {fileID: 4676151942930220060}
   m_Layer: 0
-  m_Name: Player T2
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -245,6 +262,7 @@ MonoBehaviour:
   maxCombo: 4
   maxHealth: 6
   health: 6
+  targetPos: {x: 0, y: 0, z: 0}
   isTalking: 0
   horPaddingSpace: 0
 --- !u!114 &4676151942930220060

@@ -6,11 +6,11 @@ public class MoveToNextRoom : MonoBehaviour
 {
     private Vector3 previousPos;
     private Vector3 nextPos;
-    public float delayTime;
+    public float    delayTime;
 
     public void MoveNext()
     {
-        previousPos = Camera.main.transform.position;
+        previousPos = this.transform.position;
         StartCoroutine("MoveNextCoroutine");
     }
 
@@ -20,7 +20,7 @@ public class MoveToNextRoom : MonoBehaviour
         {
             nextPos = new Vector3(previousPos.x, previousPos.y - i, previousPos.z);
 
-            Camera.main.transform.position = nextPos;
+            this.transform.position = nextPos;
 
             yield return new WaitForSeconds(delayTime);
         }

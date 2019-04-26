@@ -14,14 +14,11 @@ public class StageManager : MonoBehaviour
     public int stageMaxCount;               // 맵 갯수를 제한합니다.
     public GameObject[] generatedStages;    // 생성될 맵이 저장되는 곳입니다.
 
-    //private JsonManager jsonManager;        // Json 기능을 사용하기 위해 만들어둔 매니저를 불러옵니다.
-    private List<JsonData> stageData;       // 불러온 Json 데이터를 저장할 곳입니다.
+    private List<CardData> stageData;       // 불러온 Json 데이터를 저장할 곳입니다.
 
     public int currentStageIndex = 0;       // 플레이어가 있는 방의 번호입니다.
-    //private Player player;                  // 플레이어 데이터를 불러옵니다.
 
-    //private SpawnManager spawnManager;
-
+    // Singleton
     static StageManager instance = null;
 
     public static StageManager Instance()
@@ -31,14 +28,8 @@ public class StageManager : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
-
-        //jsonManager = FindObjectOfType<JsonManager>().GetComponent<JsonManager>();
-        //player = FindObjectOfType<Player>().GetComponent<Player>();
-
         Player.Instace().currentRoomNum = currentStageIndex;
-
-        //spawnManager = FindObjectOfType<SpawnManager>().GetComponent<SpawnManager>();
+        Player.Instace().transform.position = Vector3.zero;
 
         GenerateStage();
     }
@@ -53,55 +44,75 @@ public class StageManager : MonoBehaviour
 
     void GenerateStage()
     {
-        stageData = JsonManager.Instace().LoadMapDataJson();
+        stageData = JsonManager.Instace().Load();
+        stageMaxCount = stageData.Count; // 맵의 수.
         generatedStages = new GameObject[stageMaxCount];
 
-        stageMaxCount = stageData.Count;
-
+        // 맵 생성 반복문
         for (int i = 0; i < stageMaxCount; i++)
         {
-            stageRandomIndex = Random.Range(0, stagePrefabs.Length);
+            if (stageData[i].cardLevel <= 5) // 카드 레벨 : 1~5 까지.
+            {
+                stageRandomIndex = 0;
+            } 
+            else if (stageData[i].cardLevel > 5 || stageData[i].cardLevel <= 10) // 카드 레벨 : 5~10 까지.
+            {
+                stageRandomIndex = 1;
+            }
 
+            if (stageData[i].cardName == "음식채집")
+            {
+                stageRandomIndex = 3;
+            }
+            // 맵 생성
             generatedStages[i] = Instantiate(stagePrefabs[stageRandomIndex], new Vector3(0, i * (-12), 0), Quaternion.identity);
             generatedStages[i].name = "Stage 0" + i;
+        }
 
-            switch(stageData[i].MapCategory)
+        // 맵 타입별 처리 반복문
+        for (int i = 0; i < stageMaxCount; i++)
+        {
+            generatedStages[i].GetComponent<Stage>().stageType = stageData[i].cardName;
+            switch (stageData[i].cardName)
             {
-                case "몬스터":
-                    generatedStages[i].GetComponent<Stage>().stageType = StageType.MONSTER;
-                    generatedStages[i].GetComponent<Stage>().monsterMaxCount = stageData[i].EnemyCount;
+                case "던전탐험":
+                    generatedStages[i].GetComponent<Stage>().monsterLevel       = stageData[i].cardLevel;
+                    generatedStages[i].GetComponent<Stage>().monsterMaxCount    = (stageData[i].cardLevel + 1);
                     break;
-                case "이벤트":
-                    generatedStages[i].GetComponent<Stage>().stageType = StageType.NPC;
-                    generatedStages[i].GetComponent<Stage>().npcIndex = stageData[i].NPCIndex;
+                case "음식채집":
+                    // 화면 가운데 오브젝트 만들기.
+                    break;
+                
+                    // 나중에...
+                case "시장":
+                    break;
+                case "술집":
                     break;
             }
         }
-
-        Camera.main.transform.position = new Vector3(0, 0, -10);
-        Player.Instace().transform.position = generatedStages[currentStageIndex].transform.position;
     }
 
     public void MoveNextRoom()
     {    
-        if (currentStageIndex == stageMaxCount - 1)
+        if (currentStageIndex == stageMaxCount - 1) // 마지막 스테이지인 경우.
         {
             Player.Instace().transform.position = Vector3.zero;
             SceneManager.LoadScene("Dungeon Scene Select");
         }
 
-        else if (currentStageIndex < stageMaxCount -1)
+        else if (currentStageIndex < stageMaxCount -1) // 더 진행할 스테이지가 있는 경우.
         {
             currentStageIndex++;
-            Camera.main.transform.position = new Vector3(generatedStages[currentStageIndex].transform.position.x, generatedStages[currentStageIndex].transform.position.y, -10);
+
+            Camera.main.GetComponent<MoveToNextRoom>().MoveNext();
             Player.Instace().transform.position = generatedStages[currentStageIndex].transform.position;
         }    
 
         for (int i = 0; i < currentStageIndex; i++)
         {
-            generatedStages[i].GetComponent<Stage>().alreadyClear = true;
+            generatedStages[i].GetComponent<Stage>().alreadyClear = true; // 이전 스테이지 전부 "이미 클리어함" 상태로 변경.
         }    
+        SpawnManager.Instance().portal.SetActive(false); // 포탈 비활성화.
 
-        SpawnManager.Instance().portal.SetActive(false);
     }
 }

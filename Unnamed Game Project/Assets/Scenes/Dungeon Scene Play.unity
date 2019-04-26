@@ -275,6 +275,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 488576257, guid: 1bdf7c128e4fc8e44bee4af1828cc31e, type: 3}
+      propertyPath: stagePrefabs.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 488576257, guid: 1bdf7c128e4fc8e44bee4af1828cc31e, type: 3}
+      propertyPath: stagePrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 741981194388067034, guid: c304dc651354021488880fb1be5525a5,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1bdf7c128e4fc8e44bee4af1828cc31e, type: 3}
 --- !u!1001 &509398567
@@ -386,6 +395,7 @@ MonoBehaviour:
   - {fileID: 4749142140586346848, guid: ea24ffa45515af84581ede07f4d73ca6, type: 3}
   npcPrefabs:
   - {fileID: 2986071028470226320, guid: 4032e7c384336b44089a863663941bfb, type: 3}
+  objectPrefabs: []
   spawnFadingRange: f8ffffff09000000
   portal: {fileID: 0}
 --- !u!4 &2012811962

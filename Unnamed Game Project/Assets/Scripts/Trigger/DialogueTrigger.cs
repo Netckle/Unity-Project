@@ -6,16 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class DialogueTrigger : MonoBehaviour
 {
-    private int[] appliedDialogueRange;
+    private int[]   appliedDialogueRange;
 
-    public int[] dialogueRangeBefore;
-    public int[] dialogueRangeAfter;
+    public int[]    dialogueRangeBefore;
+    public int[]    dialogueRangeAfter;
 
-    public TYPE dialogueType;
+    public TYPE     dialogueType;
 
-    public int questIndex;
-
-    private bool isChanged = false;
+    public int      key;
+    private bool    isChanged = false;
 
     void Start()
     {
@@ -24,18 +23,17 @@ public class DialogueTrigger : MonoBehaviour
 
     void Update()
     {
-        if (!isChanged && QuestManager.Instance().CheckQuestState(questIndex))
+        if (!isChanged && QuestManager.Instance().CheckQuestState(key % 10))
         {
             StageManager.Instance().generatedStages[StageManager.Instance().currentStageIndex].GetComponent<Stage>().SpawnBox();
 
             appliedDialogueRange = dialogueRangeAfter;
-            Debug.Log("바꼈다구");
             isChanged = true;
         }
 
         if (Input.GetKeyDown(KeyCode.I))
         {
-            QuestManager.Instance().ClearQuest(questIndex);
+            QuestManager.Instance().ClearQuest(key % 10);
         }
     }
 
@@ -46,7 +44,7 @@ public class DialogueTrigger : MonoBehaviour
             Player.Instace().isTalking = true;
 
             DialogueManager.Instance().
-            StartDialogue(this.gameObject, GameObject.Find("Load CSV").GetComponent<LoadCSV>().GetData("Dialogue"), appliedDialogueRange, dialogueType, questIndex);                       
+            StartDialogue(this.gameObject, GameObject.Find("Load CSV").GetComponent<LoadCSV>().GetData("Dialogue"), appliedDialogueRange, dialogueType, key);                       
         }        
     }
 }

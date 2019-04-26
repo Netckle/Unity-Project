@@ -21,10 +21,9 @@ public class DialogueManager : MonoBehaviour
 	public TextMeshProUGUI smallDialogueSentence; 
 	public TextMeshProUGUI bigDialogueName; 
 	public TextMeshProUGUI bigDialogueSentence; 
+	
 	public Image smallDialoguePanel = null;
 	public Image bigDialoguePanel = null;
-
-	private int willOpenQuestIndex = -1;
 
 	void Awake()
     {
@@ -44,11 +43,14 @@ public class DialogueManager : MonoBehaviour
 		bigDialoguePanel.gameObject.SetActive(false);
 	}
 
-	public void StartDialogue (GameObject dialogueObject, List<Dictionary<string,object>> data, int[] dialogueIndexRange, TYPE dialogueType, int questIndex)
-	{	
-		willOpenQuestIndex = questIndex;
+	private int key = 0;
 
-		Player.Instace().targetPos = new Vector3(dialogueObject.transform.position.x - 4, dialogueObject.transform.position.y, dialogueObject.transform.position.z);
+	public void StartDialogue (GameObject talkedObj, List<Dictionary<string,object>> dialogueData, 
+	int[] dialogueIndexRange, TYPE dialogueType, int _key)
+	{	
+		key = _key;
+
+		Player.Instace().targetPos = new Vector3(talkedObj.transform.position.x - 4, talkedObj.transform.position.y, talkedObj.transform.position.z);
 		Player.Instace().canMove = false;
 
 		if (dialogueType == TYPE.NORMAL) 
@@ -66,7 +68,7 @@ public class DialogueManager : MonoBehaviour
 
 		for (int i = dialogueIndexRange[0]; i < (dialogueIndexRange[1] - 1); i++)
 		{
-			sentences.Enqueue(data[i]);
+			sentences.Enqueue(dialogueData[i]);
 		}
 
 		Player.Instace().StartCoroutine("MoveToPlayerForTalk");
@@ -76,9 +78,10 @@ public class DialogueManager : MonoBehaviour
 
 	public void DisplayNextSentence (TYPE dialogueType)
 	{
-		if (sentences.Count == 0) // 큐에 남은 대사가 없을 때...
+		if (sentences.Count == 0) // 큐에 남은 대사가 없으면
 		{
 			EndDialogue();
+
 			return;
 		}
 
@@ -87,6 +90,8 @@ public class DialogueManager : MonoBehaviour
 		StopAllCoroutines();
 		StartCoroutine(TypeSentence(sentence, dialogueType));
 	}
+
+
 
 	IEnumerator TypeSentence (Dictionary<string, object> sentence, TYPE dialogueType)
 	{
@@ -118,10 +123,12 @@ public class DialogueManager : MonoBehaviour
 		smallDialoguePanel.gameObject.SetActive(false);
 
 		Player.Instace().canMove = true;
+		Player.Instace().isTalking = false;
 
-		if (!QuestManager.Instance().CheckQuestState(willOpenQuestIndex))
-			QuestManager.Instance().StartQuest(willOpenQuestIndex);
+		AfterDialogue.Instance().StartEvent(key);		
+
+		StageManager.Instance().generatedStages[StageManager.Instance().currentStageIndex].GetComponent<Stage>().SpawnBox();
 			
-		willOpenQuestIndex = -1;
+		key = 0;
 	}
 }

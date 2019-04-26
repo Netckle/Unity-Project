@@ -26,7 +26,7 @@ public class ChangeScene : MonoBehaviour
         else
             Destroy(gameObject);
     }
-    //-----
+
     public GameObject blackImagePrefabs;
     private GameObject blackImage;
     private SpriteRenderer render;

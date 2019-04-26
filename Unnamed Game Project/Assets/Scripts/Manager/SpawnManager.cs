@@ -6,6 +6,7 @@ public class SpawnManager : MonoBehaviour
 {
     public GameObject[] monsterPrefabs;
     public GameObject[] npcPrefabs;
+    public GameObject[] objectPrefabs;
 
     public int[] spawnFadingRange = new int[2];
 
@@ -18,8 +19,6 @@ public class SpawnManager : MonoBehaviour
     {
         return instance;
     }
-
-    //-----[Prefab Setting Start]
 
     void Awake()
     {
@@ -36,6 +35,4 @@ public class SpawnManager : MonoBehaviour
         else
             Destroy(gameObject);
     }
-
-    //-----[Prefab Setting End]
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadCSV : MonoBehaviour // TXT 파일에서 데이터를 읽어와 변수에 저장합니다.
+public class LoadCSV : MonoBehaviour // CSV, TXT 파일에서 데이터를 읽어와 변수에 저장합니다.
 {
     static LoadCSV instance = null; 
 
@@ -10,25 +10,6 @@ public class LoadCSV : MonoBehaviour // TXT 파일에서 데이터를 읽어와 
     {
         return instance;
     } 
-
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-
-        dialogueData = CSVReader.Read(dialogueFileName);
-        questData = CSVReader.Read(questFileName);
-
-        dialogueCheck = CheckFile(dialogueFileName, dialogueData);
-        questCheck = CheckFile(questFileName, questData);
-    }
-
-    void Start()
-    {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
-    }
 
     private List<Dictionary<string, object>> dialogueData;
     private List<Dictionary<string, object>> questData;
@@ -39,16 +20,35 @@ public class LoadCSV : MonoBehaviour // TXT 파일에서 데이터를 읽어와 
     private bool dialogueCheck = false;
     private bool questCheck = false;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+
+        dialogueData    = CSVReader.Read(dialogueFileName);
+        questData       = CSVReader.Read(questFileName);
+
+        dialogueCheck   = CheckFile(dialogueFileName, dialogueData);
+        questCheck      = CheckFile(questFileName, questData);
+    }
+
+    void Start()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
     bool CheckFile(string fileName, List<Dictionary<string, object>> data)
     {
         if (data == null) 
         {
-            Debug.Log(fileName + "파일 로딩 실패.");
+            Debug.Log(fileName + " 파일 로딩에 실패했습니다.");
             return false;
         }
         else if (data != null) 
         {
-            Debug.Log(fileName + "파일 로딩 성공.");
+            Debug.Log(fileName + " 파일 로딩에 성공했습니다.");
             return true;
         }
         else 

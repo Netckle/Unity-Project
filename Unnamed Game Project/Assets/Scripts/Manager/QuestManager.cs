@@ -16,10 +16,10 @@ public class QuestManager : MonoBehaviour
     public TextMeshProUGUI questSentence;
     public Image questPanel = null;
 
-    private LoadCSV csvLoader;
-
-    List<Dictionary<string, object>> quest;
+    List<Dictionary<string, object>> questData;
     private bool isEnd = false;
+
+    private LoadCSV csvLoader;
 
     void Awake()
     {
@@ -32,21 +32,19 @@ public class QuestManager : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
-
-        csvLoader = GameObject.Find("Load CSV").GetComponent<LoadCSV>();
-
-        quest = csvLoader.GetData("Quest");
+        csvLoader = FindObjectOfType<LoadCSV>().GetComponent<LoadCSV>();
+        questData = csvLoader.GetData("Quest");
 
         questPanel.gameObject.SetActive(false);
     }
 
     public void StartQuest(int questIndex)
     {
-        Dictionary<string, object> loadedData = quest[questIndex];
+        Dictionary<string, object> loadedData = questData[questIndex];
 
         if (loadedData["isCleared"].ToString() == "no")
         {
-            questSentence.text = quest[questIndex]["content"].ToString();
+            questSentence.text = questData[questIndex]["content"].ToString();
             StartCoroutine("ShowQuestPanel");
         }
         else if (loadedData["isCleared"].ToString() != "no")
@@ -57,12 +55,13 @@ public class QuestManager : MonoBehaviour
 
     public void ClearQuest(int questIndex)
     {
-        Debug.Log(questIndex + "번 퀘스트 클리어!");
-        Debug.Log(quest[questIndex]["isCleared"].ToString());
-        if (quest[questIndex]["isCleared"].ToString() == "no")
+        if (questData[questIndex]["isCleared"].ToString() == "no")
         {
-            Debug.Log("들어왔는 데스웅");
-            quest[questIndex]["isCleared"] = "yes";
+            questData[questIndex]["isCleared"] = "yes";
+
+            // Debug
+            Debug.Log(questIndex + "번 퀘스트 클리어했습니다.");
+
             StartCoroutine("ShowQuestPanel");
         }
     }
@@ -70,7 +69,7 @@ public class QuestManager : MonoBehaviour
     public bool CheckQuestState(int questIndex)
     {
         bool temp = false;
-        switch (quest[questIndex]["isCleared"].ToString())
+        switch (questData[questIndex]["isCleared"].ToString())
         {
             case "yes":
                 temp = true;
@@ -84,7 +83,7 @@ public class QuestManager : MonoBehaviour
 
     public void Update()
     {
-        if (isEnd)
+        if (isEnd) // 퀘스트 표시가 끝나면 오브젝트 비활성화.
         {
             questPanel.gameObject.SetActive(false);
         }

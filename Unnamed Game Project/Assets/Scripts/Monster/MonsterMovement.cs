@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class MonsterMovement : MonoBehaviour
 {
-    public float movePower = 1.0f;
+    public float            movePower = 1.0f;
 
-    private Animator animator;
-    private Vector3 movement;
+    private Animator        animator;
+    private Vector3         movement;
 
-    public int movementFlag = 0; // 0:Idle, 1:Left, 2:Right
+    public int              movementFlag = 0; // 0:Idle, 1:Left, 2:Right
 
-    public int creatureType;
+    public int              creatureType;
 
-    public bool isTracing = false;
-    public GameObject traceTarget; 
+    public bool             isTracing = false;
+    public GameObject       traceTarget; 
 
-    public bool canMove = true;
+    public bool             canMove = true;
 
-    private Rigidbody2D rigid;
-    public SpriteRenderer render;
+    private Rigidbody2D     rigid;
+    public SpriteRenderer   render;
 
-    public int maxHealth = 6;
-    public int health = 6;
-    private bool isUnBeatTime = false;
+    public int              maxHealth = 6;
+    public int              health = 6;
+    private bool            isUnBeatTime = false;
 
-    private string dist = "";
+    private string          dist = "";
 
     void Start()
     {
-        animator = gameObject.GetComponentInChildren<Animator>();
-        rigid = gameObject.GetComponent<Rigidbody2D>();
+        animator    = gameObject.GetComponentInChildren<Animator>();
+        rigid       = gameObject.GetComponent<Rigidbody2D>();
 
         StartCoroutine("ChangeMovement");
     }
@@ -42,20 +42,15 @@ public class MonsterMovement : MonoBehaviour
 
     void OnTriggerEnter2D (Collider2D other)
     {
-        // Attacked by Creature
         if (other.gameObject.tag == "PlayerAttack" && !isUnBeatTime)
         {
-            Debug.Log(other.gameObject.name);
-            //canMove = false;
-            //Camera.main.GetComponent<CameraShake>().StartShake(0.2f, 0.2f);
-            // Bouncing
             Vector2 attackedVelocity = Vector2.zero;
 
             if (other.gameObject.transform.position.x > transform.position.x)
             {
                 attackedVelocity = new Vector2(-2f, 2f);
             }
-            else
+            else if (other.gameObject.transform.position.x < transform.position.x)
             {
                 attackedVelocity = new Vector2(2f, 2f);
             }
@@ -65,6 +60,10 @@ public class MonsterMovement : MonoBehaviour
             // Health Down
             health--;
 
+            if (health <= 0)
+            {
+                StartCoroutine("Die");
+            }
             // UnBeatTime On
             if (health > 0)
             {
@@ -72,6 +71,16 @@ public class MonsterMovement : MonoBehaviour
                 StartCoroutine(UnBeatTime());
             }
         }
+    }
+
+    IEnumerator Die()
+    {
+        canMove = false;
+        animator.SetBool("isDie",true);
+        Debug.Log("현재 플레이어 룸 번호 :" + Player.Instace().currentRoomNum);
+
+        yield return new WaitForSeconds(0.5f);
+        StageManager.Instance().generatedStages[Player.Instace().currentRoomNum].GetComponent<Stage>().DestroyMonster(GetComponent<Monster>().key);
     }
 
     // Action Function
@@ -117,6 +126,7 @@ public class MonsterMovement : MonoBehaviour
         {
             moveVelocity = Vector3.right;
             transform.localScale = new Vector3(1, 1, 1);
+            
         }
 
         transform.position += moveVelocity * movePower * Time.deltaTime;

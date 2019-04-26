@@ -6,6 +6,7 @@ public class Monster : MonoBehaviour
 {
     public int key;
 
+    /*
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player")
@@ -16,4 +17,5 @@ public class Monster : MonoBehaviour
             generatedStages[StageManager.Instance().currentStageIndex].GetComponent<Stage>().DestroyMonster(key);
         }
     }
+    */
 }
