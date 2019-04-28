@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8505661391030128721}
-  - component: {fileID: 8505661391030128734}
+  - component: {fileID: 6583179018828920664}
   m_Layer: 0
-  m_Name: JsonManager
+  m_Name: Manager Json
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8505661391030128734
+--- !u!114 &6583179018828920664
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,6 +40,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8505661391030128735}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 344d0747015416a4cb4d8de328d538e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 54d512656eba0ae439fddd7adc11aab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardData: []

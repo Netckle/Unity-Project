@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6070642175745290447}
   - component: {fileID: 1690495833914208839}
   m_Layer: 5
-  m_Name: Card
+  m_Name: Card Image For Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,10 +94,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentToReturnTo: {fileID: 0}
   placeholderParent: {fileID: 0}
-  jsonManager: {fileID: 8505661391030128734, guid: 124a5a932787448459d9ddda52bac776,
+  jsonManager: {fileID: 6583179018828920664, guid: 124a5a932787448459d9ddda52bac776,
     type: 3}
-  dropzone: {fileID: 7424692779958653081, guid: ae18252b2db4fc4468b12782ac73998b,
-    type: 3}
+  parentToReturnToSave: {fileID: 0}
 --- !u!114 &6070642175745290447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,10 +109,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f8f7e24d49f7a84ab8e9917dbfd7bb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  category: 
-  enemyCount: 0
-  evenetNum: 0
-  questNum: 0
+  data:
+    cardName: 
+    cardType: 
+    cardLevel: 0
+  cardName: 
+  cardType: 
+  cardLevel: 0
 --- !u!114 &1690495833914208839
 MonoBehaviour:
   m_ObjectHideFlags: 0

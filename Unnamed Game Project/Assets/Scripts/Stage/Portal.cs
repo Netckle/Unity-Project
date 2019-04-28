@@ -3,13 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Portal : MonoBehaviour
-{
-    void OnTriggerStay2D(Collider2D other)
+{   
+    private bool canGo = false;
+    void Update()
     {
-        if (other.gameObject.tag == "Player" && Input.GetButtonDown("Interact"))
+        if (Input.GetButtonDown("Interact") && canGo)
         {
             StageManager.Instance().MoveNextRoom();
-            Player.Instace().currentRoomNum++;
+            canGo = false;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {        
+            canGo = true;
+        }
+    }
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            canGo = false;
         }
     }
 }

@@ -1,5 +1,5 @@
 <ItemDB>
   <Item SlotNumber="0" Name="HP" Count="3" MaxCount="3" />
   <Item SlotNumber="1" Name="MP" Count="3" MaxCount="3" />
-  <Item SlotNumber="2" Name="" Count="4" MaxCount="5" />
+  <Item SlotNumber="2" Name="HP" Count="5" MaxCount="5" />
 </ItemDB>

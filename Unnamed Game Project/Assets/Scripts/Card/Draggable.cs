@@ -11,7 +11,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
 	GameObject placeholder = null;
 
-    public JsonManager jsonManager;
+   //public JsonTest jsonManager;
 	
     private int cardSiblingIndex;
     public Transform parentToReturnToSave;
@@ -98,8 +98,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             if (transform.GetSiblingIndex() != cardSiblingIndex)
             {
                 Debug.Log("같은 영역이지만 배열 순서가 다르다.");
-                jsonManager.RemoveData(GetComponent<Card>().data, cardSiblingIndex);
-                jsonManager.InsertData(GetComponent<Card>().data, transform.GetSiblingIndex());
+                JsonTest.Instace().RemoveData(GetComponent<Card>().data, cardSiblingIndex);
+                JsonTest.Instace().InsertData(GetComponent<Card>().data, transform.GetSiblingIndex());
             }
             else
             {
@@ -112,13 +112,13 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             {
                 Debug.Log("Data is Inserted...");
                 Debug.Log("올릴 오브젝트의 번호 : " + this.gameObject.transform.GetSiblingIndex());
-                jsonManager.InsertData(GetComponent<Card>().data, this.gameObject.transform.GetSiblingIndex());
+                JsonTest.Instace().InsertData(GetComponent<Card>().data, this.gameObject.transform.GetSiblingIndex());
             }
 
             else if (temp.type == "DOWN" && parentToReturnTo.GetComponent<DropSpace>().type == "DOWN")
             {
                 Debug.Log("버릴 오브젝트의 번호 : " + this.gameObject.transform.GetSiblingIndex());
-                jsonManager.RemoveData(GetComponent<Card>().data, cardSiblingIndex);
+                JsonTest.Instace().RemoveData(GetComponent<Card>().data, cardSiblingIndex);
             }
         }
 	}
