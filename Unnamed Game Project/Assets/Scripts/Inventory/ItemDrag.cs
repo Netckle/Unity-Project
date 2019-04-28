@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ItemDrag : MonoBehaviour
 {
-public Transform Img;   // 빈 이미지 객체.
+    public Transform Img;   // 빈 이미지 객체.
  
     private Image EmptyImg; // 빈 이미지.
     private Slot slot;      // 현재 슬롯에 스크립트
@@ -68,7 +68,7 @@ public Transform Img;   // 빈 이미지 객체.
  
         // 싱글톤을 이용해서 인벤토리의 스왑함수를 호출(현재 슬롯, 빈 이미지의 현재 위치.)
         Inventory.Instance().Swap(slot, Img.transform.position);
-        //slot = null;
+        slot = null;
     }
  
     public void Up()

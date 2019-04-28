@@ -79,6 +79,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            ItemIO.SaveDate();
+        }
+
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
             otherCollider.enabled = true;

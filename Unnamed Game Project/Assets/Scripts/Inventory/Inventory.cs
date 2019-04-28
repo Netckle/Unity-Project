@@ -1,17 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    static Inventory instance = null;
-
-    public static Inventory Instance()
-    {
-        return instance;
-    }
-
-    // 공개
+// 공개
     public List<GameObject> AllSlot;    // 모든 슬롯을 관리해줄 리스트.
     public RectTransform InvenRect;     // 인벤토리의 Rect
     public GameObject OriginSlot;       // 오리지널 슬롯.
@@ -24,11 +18,29 @@ public class Inventory : MonoBehaviour
     // 비공개.
     private float InvenWidth;           // 인벤토리 가로길이.
     private float InvenHeight;          // 인밴토리 세로길이.
-    //private float EmptySlot;          // 빈 슬롯의 개수.
- 
+    private float EmptySlot;            // 빈 슬롯의 개수.
+
+    static Inventory instance = null;
+
+    public Sprite[] spr;
+
+    public static Inventory Instance()
+    {
+        return instance;
+    }
+
+	void Start () 
+	{
+		if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
         // 인벤토리 이미지의 가로, 세로 사이즈 셋팅.
         InvenWidth = (slotCountX * slotSize) + (slotCountX * slotGap) + slotGap;
         InvenHeight = (slotCountY * slotSize) + (slotCountY * slotGap) + slotGap;
@@ -49,8 +61,8 @@ public class Inventory : MonoBehaviour
                 // 슬롯의 자식인 투명이미지의 RectTransform을 가져온다.
                 RectTransform item = slot.transform.GetChild(0).GetComponent<RectTransform>();
  
-                slot.name = "slot_" + y + "_" + x;   // 슬롯 이름 설정.
-                slot.transform.SetParent(transform); // 슬롯의 부모를 설정. (Inventory객체가 부모임.)
+                slot.name = "slot_" + y + "_" + x; // 슬롯 이름 설정.
+                slot.transform.parent = transform; // 슬롯의 부모를 설정. (Inventory객체가 부모임.)
  
                 // 슬롯이 생성될 위치 설정하기.
                 slotRect.localPosition = new Vector3((slotSize * x) + (slotGap * (x + 1)),
@@ -72,23 +84,11 @@ public class Inventory : MonoBehaviour
         }
  
         // 빈 슬롯 = 슬롯의 숫자.
-        //EmptySlot = AllSlot.Count;
+        EmptySlot = AllSlot.Count;
+
         Invoke("Init", 0.01f);
     }
 
-    void Start()
-    {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
-    }
- 
-    void Init()
-    {
-        //ItemIO.Load(AllSlot);
-    }
- 
     // 아이템을 넣기위해 모든 슬롯을 검사.
     public bool AddItem(Item item)
     {
@@ -131,6 +131,11 @@ public class Inventory : MonoBehaviour
         // 위에 조건에 해당되는 것이 없을 때 아이템을 먹지 못함.
         return false;
     }
+    
+    void Init()
+    {
+        ItemIO.Load(AllSlot);
+    }    
  
     // 거리가 가까운 슬롯의 반환.
     public Slot NearDisSlot(Vector3 Pos)
