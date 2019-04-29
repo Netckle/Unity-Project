@@ -9,13 +9,6 @@ public enum TYPE { NORMAL, SMALL };
 
 public class DialogueManager : MonoBehaviour 
 {
-	static DialogueManager instance = null;
-
-    public static DialogueManager Instance()
-    {
-        return instance;
-    }
-
 	private Queue<Dictionary<string,object>> sentences = null;
 
 	public TextMeshProUGUI smallDialogueSentence; 
@@ -25,33 +18,33 @@ public class DialogueManager : MonoBehaviour
 	public Image smallDialoguePanel = null;
 	public Image bigDialoguePanel = null;
 
-	void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
 	void Start () 
 	{
-		if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
-
 		sentences = new Queue<Dictionary<string,object>>();
 
 		smallDialoguePanel.gameObject.SetActive(false);
 		bigDialoguePanel.gameObject.SetActive(false);
 	}
 
-	private int key = 0;
+	private int 		key 		= 0;
+	public Sprite[] 	imgSamples;
+	public GameObject imagePrefab;
+	private GameObject 	appliedImg 	= null;
 
 	public void StartDialogue (GameObject talkedObj, List<Dictionary<string,object>> dialogueData, 
-	int[] dialogueIndexRange, TYPE dialogueType, int _key)
+	int[] dialogueIndexRange, TYPE dialogueType, int _key, int image = -1)
 	{	
 		key = _key;
 
 		Player.Instace().targetPos = new Vector3(talkedObj.transform.position.x - 4, talkedObj.transform.position.y, talkedObj.transform.position.z);
 		Player.Instace().canMove = false;
+
+		if (image != -1)
+		{
+			appliedImg = Instantiate(imagePrefab, new Vector3(0, 0, -1), Quaternion.identity);
+			appliedImg.AddComponent<SpriteRenderer>();
+			appliedImg.GetComponent<SpriteRenderer>().sprite = imgSamples[image];
+		}
 
 		if (dialogueType == TYPE.NORMAL) 
 		{
@@ -125,9 +118,12 @@ public class DialogueManager : MonoBehaviour
 		Player.Instace().canMove = true;
 		Player.Instace().isTalking = false;
 
-		AfterDialogue.Instance().StartEvent(key);		
+		//AfterDialogue.Instance().StartEvent(key);	
 
-		StageManager.Instance().generatedStages[StageManager.Instance().currentStageIndex].GetComponent<Stage>().SpawnBox();
+		Destroy(appliedImg);
+		appliedImg = null;	
+
+		GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].GetComponent<Stage>().SpawnBox();
 			
 		key = 0;
 	}

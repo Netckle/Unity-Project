@@ -22,27 +22,6 @@ public class JsonTest : MonoBehaviour
 
     List<CardData> cardData = new List<CardData>();
 
-    static JsonTest instance = null; 
-
-    public static JsonTest Instace()
-    {
-        return instance;
-    } 
-
-    void Awake()
-    {
-        Debug.Log(path);
-        DontDestroyOnLoad(gameObject);
-    }
-
-    void Start()
-    {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);   
-    }
-
     public void AddData(CardData data)
     {
         cardData.Add(data);
@@ -87,11 +66,9 @@ public class JsonTest : MonoBehaviour
     {
         CardDataContainer container = JsonUtility.FromJson<CardDataContainer>(json);
 
-        Debug.Log(container.cardData.Count);
         for (int i = 0; i < container.cardData.Count; i++)
         {
             cardData[i] = container.cardData[i];
-            Debug.Log(container.cardData[i].cardLevel + " " + container.cardData[i].cardName + " " + container.cardData[i].cardType);
         }
     }
 

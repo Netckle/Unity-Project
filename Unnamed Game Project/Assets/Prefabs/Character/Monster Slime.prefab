@@ -175,8 +175,8 @@ MonoBehaviour:
     type: 3}
   canMove: 1
   render: {fileID: 2306051549374380306}
-  maxHealth: 6
-  health: 6
+  maxHealth: 1
+  health: 1
 --- !u!114 &8437941255579734853
 MonoBehaviour:
   m_ObjectHideFlags: 0

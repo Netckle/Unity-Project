@@ -89,36 +89,29 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         DropSpace temp = parentToReturnTo.gameObject.GetComponent<DropSpace>();
 
-        Debug.Log(parentToReturnToSave);
-        Debug.Log(placeholderParent);
-
         if (parentToReturnToSave == placeholderParent)
         {
             
             if (transform.GetSiblingIndex() != cardSiblingIndex)
             {
-                Debug.Log("같은 영역이지만 배열 순서가 다르다.");
-                JsonTest.Instace().RemoveData(GetComponent<Card>().data, cardSiblingIndex);
-                JsonTest.Instace().InsertData(GetComponent<Card>().data, transform.GetSiblingIndex());
+                GameManager.Instance().jsonM.RemoveData(GetComponent<Card>().data, cardSiblingIndex);
+                GameManager.Instance().jsonM.InsertData(GetComponent<Card>().data, transform.GetSiblingIndex());
             }
             else
             {
-                Debug.Log("같은 위치라 아무것도 실행하지 않는다.");
+                Debug.Log("Current position is same position.");
             }
         }
         else if (parentToReturnToSave != placeholderParent)
         {
             if (temp.type == "UP")
             {
-                Debug.Log("Data is Inserted...");
-                Debug.Log("올릴 오브젝트의 번호 : " + this.gameObject.transform.GetSiblingIndex());
-                JsonTest.Instace().InsertData(GetComponent<Card>().data, this.gameObject.transform.GetSiblingIndex());
+                GameManager.Instance().jsonM.InsertData(GetComponent<Card>().data, this.gameObject.transform.GetSiblingIndex());
             }
 
             else if (temp.type == "DOWN" && parentToReturnTo.GetComponent<DropSpace>().type == "DOWN")
             {
-                Debug.Log("버릴 오브젝트의 번호 : " + this.gameObject.transform.GetSiblingIndex());
-                JsonTest.Instace().RemoveData(GetComponent<Card>().data, cardSiblingIndex);
+                GameManager.Instance().jsonM.RemoveData(GetComponent<Card>().data, cardSiblingIndex);
             }
         }
 	}

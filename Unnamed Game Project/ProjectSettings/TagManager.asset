@@ -12,6 +12,7 @@ TagManager:
   - Inventory
   - DragImg
   - tree
+  - Manager
   layers:
   - Default
   - TransparentFX

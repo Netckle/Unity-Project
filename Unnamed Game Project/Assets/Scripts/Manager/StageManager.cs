@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,33 +18,18 @@ public class StageManager : MonoBehaviour
 
     public int              currentStageIndex = 0;      // 플레이어가 있는 방의 번호입니다.
 
-    // Singleton
-    static StageManager instance = null;
-
-    public static StageManager Instance()
-    {
-        return instance;
-    }
-
     void Awake()
     {
+        
+    }
+
+    public void GenerateStage()
+    {
+        currentStageIndex = 0;
         Player.Instace().currentRoomNum = currentStageIndex;
         Player.Instace().transform.position = Vector3.zero;
 
-        GenerateStage();
-    }
-
-    void Start()
-    {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
-    }
-
-    void GenerateStage()
-    {
-        stageData       = JsonTest.Instace().LoadData();
+        stageData       = GameManager.Instance().jsonM.LoadData();
         stageMaxCount   = stageData.Count; 
         generatedStages = new GameObject[stageMaxCount];
 
@@ -97,7 +82,8 @@ public class StageManager : MonoBehaviour
         if (currentStageIndex == stageMaxCount - 1) 
         {
             Player.Instace().transform.position = Vector3.zero;
-            SceneManager.LoadScene("Dungeon Scene Select");
+            //SceneManager.LoadScene("Dungeon Scene Select");
+            GameManager.Instance().changeSceneM.SceneChange("Dungeon Scene Select");
         }
         else 
         {
@@ -112,6 +98,6 @@ public class StageManager : MonoBehaviour
         {
             generatedStages[i].GetComponent<Stage>().alreadyClear = true; // 이전 스테이지 전부 "이미 클리어함" 상태로 변경.
         }    
-        SpawnManager.Instance().portal.SetActive(false); // 포탈 비활성화.
+        GameManager.Instance().spawnM.portal.SetActive(false); // 포탈 비활성화.
     }
 }

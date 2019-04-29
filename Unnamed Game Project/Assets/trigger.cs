@@ -10,7 +10,7 @@ public class trigger : MonoBehaviour
     {
         if (other.gameObject.tag == "Player" && Input.GetButtonDown("Interact"))
         {
-            ChangeScene.Instace().CardSystemSwitch(flag);
+            GameManager.Instance().changeSceneM.OpenCardPanel(flag);
 
             switch(flag)
             {

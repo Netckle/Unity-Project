@@ -67,8 +67,8 @@ public class Stage : MonoBehaviour
 
     public void SpawnBox()
     {
-        SpawnManager.Instance().portal.transform.position = this.gameObject.transform.position;
-        SpawnManager.Instance().portal.SetActive(true);
+        GameManager.Instance().spawnM.portal.transform.position = this.gameObject.transform.position;
+        GameManager.Instance().spawnM.portal.SetActive(true);
         portalSpawned = true;
     }
 
@@ -78,11 +78,11 @@ public class Stage : MonoBehaviour
         for (int i = 0; i < monsterMaxCount; i++)
         {
             int monsterRandomIndex = Random.Range(monsterLevel - 1, monsterLevel + 1); // monsterLevel - 1 부터 monsterLevel 까지
-            monsterFadingSpace = Random.Range(SpawnManager.Instance().spawnFadingRange[0], SpawnManager.Instance().spawnFadingRange[1]);            
+            monsterFadingSpace = Random.Range(GameManager.Instance().spawnM.spawnFadingRange[0], GameManager.Instance().spawnM.spawnFadingRange[1]);            
 
             monsterSpawnPos[i] = new Vector3(transform.position.x + monsterFadingSpace, transform.position.y + 3, 0);      
 
-            GameObject temp = Instantiate(SpawnManager.Instance().monsterPrefabs[monsterRandomIndex], monsterSpawnPos[i], Quaternion.identity) as GameObject;
+            GameObject temp = Instantiate(GameManager.Instance().spawnM.monsterPrefabs[monsterRandomIndex], monsterSpawnPos[i], Quaternion.identity) as GameObject;
             temp.GetComponent<Monster>().key = i;
 
             generatedMonsters.Add(i, temp);
@@ -93,7 +93,7 @@ public class Stage : MonoBehaviour
     {
         generatedNpc = Instantiate
         (
-            SpawnManager.Instance().npcPrefabs[npcIndex], 
+            GameManager.Instance().spawnM.npcPrefabs[npcIndex], 
             new Vector3(transform.position.x + 3, transform.position.y, transform.position.z), 
             Quaternion.identity
         );
@@ -103,7 +103,7 @@ public class Stage : MonoBehaviour
     {
         generateObject = Instantiate
         (
-            SpawnManager.Instance().objectPrefabs[objectIndex],
+            GameManager.Instance().spawnM.objectPrefabs[objectIndex],
             new Vector3(transform.position.x, transform.position.y, transform.position.z),
             Quaternion.identity
         );

@@ -13,26 +13,16 @@ public class SpawnManager : MonoBehaviour
     [HideInInspector]
     public GameObject portal;
 
-    static SpawnManager instance = null;
-
-    public static SpawnManager Instance()
-    {
-        return instance;
-    }
-
     void Awake()
     {
-        instance = this;
 
-        portal = FindObjectOfType<Portal>().gameObject;
-        portal.SetActive(false);
     }
 
-    void Start()
+    public void UpdatePortalState()
     {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
+        portal = FindObjectOfType<Portal>().gameObject;
+        if (portal != null)
+            Debug.Log("포탈 캐치함");
+        portal.SetActive(false);
     }
 }

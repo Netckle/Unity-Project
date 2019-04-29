@@ -6,13 +6,6 @@ using TMPro;
 
 public class QuestManager : MonoBehaviour
 {
-    static QuestManager instance = null;
-
-    public static QuestManager Instance()
-    {
-        return instance;
-    }
-
     public TextMeshProUGUI questSentence;
     public Image questPanel = null;
 
@@ -21,17 +14,8 @@ public class QuestManager : MonoBehaviour
 
     private LoadCSV csvLoader;
 
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
     void Start()
     {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
         csvLoader = FindObjectOfType<LoadCSV>().GetComponent<LoadCSV>();
         questData = csvLoader.GetData("Quest");
 

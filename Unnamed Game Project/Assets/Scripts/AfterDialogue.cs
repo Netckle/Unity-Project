@@ -49,8 +49,8 @@ public class AfterDialogue : MonoBehaviour
     {
         int temp = key % 10;
 
-        if (!QuestManager.Instance().CheckQuestState(temp))
-			QuestManager.Instance().StartQuest(temp);
+        if (!GameManager.Instance().questM.CheckQuestState(temp))
+			GameManager.Instance().questM.StartQuest(temp);
     }
 
     void GetStat(int key)

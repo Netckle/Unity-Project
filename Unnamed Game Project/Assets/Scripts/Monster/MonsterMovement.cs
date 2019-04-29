@@ -80,7 +80,7 @@ public class MonsterMovement : MonoBehaviour
         Debug.Log("현재 플레이어 룸 번호 :" + Player.Instace().currentRoomNum);
 
         yield return new WaitForSeconds(0.5f);
-        StageManager.Instance().generatedStages[Player.Instace().currentRoomNum].GetComponent<Stage>().DestroyMonster(GetComponent<Monster>().key);
+        GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].GetComponent<Stage>().DestroyMonster(GetComponent<Monster>().key);
     }
 
     // Action Function

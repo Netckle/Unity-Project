@@ -15,6 +15,9 @@ public class DialogueTrigger : MonoBehaviour
 
     public int      key;
     private bool    isChanged = false;
+    public int imageNum;
+
+    private bool canTalk = false;
 
     void Start()
     {
@@ -23,9 +26,9 @@ public class DialogueTrigger : MonoBehaviour
 
     void Update()
     {
-        if (!isChanged && QuestManager.Instance().CheckQuestState(key % 10))
+        if (!isChanged && GameManager.Instance().questM.CheckQuestState(key % 10))
         {
-            StageManager.Instance().generatedStages[StageManager.Instance().currentStageIndex].GetComponent<Stage>().SpawnBox();
+            GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].GetComponent<Stage>().SpawnBox();
 
             appliedDialogueRange = dialogueRangeAfter;
             isChanged = true;
@@ -33,18 +36,33 @@ public class DialogueTrigger : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.I))
         {
-            QuestManager.Instance().ClearQuest(key % 10);
+            GameManager.Instance().questM.ClearQuest(key % 10);
         }
-    }
 
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "Player" && Input.GetButtonDown("Interact"))
+        if (canTalk && Input.GetButtonDown("Interact"))
         {
             Player.Instace().isTalking = true;
 
-            DialogueManager.Instance().
-            StartDialogue(this.gameObject, GameObject.Find("Load CSV").GetComponent<LoadCSV>().GetData("Dialogue"), appliedDialogueRange, dialogueType, key);                       
-        }        
+            GameManager.Instance().dialgoueM.
+            StartDialogue(this.gameObject, GameObject.Find("Load CSV").GetComponent<LoadCSV>().GetData("Dialogue"), appliedDialogueRange, dialogueType, key, imageNum);  
+
+            canTalk = false;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            canTalk = true;
+        }       
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            canTalk = false;
+        }
     }
 }

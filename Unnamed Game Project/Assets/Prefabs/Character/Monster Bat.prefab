@@ -204,5 +204,5 @@ MonoBehaviour:
     type: 3}
   canMove: 1
   render: {fileID: 7054990102281196107}
-  maxHealth: 6
-  health: 6
+  maxHealth: 1
+  health: 1
