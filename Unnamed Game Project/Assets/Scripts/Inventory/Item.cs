@@ -9,9 +9,7 @@ public class Item : MonoBehaviour
     public TYPE type;           // 아이템의 타입.
     public string Name;         // 아이템의 이름.
     public Sprite DefaultImg;   // 기본 이미지.
-    public int MaxCount;        // 겹칠수 있는 최대 숫자.
-    
- 
+    public int MaxCount;        // 겹칠수 있는 최대 숫자. 
  
     void AddItem()
     {

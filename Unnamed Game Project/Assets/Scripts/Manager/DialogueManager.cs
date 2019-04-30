@@ -83,9 +83,6 @@ public class DialogueManager : MonoBehaviour
 		StopAllCoroutines();
 		StartCoroutine(TypeSentence(sentence, dialogueType));
 	}
-
-
-
 	IEnumerator TypeSentence (Dictionary<string, object> sentence, TYPE dialogueType)
 	{
 		switch (dialogueType)
@@ -124,7 +121,7 @@ public class DialogueManager : MonoBehaviour
 		appliedImg = null;	
 
 		GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].GetComponent<Stage>().SpawnBox();
-			
+		AfterDialogue.Instance().StartEvent(key);
 		key = 0;
 	}
 }

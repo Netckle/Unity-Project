@@ -1372,4 +1372,5 @@ MonoBehaviour:
   dialogueRangeBefore: 0000000008000000
   dialogueRangeAfter: 
   dialogueType: 0
-  key: 11
+  key: 21
+  imageNum: 0

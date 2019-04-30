@@ -24,25 +24,29 @@ public class AfterDialogue : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public void StartEvent(int key)
+    public void StartEvent(int key) // key는 두자리 숫자.
     {
-        switch (key / 10)
+        int category = (key / 10);
+        int index = (key % 10);
+
+        switch (category)
         {
             case 1:
-                GetQuest(key);
+                GetQuest(index);
                 break;
             case 2:
-                GetItem(key);
+                GetItem(index);
                 break;
             case 3:
-                GetStat(key);
+                GetStat(index);
                 break;
         }
     }
-
+    public GameObject[] items;
     void GetItem(int key)
     {
-        Debug.Log(key + "번 아이템을 습득했습니다.");
+        Inventory.Instance().AddItem(items[key].GetComponent<Item>());
+        Debug.Log(items[key].gameObject.name + " 아이템을 습득했습니다.");
     }
 
     void GetQuest(int key)

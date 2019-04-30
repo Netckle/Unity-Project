@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public StageManager     stageM;
     [HideInInspector]
     public ChangeScene      changeSceneM;
+    [HideInInspector]
+    public IntroSceneManager sceneM;
 
     public static GameManager Instance()
     {
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
         spawnM          = FindManager<SpawnManager>     (3);
         stageM          = FindManager<StageManager>     (4);
         changeSceneM    = FindManager<ChangeScene>      (5);
+        sceneM          = FindManager<IntroSceneManager>(6);
 
         UpdateManager();
     }

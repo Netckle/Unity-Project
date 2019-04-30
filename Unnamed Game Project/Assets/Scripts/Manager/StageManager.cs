@@ -81,9 +81,11 @@ public class StageManager : MonoBehaviour
     {               
         if (currentStageIndex == stageMaxCount - 1) 
         {
-            Player.Instace().transform.position = Vector3.zero;
+            
             //SceneManager.LoadScene("Dungeon Scene Select");
-            GameManager.Instance().changeSceneM.SceneChange("Dungeon Scene Select");
+            //GameManager.Instance().changeSceneM.SceneChange("Dungeon Scene Select");
+            GameManager.Instance().sceneM.Activate("Dungeon Scene Select", true);
+            Player.Instace().transform.position = Vector3.zero;
         }
         else 
         {
