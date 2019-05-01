@@ -64,7 +64,7 @@ MonoBehaviour:
   monsterMaxCount: 0
   npcIndex: 0
   objectIndex: 0
-  alreadyClear: 0
+  stageCleared: 0
 --- !u!1 &2423462173167221134
 GameObject:
   m_ObjectHideFlags: 0
@@ -1369,8 +1369,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c8a9a64cde4ab48be3fb6c641a5cc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueRangeBefore: 0000000008000000
-  dialogueRangeAfter: 
-  dialogueType: 0
-  key: 21
-  imageNum: 0
+  dialogueRangeFirst: 0000000008000000
+  dialogueRangeAfter: 080000000a000000
+  haveQuest: 0
+  type: 0
+  eventKey: 0
+  cutsceneNum: 0

@@ -1,15 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class IntroSceneManager : MonoBehaviour
+public class SceneChangeManager : MonoBehaviour
 {
     public FadeController fader;
 
     void Start()
     {
         fader.gameObject.GetComponent<SpriteRenderer>().color = new Color(255,255,255, 0);
+    }
+
+    public void Activate(string stageName)
+    {
+        StartCoroutine(CoActivate(stageName, false));
     }
 
     public void Activate(string stageName, bool onStage = false)
@@ -28,5 +32,7 @@ public class IntroSceneManager : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
 
         fader.FadeOut(0.2f);
+
+        GameManager.Instance().stageM.GenerateStage();
     }
 }

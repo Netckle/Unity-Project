@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class trigger : MonoBehaviour
+public class CardTrigger : MonoBehaviour
 {
-    private bool flag = true;
+    public bool flag = true;
 
     void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player" && Input.GetButtonDown("Interact"))
         {
-            GameManager.Instance().changeSceneM.OpenCardPanel(flag);
+            GameManager.Instance().canvasM.OpenCardPanel(flag);
 
             switch(flag)
             {

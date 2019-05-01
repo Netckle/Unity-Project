@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
     public bool             isTalking = false;
     public float            horPaddingSpace = 0.0f;
 
-    private TYPE            dialogueType = TYPE.NORMAL;   
+    private DIALOGUEBOX            dialogueType = DIALOGUEBOX.NORMAL;   
 
     void Awake()
     {

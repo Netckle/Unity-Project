@@ -2,27 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveToNextRoom : MonoBehaviour
+public class MoveNext : MonoBehaviour
 {
     private Vector3 previousPos;
     private Vector3 nextPos;
-    public float    delayTime;
+    public float delayTime;
 
-    public void MoveNext()
+    private WaitForSeconds wait;
+
+    void Start()
     {
-        previousPos = this.transform.position;
-        StartCoroutine("MoveNextCoroutine");
+        wait = new WaitForSeconds(delayTime);
     }
 
-    IEnumerator MoveNextCoroutine()
+    public void MoveToNextRoomCamera()
+    {
+        previousPos = this.transform.position;
+        StartCoroutine("CoMoveToNextRoomCamera");
+    }
+
+    private IEnumerator CoMoveToNextRoomCamera()
     {
         for (int i = 0; i < 13; i++)
         {
             nextPos = new Vector3(previousPos.x, previousPos.y - i, previousPos.z);
-
             this.transform.position = nextPos;
-
-            yield return new WaitForSeconds(delayTime);
+            yield return wait;
         }
     }
 }

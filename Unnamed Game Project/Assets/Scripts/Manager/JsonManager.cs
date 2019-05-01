@@ -1,91 +1,82 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 using System.IO;
 using System.Text;
 
-using Newtonsoft.Json;
-
 public class JsonManager : MonoBehaviour
 {
-    string path = Application.streamingAssetsPath + "/Data";
-    [HideInInspector]
-    public List<CardData> cardData = new List<CardData>();
+    string path = Application.streamingAssetsPath + "/Data/";
 
-    // Singleton
-    static JsonManager instance = null; 
+    List<CardData> cardData = new List<CardData>();
 
-    public static JsonManager Instace()
-    {
-        return instance;
-    } 
+    // Controll data before saved.
 
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
-    void Start()
-    {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
-    }
-
-    public void AddData(CardData data)
+    public void Add(CardData data)
     {
         cardData.Add(data);
     }
 
-    public void RemoveData(CardData data, int index)
+    public void Remove(CardData data, int index)
     {
         cardData.RemoveAt(index);
     }
 
-    public void InsertData(CardData data, int index)
+    public void Insert(CardData data, int index)
     {
         cardData.Insert(index, data);
     }
 
-    public void Save()
-    {
-        string data = ObjectToJson(cardData);
+    // Save & Load
 
-        CreateJsonFile(path, "cardData", data);
-        Debug.Log(path + "/cardData.json");
+    public void Save(string fileName)
+    {
+        string data = SerializeToJson();
+        CreateJsonFile(data, fileName);
     }
 
     public List<CardData> Load()
     {
-        List<CardData> mapDataTemp = new List<CardData>();
+        string data = "";
 
-        if (File.Exists(path + "/cardData.json"))
+        if (File.Exists(path + "cardData.json"))
         {
-            Debug.Log("파일 존재함.");
-            string jsonStr = File.ReadAllText(path + "/cardData.json");
-
-            mapDataTemp = JsonToObject<List<CardData>>(jsonStr);
+            data = File.ReadAllText(path + "cardData.json");
+            Debug.Log(data);
         }
+        //string data = SerializeToJson();
+        DeserializeFromJson(data);
 
-        return mapDataTemp;
+        return cardData;
     }
 
-    string ObjectToJson(object obj)
-    {
-        return JsonConvert.SerializeObject(obj);
+    // There is no need to modify it.
+
+    string SerializeToJson()
+    {       
+        CardDataContainer container = new CardDataContainer(cardData);
+        string json = JsonUtility.ToJson(container);
+
+        return json;
     }
 
-    T JsonToObject<T>(string jsonData)
+    void DeserializeFromJson(string json)
     {
-        return JsonConvert.DeserializeObject<T>(jsonData);
+        CardDataContainer container = JsonUtility.FromJson<CardDataContainer>(json);
+
+        for (int i = 0; i < container.cardData.Count; i++)
+        {
+            cardData[i] = container.cardData[i];
+        }
     }
 
-    void CreateJsonFile(string createPath, string fileName, string jsonData)
+    void CreateJsonFile(string jsonData, string fileName)
     {
-        FileStream filestream = new FileStream(string.Format("{0}/{1}.json", createPath, fileName), FileMode.Create);
+        FileStream filestream = new FileStream(path + fileName, FileMode.Create);
         byte[] data = Encoding.UTF8.GetBytes(jsonData);
+
         filestream.Write(data, 0, data.Length);
         filestream.Close();
     }

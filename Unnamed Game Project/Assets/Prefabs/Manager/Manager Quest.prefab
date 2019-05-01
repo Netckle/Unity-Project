@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7427529890244766053}
   - component: {fileID: 7427529890244766052}
   m_Layer: 0
-  m_Name: "\uD018\uC2A4\uD2B8 \uB9E4\uB2C8\uC800"
-  m_TagString: Untagged
+  m_Name: Manager Quest
+  m_TagString: Manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,5 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c7d2ee085f90640b2978c0a763dc69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questSentence: {fileID: 0}
+  questContent: {fileID: 0}
   questPanel: {fileID: 0}

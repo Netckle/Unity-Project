@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 4676151942690171702}
   - component: {fileID: 4676151942690171703}
   - component: {fileID: 6270522085423986636}
-  m_Layer: 0
+  - component: {fileID: 55566378}
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: PlayerAttack
   m_Icon: {fileID: 0}
@@ -116,6 +117,27 @@ CircleCollider2D:
   m_Offset: {x: 1.15, y: -0.3}
   serializedVersion: 2
   m_Radius: 0.4
+--- !u!50 &55566378
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4676151942690171697}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &4676151942861004094
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +148,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4676151942861004093}
   - component: {fileID: 4676151942861004092}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ground Check
   m_TagString: Untagged
   m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
@@ -173,7 +195,8 @@ GameObject:
   - component: {fileID: 4676151942930220063}
   - component: {fileID: 4676151942930220051}
   - component: {fileID: 4676151942930220060}
-  m_Layer: 0
+  - component: {fileID: 1817964209}
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -245,20 +268,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57edbb673f3dea54984dcf8bffc7ab49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Effect: []
+  Img:
+  - {fileID: 0}
+  - {fileID: 0}
+  MAX_HP: 10
+  MAX_MP: 10
+  p_HP: 8
+  p_MP: 8
   currentRoomNum: 0
   render: {fileID: 4676151942690171702}
   animator: {fileID: 4676151942690171703}
   canMove: 1
-  movePower: 5
-  jumpPower: 5
+  movePower: 7
+  jumpPower: 7
   groundCheck: {fileID: 4676151942861004093}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 768
   checkRadius: 0.3
   extraJumpsValue: 0
-  cooldown: 0.5
-  maxTime: 0.8
+  otherCollider: {fileID: 1817964209}
+  cooldown: 0.3
+  maxTime: 0.4
   maxCombo: 4
   maxHealth: 6
   health: 6
@@ -279,3 +311,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
+--- !u!70 &1817964209
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4676151942930220056}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.25}
+  m_Size: {x: 1.2, y: 1.7}
+  m_Direction: 0

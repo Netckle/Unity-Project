@@ -48,7 +48,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		
-		jsonManager.AddData(eventData.pointerDrag.GetComponent<Card>().data);
+		jsonManager.Add(eventData.pointerDrag.GetComponent<Card>().data);
 		if(d != null) 
         {
 			d.parentToReturnTo = this.transform;

@@ -175,7 +175,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -204,10 +204,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 301826159}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72143ff710ad6a644a9a480dc22364cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 4824fdb5bf0d5be47ab5bc7f76e62ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delayTime: 0.05
+  delayTime: 0.1
 --- !u!1001 &509398567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -218,12 +218,7 @@ PrefabInstance:
     - target: {fileID: 269617404029880061, guid: d19a7469e8031794f80d96ffcb506f92,
         type: 3}
       propertyPath: m_Name
-      value: Box
-      objectReference: {fileID: 0}
-    - target: {fileID: 269617404029880061, guid: d19a7469e8031794f80d96ffcb506f92,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      value: Portal
       objectReference: {fileID: 0}
     - target: {fileID: 8238458640269123595, guid: d19a7469e8031794f80d96ffcb506f92,
         type: 3}

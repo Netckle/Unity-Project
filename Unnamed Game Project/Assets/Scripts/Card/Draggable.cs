@@ -94,8 +94,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             
             if (transform.GetSiblingIndex() != cardSiblingIndex)
             {
-                GameManager.Instance().jsonM.RemoveData(GetComponent<Card>().data, cardSiblingIndex);
-                GameManager.Instance().jsonM.InsertData(GetComponent<Card>().data, transform.GetSiblingIndex());
+                GameManager.Instance().jsonM.Remove(GetComponent<Card>().data, cardSiblingIndex);
+                GameManager.Instance().jsonM.Insert(GetComponent<Card>().data, transform.GetSiblingIndex());
             }
             else
             {
@@ -106,12 +106,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         {
             if (temp.type == "UP")
             {
-                GameManager.Instance().jsonM.InsertData(GetComponent<Card>().data, this.gameObject.transform.GetSiblingIndex());
+                GameManager.Instance().jsonM.Insert(GetComponent<Card>().data, this.gameObject.transform.GetSiblingIndex());
             }
 
             else if (temp.type == "DOWN" && parentToReturnTo.GetComponent<DropSpace>().type == "DOWN")
             {
-                GameManager.Instance().jsonM.RemoveData(GetComponent<Card>().data, cardSiblingIndex);
+                GameManager.Instance().jsonM.Remove(GetComponent<Card>().data, cardSiblingIndex);
             }
         }
 	}

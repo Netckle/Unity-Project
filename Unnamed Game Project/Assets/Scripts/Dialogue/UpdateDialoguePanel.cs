@@ -5,15 +5,18 @@ using UnityEngine.UI;
 
 public class UpdateDialoguePanel : MonoBehaviour // 대화하고 있는 대상의 머리 위로 대화창을 이동 시킨다.
 {
-    public float    padding = 0.0f;
-    public string   targetName;
+    public float padding = 0.0f;
+    public string targetName;
 
-    private Vector3 tempPos;
     private Vector3 targetPos;
+    private Vector3 appliedTargetPos;
 
     void Update()
     {
-        SetPanelPosition();
+        if (this.gameObject.activeSelf == true)
+        {
+            SetPanelPosition();
+        }
     }
 
     public void SetTarget(string _targetName)
@@ -26,12 +29,12 @@ public class UpdateDialoguePanel : MonoBehaviour // 대화하고 있는 대상�
         if (targetName == null)
             return;
 
-        tempPos = GameObject.Find(targetName).transform.position;
-        tempPos.y += padding;
+        targetPos = GameObject.Find(targetName).transform.position;
+        targetPos.y += padding;
 
-        targetPos = Camera.main.WorldToScreenPoint(tempPos);
-        tempPos = Vector3.zero;
+        appliedTargetPos = Camera.main.WorldToScreenPoint(targetPos);
+        targetPos = Vector3.zero;
 
-        transform.position = targetPos;        
+        transform.position = appliedTargetPos;        
     }
 }

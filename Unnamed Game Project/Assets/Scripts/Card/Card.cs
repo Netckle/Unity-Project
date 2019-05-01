@@ -17,6 +17,16 @@ public class CardData
     }
 }
 
+public struct CardDataContainer
+{
+    public List<CardData> cardData;
+
+    public CardDataContainer(List<CardData> _cardData)
+    {
+        cardData = _cardData;
+    }
+}
+
 public class Card : MonoBehaviour
 {
     [HideInInspector]

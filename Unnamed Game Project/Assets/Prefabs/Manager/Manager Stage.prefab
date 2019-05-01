@@ -47,6 +47,7 @@ MonoBehaviour:
   - {fileID: 4352503303668163991, guid: 9891e8b75a3f0ac46963f5c0d946df32, type: 3}
   - {fileID: 1062324969001756696, guid: 21df82211dd86aa499552b4491f5ec54, type: 3}
   - {fileID: 1348717854914027841, guid: fe7fba9b6e1142145ae9b65765e65f0e, type: 3}
-  stageMaxCount: 8
+  - {fileID: 741981194388067034, guid: c304dc651354021488880fb1be5525a5, type: 3}
   generatedStages: []
+  stageMaxCount: 8
   currentStageIndex: 0

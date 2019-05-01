@@ -9,7 +9,7 @@ public class Portal : MonoBehaviour
     {
         if (Input.GetButtonDown("Interact") && canGo)
         {
-            GameManager.Instance().stageM.MoveNextRoom();
+            GameManager.Instance().stageM.MoveToNextRoom();
             canGo = false;
         }
     }

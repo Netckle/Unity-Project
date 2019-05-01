@@ -8,21 +8,15 @@ public class GameManager : MonoBehaviour
     // Singleton Instance
     static GameManager instance = null;
 
-    // Manager
-    [HideInInspector]
-    public DialogueManager  dialgoueM;
-    [HideInInspector]
-    public QuestManager     questM;
-    [HideInInspector]
-    public JsonTest         jsonM;
-    [HideInInspector]
-    public SpawnManager     spawnM;
-    [HideInInspector]
-    public StageManager     stageM;
-    [HideInInspector]
-    public ChangeScene      changeSceneM;
-    [HideInInspector]
-    public IntroSceneManager sceneM;
+    public DialogueManager      dialgoueM;
+    public QuestManager         questM;
+    public JsonManager          jsonM;
+    public ObjectManager        spawnM;
+    public StageManager         stageM;
+    public SceneChangeManager   sceneChangeM;
+    public CanvasManager        canvasM;
+
+    public LoadCSV loadCSV;
 
     public static GameManager Instance()
     {
@@ -31,8 +25,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        
+        DontDestroyOnLoad(gameObject);        
     }
 
     void Start()
@@ -42,13 +35,15 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        dialgoueM       = FindManager<DialogueManager>  (0);
-        questM          = FindManager<QuestManager>     (1);
-        jsonM           = FindManager<JsonTest>         (2);
-        spawnM          = FindManager<SpawnManager>     (3);
-        stageM          = FindManager<StageManager>     (4);
-        changeSceneM    = FindManager<ChangeScene>      (5);
-        sceneM          = FindManager<IntroSceneManager>(6);
+        dialgoueM       = FindManager<DialogueManager>      (0);
+        questM          = FindManager<QuestManager>         (1);
+        jsonM           = FindManager<JsonManager>          (2);
+        spawnM          = FindManager<ObjectManager>        (3);
+        stageM          = FindManager<StageManager>         (4);
+        sceneChangeM    = FindManager<SceneChangeManager>   (5);
+        canvasM         = FindManager<CanvasManager>        (6);
+
+        loadCSV = FindManager<LoadCSV>(7);
 
         UpdateManager();
     }
@@ -69,7 +64,7 @@ public class GameManager : MonoBehaviour
         {
             case "Dungeon Scene Play":
                 spawnM.gameObject.SetActive(true);
-                spawnM.UpdatePortalState();
+                spawnM.UpdatePortal(false);
                 stageM.GenerateStage();
                 break;
             case "Dungeon Scene Select":

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+public class ObjectManager : MonoBehaviour
 {
     public GameObject[] monsterPrefabs;
     public GameObject[] npcPrefabs;
@@ -13,16 +13,14 @@ public class SpawnManager : MonoBehaviour
     [HideInInspector]
     public GameObject portal;
 
-    void Awake()
-    {
-
-    }
-
-    public void UpdatePortalState()
+    public void UpdatePortal(bool active)
     {
         portal = FindObjectOfType<Portal>().gameObject;
+
         if (portal != null)
-            Debug.Log("포탈 캐치함");
-        portal.SetActive(false);
+        {
+            Debug.LogError("포탈을 찾을 수 없습니다.");
+        }         
+        portal.SetActive(active);
     }
 }

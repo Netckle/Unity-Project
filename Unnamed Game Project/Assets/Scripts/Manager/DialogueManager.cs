@@ -4,124 +4,184 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro; 
 
-// 대화상자의 타입.
-public enum TYPE { NORMAL, SMALL };
+public enum DIALOGUEBOX 
+{
+	NORMAL, SMALL
+}
+
+public enum EVENTTYPE 
+{
+	NONE, ITEM, QUEST, STATUS 
+}
 
 public class DialogueManager : MonoBehaviour 
 {
-	private Queue<Dictionary<string,object>> sentences = null;
+	private Queue<Dictionary<string,object>> sentences = new Queue<Dictionary<string,object>>();
 
-	public TextMeshProUGUI smallDialogueSentence; 
-	public TextMeshProUGUI bigDialogueName; 
-	public TextMeshProUGUI bigDialogueSentence; 
-	
-	public Image smallDialoguePanel = null;
-	public Image bigDialoguePanel = null;
+	public Image smallPanel = null;
+	public TextMeshProUGUI smallContent; 
+
+	public Image bigPanel = null;
+	public TextMeshProUGUI bigName; 
+	public TextMeshProUGUI bigContent; 
+
+	public Sprite[] cutsceneImages;
+	public GameObject cutscenePrefab;
+
+	public GameObject[] itemPrefabs;
+
+	private int eventKey = 0;	
+	private GameObject appliedCutscene = null;
 
 	void Start () 
 	{
-		sentences = new Queue<Dictionary<string,object>>();
-
-		smallDialoguePanel.gameObject.SetActive(false);
-		bigDialoguePanel.gameObject.SetActive(false);
+		smallPanel.gameObject.SetActive(false);
+		bigPanel.gameObject.SetActive(false);
 	}
 
-	private int 		key 		= 0;
-	public Sprite[] 	imgSamples;
-	public GameObject imagePrefab;
-	private GameObject 	appliedImg 	= null;
-
-	public void StartDialogue (GameObject talkedObj, List<Dictionary<string,object>> dialogueData, 
-	int[] dialogueIndexRange, TYPE dialogueType, int _key, int image = -1)
+	public void StartDialogue (GameObject talkingObject, List<Dictionary<string,object>> dialogueData, 
+	int[] dialogueRange, DIALOGUEBOX boxType, int key, int cutsceneNum = -1)
 	{	
-		key = _key;
+		eventKey = key;
 
-		Player.Instace().targetPos = new Vector3(talkedObj.transform.position.x - 4, talkedObj.transform.position.y, talkedObj.transform.position.z);
+		Player.Instace().targetPos = new Vector3(talkingObject.transform.position.x - 4, talkingObject.transform.position.y, talkingObject.transform.position.z);
 		Player.Instace().canMove = false;
 
-		if (image != -1)
+		if (cutsceneNum != -1)
 		{
-			appliedImg = Instantiate(imagePrefab, new Vector3(0, 0, -1), Quaternion.identity);
-			appliedImg.AddComponent<SpriteRenderer>();
-			appliedImg.GetComponent<SpriteRenderer>().sprite = imgSamples[image];
+			appliedCutscene = Instantiate(cutscenePrefab, GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].transform.position, Quaternion.identity);
+			appliedCutscene.AddComponent<SpriteRenderer>();
+			appliedCutscene.GetComponent<SpriteRenderer>().sprite = cutsceneImages[cutsceneNum];
 		}
 
-		if (dialogueType == TYPE.NORMAL) 
+		// Determines the type of dialog box.
+		switch (boxType)
 		{
-			bigDialoguePanel.gameObject.SetActive(true);
-			smallDialoguePanel.gameObject.SetActive(false);
-		}
-		else if (dialogueType == TYPE.SMALL)
-		{
-			bigDialoguePanel.gameObject.SetActive(false);
-			smallDialoguePanel.gameObject.SetActive(true);
+			case DIALOGUEBOX.NORMAL:
+				bigPanel.gameObject.SetActive(true);
+				smallPanel.gameObject.SetActive(false);
+				break;
+			case DIALOGUEBOX.SMALL:
+				bigPanel.gameObject.SetActive(false);
+				smallPanel.gameObject.SetActive(true);
+				break;
 		}
 
 		sentences.Clear();
 
-		for (int i = dialogueIndexRange[0]; i < (dialogueIndexRange[1] - 1); i++)
+		int startIndex = dialogueRange[0];
+		int endIndex = dialogueRange[1] - 1;
+
+		for (int i = startIndex; i < endIndex; i++)
 		{
 			sentences.Enqueue(dialogueData[i]);
 		}
 
 		Player.Instace().StartCoroutine("MoveToPlayerForTalk");
-
-		DisplayNextSentence(dialogueType);
+		DisplayNextSentence(boxType);
 	}
 
-	public void DisplayNextSentence (TYPE dialogueType)
+	public void DisplayNextSentence (DIALOGUEBOX boxType)
 	{
-		if (sentences.Count == 0) // 큐에 남은 대사가 없으면
+		if (sentences.Count == 0) 
 		{
 			EndDialogue();
-
 			return;
 		}
 
 		Dictionary<string, object> sentence = sentences.Dequeue(); 
 
 		StopAllCoroutines();
-		StartCoroutine(TypeSentence(sentence, dialogueType));
+		StartCoroutine(TypeSentence(sentence, boxType));
 	}
-	IEnumerator TypeSentence (Dictionary<string, object> sentence, TYPE dialogueType)
-	{
-		switch (dialogueType)
-		{
-			case TYPE.NORMAL: 
-			bigDialogueName.text = sentence["Name"].ToString();
-			bigDialogueSentence.text = "";		
-			break;
 
-			case TYPE.SMALL: 
-			smallDialoguePanel.GetComponent<UpdateDialoguePanel>().SetTarget(sentence["Name"].ToString());
-			smallDialogueSentence.text = "";		
-			break;
+	IEnumerator TypeSentence (Dictionary<string, object> sentence, DIALOGUEBOX boxType)
+	{
+		// Set name text
+		switch (boxType)
+		{
+			case DIALOGUEBOX.NORMAL: 
+				bigName.text = sentence["Name"].ToString();
+				bigContent.text = "";		
+				break;
+
+			case DIALOGUEBOX.SMALL: 
+				smallPanel.GetComponent<UpdateDialoguePanel>().SetTarget(sentence["Name"].ToString());
+				smallContent.text = "";		
+				break;
 		}		
 
+		// Set content text
 		foreach (char letter in sentence["Text"].ToString().ToCharArray())
 		{
-			if (dialogueType == TYPE.NORMAL) bigDialogueSentence.text += letter;			
-			else if (dialogueType == TYPE.SMALL) smallDialogueSentence.text += letter;
-
+			if (boxType == DIALOGUEBOX.NORMAL) 
+			{
+				bigContent.text += letter;		
+			}	
+			else if (boxType == DIALOGUEBOX.SMALL) 
+			{
+				smallContent.text += letter;
+			}
 			yield return null;
 		}
 	}
 
 	void EndDialogue()
 	{
-		bigDialoguePanel.gameObject.SetActive(false);
-		smallDialoguePanel.gameObject.SetActive(false);
+		Destroy(appliedCutscene);
+		appliedCutscene = null;	
+
+		bigPanel.gameObject.SetActive(false);
+		smallPanel.gameObject.SetActive(false);
 
 		Player.Instace().canMove = true;
-		Player.Instace().isTalking = false;
+		Player.Instace().isTalking = false;	
 
-		//AfterDialogue.Instance().StartEvent(key);	
-
-		Destroy(appliedImg);
-		appliedImg = null;	
+		ChooseEvent(eventKey);
 
 		GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].GetComponent<Stage>().SpawnBox();
-		AfterDialogue.Instance().StartEvent(key);
-		key = 0;
+		
+		eventKey = 0;
+	}
+
+	// Functions that occur after the conversation is over.
+
+	void ChooseEvent(int key) 
+    {
+        int category = (key / 10);
+        int eventNum = (key % 10);
+
+		EVENTTYPE type = EVENTTYPE.NONE;
+
+        switch (category)
+		{
+			case 1: 
+				type = EVENTTYPE.ITEM; 
+				break;
+			case 2: 
+				type = EVENTTYPE.QUEST; 
+				break;
+			case 3:
+				type = EVENTTYPE.STATUS;
+				break;
+		}
+		StartEvent(type, eventNum);
+    }
+
+	void StartEvent(EVENTTYPE type, int key)
+	{
+		switch (type)
+		{
+			case EVENTTYPE.ITEM:
+				Inventory.Instance().AddItem(itemPrefabs[key].GetComponent<Item>());
+				break;
+			case EVENTTYPE.QUEST:
+        		if (!GameManager.Instance().questM.CheckState(key))
+					GameManager.Instance().questM.FirstStart(key);
+				break;
+			case EVENTTYPE.STATUS:
+				Debug.Log("스탯 관련 내용.");
+				break;
+		}
 	}
 }

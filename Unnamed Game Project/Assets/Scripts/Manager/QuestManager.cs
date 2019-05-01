@@ -6,10 +6,10 @@ using TMPro;
 
 public class QuestManager : MonoBehaviour
 {
-    public TextMeshProUGUI questSentence;
+    public TextMeshProUGUI questContent;
     public Image questPanel = null;
 
-    List<Dictionary<string, object>> questData;
+    private List<Dictionary<string, object>> questData;
     private bool isEnd = false;
 
     private LoadCSV csvLoader;
@@ -17,27 +17,35 @@ public class QuestManager : MonoBehaviour
     void Start()
     {
         csvLoader = FindObjectOfType<LoadCSV>().GetComponent<LoadCSV>();
-        questData = csvLoader.GetData("Quest");
+        questData = csvLoader.GetData(DATATYPE.QUEST);
 
         questPanel.gameObject.SetActive(false);
     }
 
-    public void StartQuest(int questIndex)
+    public void Update()
     {
-        Dictionary<string, object> loadedData = questData[questIndex];
+        if (isEnd) 
+        {
+            questPanel.gameObject.SetActive(false);
+        }
+    }
+
+    public void FirstStart(int index)
+    {
+        Dictionary<string, object> loadedData = questData[index];
 
         if (loadedData["isCleared"].ToString() == "no")
         {
-            questSentence.text = questData[questIndex]["content"].ToString();
+            questContent.text = questData[index]["content"].ToString();
             StartCoroutine("ShowQuestPanel");
         }
-        else if (loadedData["isCleared"].ToString() != "no")
+        else if (loadedData["isCleared"].ToString() == "yes")
         {
             Debug.Log("해당 퀘스트는 이미 클리어 되었습니다.");
         }
     }
 
-    public void ClearQuest(int questIndex)
+    public void Clear(int questIndex)
     {
         if (questData[questIndex]["isCleared"].ToString() == "no")
         {
@@ -50,30 +58,23 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public bool CheckQuestState(int questIndex)
+    public bool CheckState(int questIndex)
     {
-        bool temp = false;
+        bool isCleared = false;
+
         switch (questData[questIndex]["isCleared"].ToString())
         {
             case "yes":
-                temp = true;
+                isCleared = true;
                 break;
             case "no":
-                temp = false;
+                isCleared = false;
                 break;
         }
-        return temp;
+        return isCleared;
     }
 
-    public void Update()
-    {
-        if (isEnd) // 퀘스트 표시가 끝나면 오브젝트 비활성화.
-        {
-            questPanel.gameObject.SetActive(false);
-        }
-    }
-
-    IEnumerator ShowQuestPanel()
+    private IEnumerator ShowPanel()
     {
         isEnd = false;
 
@@ -81,7 +82,7 @@ public class QuestManager : MonoBehaviour
 
         for (float i = 0f; i < 1f; i += 0.05f)
         {
-            questSentence.color = new Color(questSentence.color.r, questSentence.color.g, questSentence.color.b, i);
+            questContent.color = new Color(questContent.color.r, questContent.color.g, questContent.color.b, i);
             questPanel.color = new Color(questPanel.color.r, questPanel.color.g, questPanel.color.b, i); 
             yield return new WaitForSeconds(0.05f);
         }
@@ -90,7 +91,7 @@ public class QuestManager : MonoBehaviour
 
         for (float i = 1f; i > 0f; i -= 0.05f)
         {
-            questSentence.color = new Color(questSentence.color.r, questSentence.color.g, questSentence.color.b, i);
+            questContent.color = new Color(questContent.color.r, questContent.color.g, questContent.color.b, i);
             questPanel.color = new Color(questPanel.color.r, questPanel.color.g, questPanel.color.b, i); 
             yield return new WaitForSeconds(0.05f);
         }        
