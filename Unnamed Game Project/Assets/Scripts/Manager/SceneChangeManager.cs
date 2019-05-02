@@ -8,31 +8,39 @@ public class SceneChangeManager : MonoBehaviour
 
     void Start()
     {
+        // 처음은 투명한 상태로 한다.
         fader.gameObject.GetComponent<SpriteRenderer>().color = new Color(255,255,255, 0);
     }
 
+    // 카드 HUD용 씬 변경 함수.
     public void Activate(string stageName)
     {
-        StartCoroutine(CoActivate(stageName, false));
+        GameManager.Instance().canvasM.ControllPanel(HUDTYPE.CARD, false);
+        GameManager.Instance().canvasM.ControllPanel(HUDTYPE.INVENTORY, false);
+
+        StartCoroutine(CoActivate(stageName, true));
     }
 
-    public void Activate(string stageName, bool onStage = false)
+    public void Activate(string stageName, bool toStage)
     {
-        StartCoroutine(CoActivate(stageName, onStage));
+        StartCoroutine(CoActivate(stageName, toStage));
     }
 
-    IEnumerator CoActivate(string stageName, bool onStage)
-    {      
-        if (onStage)
-        {
-            fader.gameObject.transform.position = GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].transform.position;
-        }
-        fader.FadeIn(0.2f, ()=>UnityEngine.SceneManagement.SceneManager.LoadScene(stageName));
+    IEnumerator CoActivate(string stage, bool toStage)
+    {              
+        fader.FadeIn(0.2f, ()=>UnityEngine.SceneManagement.SceneManager.LoadScene(stage));
         
         yield return new WaitForSeconds(1.0f);
 
         fader.FadeOut(0.2f);
 
-        GameManager.Instance().stageM.GenerateStage();
+        Debug.Log(toStage);
+        //yield return new WaitForSeconds(1.0f);
+        if (toStage)
+        {
+            GameManager.Instance().objectM.portal.SetActive(false);
+            GameManager.Instance().stageM.GenerateStage();
+            
+        }
     }
 }

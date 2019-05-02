@@ -138,6 +138,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            GameManager.Instance().canvasM.ControllPanel(HUDTYPE.INVENTORY,true);
+        }
+
         if (Input.GetKeyDown(KeyCode.G))
         {
             ItemIO.SaveDate();

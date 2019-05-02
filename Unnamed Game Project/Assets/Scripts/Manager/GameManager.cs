@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public DialogueManager      dialgoueM;
     public QuestManager         questM;
     public JsonManager          jsonM;
-    public ObjectManager        spawnM;
+    public ObjectManager        objectM;
     public StageManager         stageM;
     public SceneChangeManager   sceneChangeM;
     public CanvasManager        canvasM;
@@ -38,14 +38,12 @@ public class GameManager : MonoBehaviour
         dialgoueM       = FindManager<DialogueManager>      (0);
         questM          = FindManager<QuestManager>         (1);
         jsonM           = FindManager<JsonManager>          (2);
-        spawnM          = FindManager<ObjectManager>        (3);
+        objectM          = FindManager<ObjectManager>        (3);
         stageM          = FindManager<StageManager>         (4);
         sceneChangeM    = FindManager<SceneChangeManager>   (5);
         canvasM         = FindManager<CanvasManager>        (6);
 
         loadCSV = FindManager<LoadCSV>(7);
-
-        UpdateManager();
     }
 
     T FindManager<T>(int index)
@@ -57,19 +55,4 @@ public class GameManager : MonoBehaviour
         
         return tempData;
     }    
-
-    public void UpdateManager()
-    {
-        switch (SceneManager.GetActiveScene().name)
-        {
-            case "Dungeon Scene Play":
-                spawnM.gameObject.SetActive(true);
-                spawnM.UpdatePortal(false);
-                stageM.GenerateStage();
-                break;
-            case "Dungeon Scene Select":
-                spawnM.gameObject.SetActive(false);
-                break;
-        }
-    }
 }

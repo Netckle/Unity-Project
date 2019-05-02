@@ -1,1 +1,24 @@
-{"cardData":[{"cardName":"던전탐험","cardType":"노말","cardLevel":1},{"cardName":"음식채집","cardType":"노말","cardLevel":0}]}
+{
+    "cardData": [
+        {
+            "cardName": "사냥",
+            "cardType": "노말",
+            "cardLevel": 1
+        },
+        {
+            "cardName": "채집",
+            "cardType": "노말",
+            "cardLevel": 1
+        },
+        {
+            "cardName": "마을",
+            "cardType": "노말",
+            "cardLevel": 1
+        },
+        {
+            "cardName": "시장",
+            "cardType": "노말",
+            "cardLevel": 1
+        }
+    ]
+}

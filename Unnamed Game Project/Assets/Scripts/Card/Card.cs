@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.UI;
+
 [System.Serializable]
 public class CardData
 {
@@ -36,8 +38,14 @@ public class Card : MonoBehaviour
     public string   cardType;
     public int      cardLevel;
 
+    public Text name;
+    public Text level;
+
     void Start()
     {
         data = new CardData(cardName, cardType, cardLevel);
+
+        name.text = cardName;
+        level.text = "레벨 " + cardLevel.ToString();
     }
 }

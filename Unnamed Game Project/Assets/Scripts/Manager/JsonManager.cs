@@ -57,7 +57,7 @@ public class JsonManager : MonoBehaviour
     string SerializeToJson()
     {       
         CardDataContainer container = new CardDataContainer(cardData);
-        string json = JsonUtility.ToJson(container);
+        string json = JsonUtility.ToJson(container, prettyPrint:true);
 
         return json;
     }

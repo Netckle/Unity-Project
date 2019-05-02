@@ -13,14 +13,19 @@ public class ObjectManager : MonoBehaviour
     [HideInInspector]
     public GameObject portal;
 
-    public void UpdatePortal(bool active)
+    public bool SearchPortal()
     {
         portal = FindObjectOfType<Portal>().gameObject;
 
-        if (portal != null)
+        if (portal = null)
         {
-            Debug.LogError("포탈을 찾을 수 없습니다.");
-        }         
-        portal.SetActive(active);
+            Debug.LogError("포탈을 찾을 수 없음.");
+            return false;
+        } 
+        else
+        {
+            Debug.Log("포탈 검색 완료.");
+            return true;
+        }
     }
 }

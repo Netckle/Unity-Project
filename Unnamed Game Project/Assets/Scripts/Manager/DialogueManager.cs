@@ -49,7 +49,10 @@ public class DialogueManager : MonoBehaviour
 
 		if (cutsceneNum != -1)
 		{
-			appliedCutscene = Instantiate(cutscenePrefab, GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].transform.position, Quaternion.identity);
+			Vector3 temp = new Vector3(GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].transform.position.x,
+			GameManager.Instance().stageM.generatedStages[GameManager.Instance().stageM.currentStageIndex].transform.position.y, -1);
+
+			appliedCutscene = Instantiate(cutscenePrefab, temp, Quaternion.identity);
 			appliedCutscene.AddComponent<SpriteRenderer>();
 			appliedCutscene.GetComponent<SpriteRenderer>().sprite = cutsceneImages[cutsceneNum];
 		}

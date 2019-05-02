@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class CardTrigger : MonoBehaviour
 {
-    public bool flag = true;
+    public bool isOpen = true;
 
     void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player" && Input.GetButtonDown("Interact"))
         {
-            GameManager.Instance().canvasM.OpenCardPanel(flag);
+            GameManager.Instance().canvasM.ControllPanel(HUDTYPE.CARD, isOpen);
 
-            switch(flag)
+            switch(isOpen)
             {
                 case true:
-                    flag = false;
+                    isOpen = false;
                     break;
                 case false:
-                    flag = true;
+                    isOpen = true;
                     break;
             }
         }

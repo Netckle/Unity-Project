@@ -5,6 +5,13 @@ using UnityEngine;
 public class Portal : MonoBehaviour
 {   
     private bool canGo = false;
+
+    void Start()
+    {
+        GameManager.Instance().objectM.portal = this.gameObject;
+        GameManager.Instance().objectM.portal.SetActive(false);
+    }
+
     void Update()
     {
         if (Input.GetButtonDown("Interact") && canGo)
@@ -21,6 +28,7 @@ public class Portal : MonoBehaviour
             canGo = true;
         }
     }
+
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player")

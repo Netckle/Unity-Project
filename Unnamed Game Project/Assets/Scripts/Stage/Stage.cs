@@ -31,11 +31,15 @@ public class Stage : MonoBehaviour
     {
         switch(stageType)
         {
-            case "던전탐험":
+            case "사냥":
                 monsterSpawnPos = new Vector3[monsterMaxCount];
                 GenerateMonster();
                 break;
-            case "음식채집":                
+            case "채집":                
+                break;
+            case "마을":
+                break;
+            case "시장":
                 break;
             default:
                 Debug.LogError("스테이지 타입 에러.");
@@ -51,7 +55,7 @@ public class Stage : MonoBehaviour
         }
 
         // [던전탐험의 경우]
-        else if (!stageCleared && stageType == "던전탐험" && generatedMonsters.Count == 0) // 해당 맵의 몬스터를 모두 제거했을때.
+        else if (!stageCleared && stageType == "사냥" && generatedMonsters.Count == 0) // 해당 맵의 몬스터를 모두 제거했을때.
         {
             stageState = STAGESTATE.CLEAR;
         }
@@ -65,8 +69,8 @@ public class Stage : MonoBehaviour
 
     public void SpawnBox()
     {
-        GameManager.Instance().spawnM.portal.transform.position = this.gameObject.transform.position;
-        GameManager.Instance().spawnM.portal.SetActive(true);
+        GameManager.Instance().objectM.portal.transform.position = this.gameObject.transform.position;
+        GameManager.Instance().objectM.portal.SetActive(true);
         portalSpawned = true;
     }
 
@@ -76,11 +80,11 @@ public class Stage : MonoBehaviour
         for (int i = 0; i < monsterMaxCount; i++)
         {
             int monsterRandomIndex = Random.Range(monsterLevel - 1, monsterLevel + 1); // monsterLevel - 1 부터 monsterLevel 까지
-            fadingSpaceSize = Random.Range(GameManager.Instance().spawnM.spawnFadingRange[0], GameManager.Instance().spawnM.spawnFadingRange[1]);            
+            fadingSpaceSize = Random.Range(GameManager.Instance().objectM.spawnFadingRange[0], GameManager.Instance().objectM.spawnFadingRange[1]);            
 
             monsterSpawnPos[i] = new Vector3(transform.position.x + fadingSpaceSize, transform.position.y + 3, 0);      
 
-            GameObject temp = Instantiate(GameManager.Instance().spawnM.monsterPrefabs[monsterRandomIndex], monsterSpawnPos[i], Quaternion.identity) as GameObject;
+            GameObject temp = Instantiate(GameManager.Instance().objectM.monsterPrefabs[monsterRandomIndex], monsterSpawnPos[i], Quaternion.identity) as GameObject;
             temp.GetComponent<Monster>().key = i;
 
             generatedMonsters.Add(i, temp);
@@ -91,7 +95,7 @@ public class Stage : MonoBehaviour
     {
         generatedNpc = Instantiate
         (
-            GameManager.Instance().spawnM.npcPrefabs[npcIndex], 
+            GameManager.Instance().objectM.npcPrefabs[npcIndex], 
             new Vector3(transform.position.x + 3, transform.position.y, transform.position.z), 
             Quaternion.identity
         );
@@ -101,7 +105,7 @@ public class Stage : MonoBehaviour
     {
         generateObject = Instantiate
         (
-            GameManager.Instance().spawnM.objectPrefabs[objectIndex],
+            GameManager.Instance().objectM.objectPrefabs[objectIndex],
             new Vector3(transform.position.x, transform.position.y, transform.position.z),
             Quaternion.identity
         );

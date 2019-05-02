@@ -1369,9 +1369,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c8a9a64cde4ab48be3fb6c641a5cc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueRangeFirst: 0000000008000000
+  dialogueRangeFirst: 0400000006000000
   dialogueRangeAfter: 080000000a000000
   haveQuest: 0
   type: 0
-  eventKey: 0
+  eventKey: 10
   cutsceneNum: 0
