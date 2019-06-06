@@ -1,0 +1,35 @@
+﻿{
+    "items":
+    [
+        {
+        "index":0,
+        "name":"Player",
+        "content":"0번째 대화 테스트."
+        },
+        {
+        "index":1,
+        "name":"Player",
+        "content":"1번째 대화 테스트."
+        },
+        {
+        "index":2,
+        "name":"Player",
+        "content":"2번째 대화 테스트."
+        },
+        {
+        "index":3,
+        "name":"Player",
+        "content":"3번째 대화 테스트."
+        },
+        {
+        "index":4,
+        "name":"Player",
+        "content":"4번째 대화 테스트."
+        },
+        {
+        "index":5,
+        "name":"Player",
+        "content":"5번째 대화 테스트."
+        }
+    ]
+}

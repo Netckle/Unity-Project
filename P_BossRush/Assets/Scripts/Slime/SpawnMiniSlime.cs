@@ -54,5 +54,6 @@ public class SpawnMiniSlime : MonoBehaviour
             }
         }
         mini.canAttack = true;
+        mini.monsterSpawned = false;
     }
 }
