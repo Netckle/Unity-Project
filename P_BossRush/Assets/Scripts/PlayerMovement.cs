@@ -6,6 +6,8 @@ using System;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public int currentGround = 0;
+
     private Collision coll;
     [HideInInspector]
     public Rigidbody2D rb;
@@ -167,6 +169,26 @@ public class PlayerMovement : MonoBehaviour
             side = -1;
             anim.Flip(side);
         }
+
+        if (Input.GetKeyDown(KeyCode.J) && !goDown)
+        {
+            StartCoroutine(rotateEffector(0.5f));
+        }
+    }
+
+    public bool goDown = false;
+
+    public PlatformEffector2D effector;
+
+    IEnumerator rotateEffector(float time)
+    {
+        goDown = true;
+        effector.rotationalOffset = 180;
+
+        yield return new WaitForSeconds(time);
+
+        effector.rotationalOffset = 0;
+        goDown = false;
     }
 
     private void Dash(float x, float y)

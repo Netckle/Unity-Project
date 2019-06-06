@@ -62,6 +62,20 @@ public class Player : MonoBehaviour
             jumpParticle.time = 0f;
             jumpParticle.Play(true);
         }
+
+        if (Input.GetKeyDown(KeyCode.J))
+            rotateEffector(0.5f);
+    }
+
+    public PlatformEffector2D effector;
+
+    IEnumerator rotateEffector(float time)
+    {
+        effector.rotationalOffset = 180;
+
+        yield return new WaitForSeconds(time);
+
+        effector.rotationalOffset = 0;
     }
 
     void GroundTouch()

@@ -14,11 +14,15 @@ public class MiniSlime : MonoBehaviour
     private int movementFlag = 0;    
     private Animator anim;
 
+    public ParticleSystem particle;
+
     void Start()
     {
         anim = GetComponentInChildren<Animator>();
 
         StartCoroutine("ChangeMovement");
+
+        //particle = GetComponentInChildren<ParticleSystem>();
     }
 
     IEnumerator ChangeMovement()

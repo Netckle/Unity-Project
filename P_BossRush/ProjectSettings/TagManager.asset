@@ -14,8 +14,8 @@ TagManager:
   - 
   - 
   - Floor
-  - 
-  - 
+  - Monster
+  - MonsterPlatform
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: aaaa
+    uniqueID: 302708135
+    locked: 0
+  - name: aaaaa
+    uniqueID: 1420720039
     locked: 0
