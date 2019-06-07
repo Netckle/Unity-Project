@@ -40,7 +40,8 @@ public class BossSlime : MonoBehaviour
 
         //StartCoroutine("ChangeMovement");
 
-        StartCoroutine(Movement(jumpCount, waitTime,spawnCount));
+        //StartCoroutine(Movement(jumpCount, waitTime,spawnCount));
+        StartCoroutine(BossPattern());
     }
 
     private bool oneCycleCompleted = false;
@@ -70,6 +71,107 @@ public class BossSlime : MonoBehaviour
         StartCoroutine("ChangeMovement");
     }
 
+    public test1 test;
+    public PlayerMovement player;
+
+    public bool onMiddle = false;
+
+    public bool secondMove = false;
+
+    IEnumerator BossPattern()
+    {
+        int line = player.currentLine;
+
+        StartCoroutine(MoveToNewLine(line, 1.0f));
+
+        yield return new WaitForSeconds(2.0f);
+
+        StartCoroutine(MoveMiddleToSide(20, 8, 3.0f));
+
+        //yield return new WaitForSeconds(2.0f);
+
+        //StartCoroutine(MoveToMiddle(movePower, 2.0f));
+
+        //yield return new WaitForSeconds(2.0f);
+
+        yield return new WaitUntil(() => secondMove);
+        
+        StartCoroutine(MoveToMiddle(20, 0.1F));
+
+        yield return new WaitUntil(() => onMiddle);
+
+        StartCoroutine(BossPattern());
+    }
+
+    IEnumerator MoveToNewLine(int lineNum, float waitTime)
+    {
+        Debug.Log("MoveToNewLine 실행.");
+        // 페이드 효과.
+
+        yield return new WaitForSeconds(waitTime);
+        transform.position = test.lines[lineNum].transform.position;        
+
+        // 페이드 효과.
+    }
+
+    IEnumerator MoveToMiddle(float speed, float waitTime)
+    {
+        onMiddle = false;
+        Debug.Log("MoveToMiddle 실행.");
+
+        if (transform.position.x == 0)
+            yield return null;
+        
+        onMiddle = true;
+        Vector3 pos = new Vector3(0, transform.position.y, 0);
+        while (Vector3.Distance(transform.position, pos) > 0.5f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, transform.position.y, 0), speed * Time.deltaTime);
+            yield return new WaitForSeconds(0.1f);
+        }        
+
+        transform.position = new Vector3(0, transform.position.y, 0);        
+
+        onMiddle = true; 
+    }
+
+    IEnumerator MoveMiddleToSide(float speed, float halfRange, float waitTime)
+    {
+        secondMove = false;
+
+        Debug.Log("MoveMiddleToSide 실행.");
+
+        Vector3 leftEnd  = transform.position - new Vector3(halfRange, 0, 0);
+        Vector3 rightEnd = transform.position + new Vector3(halfRange, 0, 0);
+        
+        while (Vector3.Distance(transform.position, leftEnd) > 0.5f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, leftEnd, speed * Time.deltaTime);      
+            yield return new WaitForSeconds(0.1f);  
+        }        
+
+        yield return new WaitForSeconds(waitTime);
+
+        while (Vector3.Distance(transform.position, rightEnd) > 0.5f)
+        {
+             transform.position = Vector3.MoveTowards(transform.position, rightEnd, speed * Time.deltaTime);   
+             yield return new WaitForSeconds(0.1f);      
+        }       
+
+        secondMove = true;
+    }
+
+    private void Jump(int count)
+    {
+        
+    }
+
+    private void Spawn(int count)
+    {
+        test.SpawnSlime(count);
+    }
+
+
     IEnumerator Movement(int jumpCount, float time, int count)
     {
         oneCycleCompleted = false;
@@ -97,7 +199,7 @@ public class BossSlime : MonoBehaviour
         StartCoroutine(Movement(jumpCount, time, count));
     }
 
-    private void Spawn(int count)
+    private void Spawn1(int count)
     {
         DeletePlayerPos();      
 

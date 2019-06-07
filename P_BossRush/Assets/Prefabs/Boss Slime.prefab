@@ -113,8 +113,6 @@ GameObject:
   - component: {fileID: 300359627050030481}
   - component: {fileID: 300359627050030484}
   - component: {fileID: 300359627050030494}
-  - component: {fileID: 300359627050030482}
-  - component: {fileID: 3383378886464342922}
   m_Layer: 9
   m_Name: Boss Slime
   m_TagString: Untagged
@@ -190,45 +188,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &300359627050030482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 300359627050030495}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33a039f095a239d49b51609deb4317ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 5007197452824315982, guid: 6e1002bb0cd293d42bde5fd9e5b8e472, type: 3}
-  power: 5
-  yOffset: 4
-  miniSlimes: []
---- !u!114 &3383378886464342922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 300359627050030495}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebb8128a614b3b346921ffb505a2e2eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HP: 10
-  maxMiniSlime: 3
-  scale: 3
-  movePower: 5
-  canAttack: 0
-  destinedGoal: 0
-  playerPos: {x: 0, y: 0, z: 0}
-  canMove: 1
-  jumpCount: 0
-  waitTime: 0
-  spawnCount: 0
-  monsterSpawned: 0
-  isJumping: 0
-  jumpPower: 0

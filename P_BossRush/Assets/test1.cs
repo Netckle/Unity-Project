@@ -16,6 +16,18 @@ public class test1 : MonoBehaviour
         }
     } 
 
+    public bool miniSlimeIs()
+    {
+        for (int i = 0; i < miniSlimes.Length; i++)
+        {
+            if (miniSlimes[i].activeSelf)
+            {
+                return false;
+            }            
+        }
+        return true;
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -24,7 +36,7 @@ public class test1 : MonoBehaviour
         }
     }
 
-    private void SpawnSlime(int length)
+    public void SpawnSlime(int length)
     {
         for (int i = 0; i < miniSlimes.Length; ++i)
         {
@@ -76,7 +88,7 @@ public class test1 : MonoBehaviour
 
     void test()
     {
-        int temp = player.currentGround;
+        int temp = player.currentLine;
 
         Vector3 tempPos = lines[temp].transform.position + new Vector3(0, 3, 0);
 
