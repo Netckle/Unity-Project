@@ -24,6 +24,8 @@ public class BossSlimeMovement : MonoBehaviour
 
     private Rigidbody2D rigid;
 
+    public bool canDamaged = false; // 공격을 받을 수 있는 상태인가.
+
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -76,7 +78,7 @@ public class BossSlimeMovement : MonoBehaviour
         // Fade Effect
 
         yield return new WaitForSeconds(waitTime);
-        transform.position = test.lines[lineNum].transform.position + new Vector3(0, yPadding, 0);
+        transform.position = test.lines[lineNum].transform.position;
 
         // Fade Effect
         moveToNewLine = true;
