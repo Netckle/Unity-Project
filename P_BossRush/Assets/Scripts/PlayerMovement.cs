@@ -51,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
         coll = GetComponent<Collision>();
         rb   = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<AnimationScript>();
+
+        StartCoroutine(MeleeAttack());
     }
 
     void Update()
@@ -343,5 +345,59 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(.15f);
         if (coll.onGround)
             hasDashed = false;
+    }
+
+    // Attack
+    public float            cooldown = 0.5f;   // Combo Attack Cooldown
+    public float            maxTime = 0.8f;    // Accepted Combo Limit Time
+    public int              maxCombo;          // Combo Attack Max Count
+    private int             combo = 0;         // Current Combo Count
+    private float           lastTime;          // Last Attack Time
+
+    public int              maxHealth = 6;
+    public int              health = 6;
+
+    public Animator animator;
+
+    IEnumerator MeleeAttack()
+    {
+        // Constantly loops so you only have to call it once
+        while(true)
+        {
+            // Checks if attacking and then starts of the combo
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                canMove = false;
+                combo++;
+
+                animator.SetBool("isAttacking", true);
+
+                animator.SetInteger("attackCount", combo);
+                lastTime = Time.time;
+
+                //Combo loop that ends the combo if you reach the maxTime between attacks, or reach the end of the combo
+                while((Time.time - lastTime) < maxTime && combo < maxCombo)
+                {
+                    // Attacks if your cooldown has reset
+                    if (Input.GetKeyDown(KeyCode.Q) && (Time.time - lastTime) > cooldown)
+                    {
+                        combo++;
+
+                        animator.SetInteger("attackCount", combo);
+                        lastTime = Time.time;
+                    }
+                    yield return null;
+                }                
+                // Resets combo and waits the remaining amount of cooldown time before you can attack again to restart the combo
+                canMove = true;
+
+                combo = 0;
+                animator.SetBool("isAttacking", false);
+                animator.SetInteger("attackCount", combo);
+                
+                yield return new WaitForSeconds(cooldown - (Time.time - lastTime));
+            }
+            yield return null;
+        }
     }
 }
