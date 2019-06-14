@@ -39,6 +39,7 @@ public class DialogueManager : MonoBehaviour
         for (int i = start; i < end; ++i)
         {
             sentences.Enqueue(data[i]);
+            Debug.Log(data[i].content);
         }
 
         DisplayNextSentence();

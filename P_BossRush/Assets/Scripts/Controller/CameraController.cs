@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraPro : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     public Transform OBJ01;
     public Transform OBJ02;
@@ -36,9 +36,7 @@ public class CameraPro : MonoBehaviour
         cameraDistance = (distanceBetweenOBJs / 2.0f / aspectRatio) / tanFov;
 
         Vector3 dir = (Camera.main.transform.position - middlePoint).normalized;
-        Camera.main.transform.position = middlePoint + dir * (cameraDistance + DISTANCE_MARGIN);
-
-        
+        Camera.main.transform.position = middlePoint + dir * (cameraDistance + DISTANCE_MARGIN);        
     }
 
     void LateUpdate()

@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class FadeController : MonoBehaviour
 {
-    public void FadeIn(float fadeOutTime, System.Action nextEvent = null){
+    public void FadeIn(float fadeOutTime, System.Action nextEvent = null)
+	{
 		StartCoroutine(CoFadeIn(fadeOutTime,nextEvent));
 	}
 
-	public void FadeOut(float fadeOutTime, System.Action nextEvent = null){
+	public void FadeOut(float fadeOutTime, System.Action nextEvent = null)
+	{
 		StartCoroutine(CoFadeOut(fadeOutTime, nextEvent));
 	}
 
 	// 투명 -> 불투명
-	IEnumerator CoFadeIn(float fadeOutTime, System.Action nextEvent = null){
+	IEnumerator CoFadeIn(float fadeOutTime, System.Action nextEvent = null)
+	{
 		SpriteRenderer sr = this.gameObject.GetComponent<SpriteRenderer>();
 		Color tempColor = sr.color;
 		while(tempColor.a < 1f){
@@ -30,7 +33,8 @@ public class FadeController : MonoBehaviour
 	}
 
 	// 불투명 -> 투명
-	IEnumerator CoFadeOut(float fadeOutTime, System.Action nextEvent = null){
+	IEnumerator CoFadeOut(float fadeOutTime, System.Action nextEvent = null)
+	{
 		SpriteRenderer sr = this.gameObject.GetComponent<SpriteRenderer>();
 		Color tempColor = sr.color;
 		while(tempColor.a > 0f){

@@ -6,24 +6,24 @@ using System;
 
 public class PlayerMovement : MonoBehaviour
 {   
-    private Collision coll;
-    private AnimationScript anim;
     [HideInInspector]
-    public Rigidbody2D rb;
+    public Rigidbody2D rigid;
+    private Collision coll;
+    private AnimationScript anim;    
 
     [Space]
-    [Header("Move Value")]
-    public float speed = 10;
-    public float jumpForce = 50;
-    public float slideSpeed = 5;
+    [Header("Move & Jump")]
+    public float speed        = 10;
+    public float jumpForce    = 50;
+    public float slideSpeed   = 5;
     public float wallJumpLerp = 10;
-    public float dashSpeed = 20;
+    public float dashSpeed    = 20;
 
     private bool groundTouch;
     private bool hasDashed;
 
     [Space]
-    [Header("Flag")]
+    [Header("State Flags")]
     public bool canMove;
     public bool wallGrab;
     public bool wallJumped;
@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     public int currentLine = 0;
 
     [Space]
-    [Header("Polish")]
+    [Header("Particles")]
     public ParticleSystem dashParticle;
     public ParticleSystem jumpParticle;
     public ParticleSystem wallJumpParticle;
@@ -46,11 +46,26 @@ public class PlayerMovement : MonoBehaviour
     public bool canGoDown = false;
     public PlatformEffector2D effector;
 
+    [Space]
+    [Header("Atttack")]    
+    public float            cooldown = 0.5f;   // Combo Attack Cooldown
+    public float            maxTime = 0.8f;    // Accepted Combo Limit Time
+    public int              maxCombo;          // Combo Attack Max Count
+    private int             combo = 0;         // Current Combo Count
+    private float           lastTime;          // Last Attack Time
+
+    public int              maxHealth = 6;
+    public int              health = 6;
+
+    public Animator animator;
+
+    public bool pause = false;
+
     void Start()
     {
-        coll = GetComponent<Collision>();
-        rb   = GetComponent<Rigidbody2D>();
-        anim = GetComponentInChildren<AnimationScript>();
+        coll  = GetComponent<Collision>();
+        rigid = GetComponent<Rigidbody2D>();
+        anim  = GetComponentInChildren<AnimationScript>();
 
         StartCoroutine(MeleeAttack());
     }
@@ -64,7 +79,21 @@ public class PlayerMovement : MonoBehaviour
         Vector2 dir = new Vector2(x, y);
 
         Walk(dir);
-        anim.SetHorizontalMovement(x, y, rb.velocity.y);
+        anim.SetHorizontalMovement(x, y, rigid.velocity.y);
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            DialogueManager.instance.DisplayNextSentence();
+        }
+
+        if (pause)
+        {
+            PauseManager.instance.Pause(this.gameObject, "Player");            
+        }
+        if (pause && Input.GetKeyDown(KeyCode.N))
+        {
+            PauseManager.instance.Release(this.gameObject, "Player");
+        }
 
         // 벽을 잡는 상황.
         if (coll.onWall && Input.GetButton("Fire3") && canMove)
@@ -93,19 +122,19 @@ public class PlayerMovement : MonoBehaviour
         // 벽을 짚고 대시는 안한 상황.
         if (wallGrab && !isDashing)
         {
-            rb.gravityScale = 0;
+            rigid.gravityScale = 0;
             if (x > 0.2f || x < -0.2f)
             {
-                rb.velocity = new Vector2(rb.velocity.x, 0);
+                rigid.velocity = new Vector2(rigid.velocity.x, 0);
             }
 
             float speedModifier = y > 0 ? 0.5f : 1;
 
-            rb.velocity = new Vector2(rb.velocity.x, y * (speed * speedModifier));
+            rigid.velocity = new Vector2(rigid.velocity.x, y * (speed * speedModifier));
         }
         else
         {
-            rb.gravityScale = 3;
+            rigid.gravityScale = 3;
         }
 
         // 벽에 있고 바닥에 없는 상황.
@@ -191,11 +220,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (!wallJumped)
         {
-            rb.velocity = new Vector2(dir.x * speed, rb.velocity.y);
+            rigid.velocity = new Vector2(dir.x * speed, rigid.velocity.y);
         }
         else
         {
-            rb.velocity = Vector2.Lerp(rb.velocity, (new Vector2(dir.x * speed, rb.velocity.y)), wallJumpLerp * Time.deltaTime);
+            rigid.velocity = Vector2.Lerp(rigid.velocity, (new Vector2(dir.x * speed, rigid.velocity.y)), wallJumpLerp * Time.deltaTime);
         }
     }
 
@@ -209,10 +238,10 @@ public class PlayerMovement : MonoBehaviour
 
         anim.SetTrigger("dash");
 
-        rb.velocity = Vector2.zero;
+        rigid.velocity = Vector2.zero;
         Vector2 dir = new Vector2(x, y);
 
-        rb.velocity += dir.normalized * dashSpeed;
+        rigid.velocity += dir.normalized * dashSpeed;
         StartCoroutine(DashWait());
     }
 
@@ -221,8 +250,8 @@ public class PlayerMovement : MonoBehaviour
         slideParticle.transform.parent.localScale = new Vector3(ParticleSide(), 1, 1);
         ParticleSystem particle = wall ? wallJumpParticle : jumpParticle;
 
-        rb.velocity = new Vector2(rb.velocity.x, 0);
-        rb.velocity += dir * jumpForce;
+        rigid.velocity = new Vector2(rigid.velocity.x, 0);
+        rigid.velocity += dir * jumpForce;
 
         particle.Play();
     }
@@ -256,13 +285,13 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         bool pushingWall = false;
-        if ((rb.velocity.x > 0 && coll.onRightWall) || (rb.velocity.x < 0 && coll.onLeftWall))
+        if ((rigid.velocity.x > 0 && coll.onRightWall) || (rigid.velocity.x < 0 && coll.onLeftWall))
         {
             pushingWall = true;
         }
-        float push = pushingWall ? 0 : rb.velocity.x;
+        float push = pushingWall ? 0 : rigid.velocity.x;
 
-        rb.velocity = new Vector2(push, -slideSpeed);
+        rigid.velocity = new Vector2(push, -slideSpeed);
     }
 
     void GroundTouch()
@@ -277,7 +306,7 @@ public class PlayerMovement : MonoBehaviour
 
     void RigidbodyDrag(float x)
     {
-        rb.drag = x;
+        rigid.drag = x;
     }
 
     int ParticleSide()
@@ -326,7 +355,7 @@ public class PlayerMovement : MonoBehaviour
         DOVirtual.Float(14, 0, .8f, RigidbodyDrag);
 
         dashParticle.Play();
-        rb.gravityScale = 0;
+        rigid.gravityScale = 0;
         GetComponent<BetterJumping>().enabled = false;
         wallJumped = true;
         isDashing = true;
@@ -334,7 +363,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(.3f);
 
         dashParticle.Stop();
-        rb.gravityScale = 3;
+        rigid.gravityScale = 3;
         GetComponent<BetterJumping>().enabled = true;
         wallJumped = false;
         isDashing = false;
@@ -347,17 +376,6 @@ public class PlayerMovement : MonoBehaviour
             hasDashed = false;
     }
 
-    // Attack
-    public float            cooldown = 0.5f;   // Combo Attack Cooldown
-    public float            maxTime = 0.8f;    // Accepted Combo Limit Time
-    public int              maxCombo;          // Combo Attack Max Count
-    private int             combo = 0;         // Current Combo Count
-    private float           lastTime;          // Last Attack Time
-
-    public int              maxHealth = 6;
-    public int              health = 6;
-
-    public Animator animator;
 
     IEnumerator MeleeAttack()
     {
@@ -400,4 +418,6 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
     }
+
+
 }
