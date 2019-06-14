@@ -20,11 +20,11 @@ public class FrameController : MonoBehaviour
     {
         int w = Screen.width, h = Screen.height;
 
-        rect = new Rect(0, 0, w, h * 4 / 100);
+        rect = new Rect(0, 0, w, h * 8 / 100);
 
         style = new GUIStyle();
         style.alignment = TextAnchor.UpperLeft;
-        style.fontSize = h * 4 / 100;
+        style.fontSize = h * 8 / 100;
         style.normal.textColor = Color.white;
 
         StartCoroutine("worstReset");
@@ -59,7 +59,7 @@ public class FrameController : MonoBehaviour
         {
             worstFps = fps;
         }
-        text = msec.ToString ("F1") + "ms (" + fps.ToString ("F1") + ") // worst : " + worstFps.ToString ("F1");
+        text = msec.ToString ("F1") + "ms  (" + fps.ToString ("F1") + ") // worst : " + worstFps.ToString ("F1");
         GUI.Label(rect, text, style);
     }
 }

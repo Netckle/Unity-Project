@@ -4,32 +4,32 @@
         {
         "index":0,
         "name":"Player",
-        "content":"0번째 대화 테스트."
+        "content":"어이, 소용없어."
         },
         {
         "index":1,
         "name":"Player",
-        "content":"1번째 대화 테스트."
+        "content":"네 녀석같은 꼬마의 공격으론 어림없을거야."
         },
         {
         "index":2,
         "name":"Player",
-        "content":"2번째 대화 테스트."
+        "content":"내가 도와주고 싶지만...너무 배가 고프군."
         },
         {
         "index":3,
         "name":"Player",
-        "content":"3번째 대화 테스트."
+        "content":"뭐...열심히 해보라고...난 좀 자야겠어."
         },
         {
         "index":4,
         "name":"Player",
-        "content":"4번째 대화 테스트."
+        "content":"혹시라도 쓰러뜨리면...나도 데리고 가달라고...크크"
         },
         {
         "index":5,
         "name":"Player",
-        "content":"5번째 대화 테스트."
+        "content":"ZZZ... "
         }
     ]
 }

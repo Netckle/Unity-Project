@@ -27,7 +27,7 @@ public class TimeScaleManager : MonoBehaviour
             {
                 Time.timeScale = 0;
                 isPause = true;
-                DialogueManager.instance.StartDialogue(JsonManager.instance.Load<Dialogue>(), 0, 3);
+                //DialogueManager.instance.StartDialogue(JsonManager.instance.Load<Dialogue>(), 0, 3);
                 return;
             }
 

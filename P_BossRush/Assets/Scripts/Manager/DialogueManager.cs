@@ -25,13 +25,21 @@ public class DialogueManager : MonoBehaviour
     public Image panel;
     public TextMeshProUGUI content;
 
+    private GameObject sayingOBJ;
+    private string sayingTag;
+
     void Start()
     {
         panel.gameObject.SetActive(false);
     }
 
-    public void StartDialogue(Dialogue[] data, int start, int end)
+    public void StartDialogue(GameObject obj, string tag, Dialogue[] data, int start, int end)
     {
+        sayingOBJ = obj;
+        sayingTag = tag;
+
+        PauseManager.instance.Pause(sayingOBJ, sayingTag);
+
         panel.gameObject.SetActive(true);
 
         sentences.Clear();
@@ -74,5 +82,8 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         panel.gameObject.SetActive(false);
+        PauseManager.instance.Release(sayingOBJ, sayingTag);
+        sayingOBJ = null;
+        sayingTag = "";
     }
 }

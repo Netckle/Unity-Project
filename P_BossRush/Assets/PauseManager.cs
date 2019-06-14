@@ -56,6 +56,9 @@ public class PauseManager : MonoBehaviour
             case "Player":
                 obj.GetComponent<PlayerMovement>().pause = flag;
                 break;
+            case "Monster":
+                obj.GetComponent<BossSlimeMovement>().pause = flag;
+                break;
             // other OBJ
         }
     }

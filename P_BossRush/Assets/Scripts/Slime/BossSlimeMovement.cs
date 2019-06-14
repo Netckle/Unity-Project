@@ -26,6 +26,8 @@ public class BossSlimeMovement : MonoBehaviour
 
     public bool canDamaged = false; // 공격을 받을 수 있는 상태인가.
 
+    public bool pause = false;
+
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -36,7 +38,10 @@ public class BossSlimeMovement : MonoBehaviour
     {
         spawned = test.miniSlimeIs();
 
-        
+        if (pause)
+        {
+            PauseManager.instance.Pause(this.gameObject, "Monster");
+        }        
     }
 
     void FixedUpdate()
