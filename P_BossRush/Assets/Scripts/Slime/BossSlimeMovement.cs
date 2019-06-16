@@ -78,7 +78,6 @@ public class BossSlimeMovement : MonoBehaviour
     // Move Parts
     IEnumerator MoveToNewLine(int lineNum, float waitTime, float yPadding)
     {
-        Debug.Log("MoveToNewLine 실행중.");
         moveToNewLine = false;
         // Fade Effect
 
@@ -91,7 +90,6 @@ public class BossSlimeMovement : MonoBehaviour
 
     IEnumerator MoveToMiddle(float movePower, float waitTime)
     {
-        Debug.Log("MoveToMiddle 실행중.");
         moveToMiddle = false;
 
         Vector3 end = new Vector3(0, transform.position.y, 0);
@@ -108,13 +106,10 @@ public class BossSlimeMovement : MonoBehaviour
 
     IEnumerator MoveFromMiddleToSide(float movePower, float halfRange, float waitTime)
     {
-        Debug.Log("MoveFromMiddleToSide 실행중.");
         moveFromMiddleToSide = false;
 
         Vector3 leftEnd = transform.position - new Vector3(halfRange, 0, 0);
         Vector3 rightEnd = transform.position + new Vector3(halfRange, 0, 0);
-
-        Debug.Log(leftEnd + " " + rightEnd);
 
         while (Vector3.Distance(transform.position, leftEnd) > 0.5f)
         {
@@ -135,7 +130,6 @@ public class BossSlimeMovement : MonoBehaviour
 
     IEnumerator Jump(int count, float waitTime)
     {
-        Debug.Log("점프");
         jumping = false;
 
         for (int i = 0; i < count; ++i)

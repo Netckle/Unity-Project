@@ -21,7 +21,7 @@ public class CutsceneTest : Cutscene
 
         player.canMove = false;
 
-        player.gameObject.transform.position = npc.gameObject.transform.position + new Vector3(5, 1, 0);
+        player.gameObject.transform.position = npc.gameObject.transform.position + new Vector3(-5, 1, 0);
        
         DialogueManager.instance.StartDialogue(this, JsonManager.instance.Load<Dialogue>(), start, end);
 

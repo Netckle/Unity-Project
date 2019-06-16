@@ -45,7 +45,6 @@ public class test1 : MonoBehaviour
 
         int[] pos = getRandomInt(length, 0, miniSlimes.Length);
 
-        Debug.Log(pos);
 
         foreach (int num in pos)
         {

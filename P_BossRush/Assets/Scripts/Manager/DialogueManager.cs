@@ -27,12 +27,14 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
-        panel.gameObject.SetActive(false);
+        //panel.gameObject.SetActive(false);
     }
+
     private CutsceneTest cutscneTemp;
+
     public void StartDialogue(CutsceneTest cutscne, Dialogue[] data, int start, int end)
     {
-        Debug.Log("대화 시작하는 문장" + start + " " + end);
+        Debug.Log("StartDialogue");
         FindObjectOfType<PlayerMovement>().isTalking = true;
 
         cutscneTemp = cutscne;
