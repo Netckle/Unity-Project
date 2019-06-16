@@ -40,7 +40,7 @@ public class BossSlimeMovement : MonoBehaviour
 
         if (pause)
         {
-            PauseManager.instance.Pause(this.gameObject, "Monster");
+            PauseManager.instance.Pause(this.gameObject, true);
         }        
     }
 

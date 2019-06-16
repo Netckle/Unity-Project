@@ -19,18 +19,19 @@ public class PauseManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }   
 
-    public void Pause(GameObject obj, string tag)
+    public void Pause(GameObject obj, bool animeStop)
     {
         Animator animator = obj.GetComponentInChildren<Animator>();
         Rigidbody2D rigid = obj.GetComponentInChildren<Rigidbody2D>();
         Transform transform = obj.transform;
 
-        animator.speed = 0f;
+        if (animeStop)
+            animator.speed = 0f;
+
         savedVelocity = rigid.velocity;
+
         rigid.velocity = Vector3.zero;
         rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY; 
-
-        //ChangeOBJMove(obj, tag, false);
     }
 
     public void Release(GameObject obj, string tag)
@@ -40,6 +41,7 @@ public class PauseManager : MonoBehaviour
         Transform transform = obj.transform;
 
         animator.speed = 1f;
+
         rigid.velocity = savedVelocity;
         savedVelocity = Vector3.zero;
 
@@ -56,10 +58,12 @@ public class PauseManager : MonoBehaviour
             case "Player":
                 obj.GetComponent<PlayerMovement>().pause = flag;
                 break;
-            case "Monster":
+            case "BossSlime":
                 obj.GetComponent<BossSlimeMovement>().pause = flag;
                 break;
-            // other OBJ
+            case "NPC":
+                obj.GetComponent<NPCMovement>().pause = flag;
+                break;
         }
     }
 }

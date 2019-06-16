@@ -13,7 +13,7 @@ public class test : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            DialogueManager.instance.StartDialogue(slime, "Monster", JsonManager.instance.Load<Dialogue>(), start, end);
+            //DialogueManager.instance.StartDialogue(JsonManager.instance.Load<Dialogue>(), start, end);
         }
     }
 }

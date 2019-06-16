@@ -6,13 +6,16 @@ using System;
 
 public class PlayerMovement : MonoBehaviour
 {   
+    #region Variable
+
     [HideInInspector]
-    public Rigidbody2D rigid;
-    private Collision coll;
-    private AnimationScript anim;    
+    public Rigidbody2D rigidbody2d;
+    private Collision collider;
+    private Animator animator;
+    private AnimationScript animationScript;
 
     [Space]
-    [Header("Move & Jump")]
+    [Header("Move & Jump")]    
     public float speed        = 10;
     public float jumpForce    = 50;
     public float slideSpeed   = 5;
@@ -24,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Space]
     [Header("State Flags")]
-    public bool canMove;
+
     public bool wallGrab;
     public bool wallJumped;
     public bool wallSlide;
@@ -57,88 +60,119 @@ public class PlayerMovement : MonoBehaviour
     public int              maxHealth = 6;
     public int              health = 6;
 
-    public Animator animator;
-
+    public bool canMove = false;
     public bool pause = false;
+    public bool isTalking = false;
+
+    #endregion
 
     void Start()
     {
-        coll  = GetComponent<Collision>();
-        rigid = GetComponent<Rigidbody2D>();
-        anim  = GetComponentInChildren<AnimationScript>();
+        collider = GetComponent<Collision>();
+        rigidbody2d = GetComponent<Rigidbody2D>();
+        animationScript = GetComponentInChildren<AnimationScript>();
+        animator = GetComponentInChildren<Animator>();
 
-        StartCoroutine(MeleeAttack());
+        StartCoroutine(CoMeleeAttack());
     }
 
     void Update()
     {
-        float x     = Input.GetAxis("Horizontal");
-        float y     = Input.GetAxis("Vertical");
-        float xRaw  = Input.GetAxisRaw("Horizontal");
-        float yRaw  = Input.GetAxisRaw("Vertical");
+        #region Walk
+        float x = Input.GetAxis("Horizontal");
+        float y = Input.GetAxis("Vertical");
+        float xRaw = Input.GetAxisRaw("Horizontal");
+        float yRaw = Input.GetAxisRaw("Vertical");
         Vector2 dir = new Vector2(x, y);
 
-        Walk(dir);
-        anim.SetHorizontalMovement(x, y, rigid.velocity.y);
+        Walk(dir);        
+        animationScript.SetHorizontalMovement(x, y, rigidbody2d.velocity.y);
+        #endregion
+        
+       
+        // -----
 
-        if (Input.GetKeyDown(KeyCode.M))
+        #region KeyDown 키를 누르는 것과 관련된 부분.
+
+        if (isTalking && Input.GetButtonDown("Interact"))
         {
             DialogueManager.instance.DisplayNextSentence();
         }
+        
+        if (Input.GetButtonDown("Jump"))
+        {
+            animationScript.SetTrigger("jump");
 
-        if (pause)
-        {
-            PauseManager.instance.Pause(this.gameObject, "Player");            
+            if (collider.onGround)
+            {
+                Jump(Vector2.up, false);
+            }
+
+            if (collider.onWall && !collider.onGround)
+            {
+                WallJump();
+            }
         }
-        if (pause && Input.GetKeyDown(KeyCode.N))
+        
+        if (Input.GetButtonDown("Dash") && !hasDashed)
         {
-            PauseManager.instance.Release(this.gameObject, "Player");
+            if (xRaw != 0 || yRaw != 0)
+            {
+                Dash(xRaw, yRaw);
+            }
         }
 
-        // 벽을 잡는 상황.
-        if (coll.onWall && Input.GetButton("Fire3") && canMove)
+        if (collider.onWall && Input.GetButton("Interact") && canMove)
         {
-            if (side != coll.wallSide)
-                anim.Flip(side * -1);
+            if (side != collider.wallSide)
+                animationScript.Flip(side * -1);
 
             wallGrab  = true;
             wallSlide = false;
         }
-
-        // 벽짚기 버튼을 떼거나, 벽이 아니거나, 움직일 수 없는 상황.
-        if (Input.GetButtonUp("Fire3") || !coll.onWall || !canMove)
+        
+        if (Input.GetButtonUp("Interact") || !collider.onWall || !canMove)
         {
             wallGrab  = false;
             wallSlide = false;
         }
 
-        // 바닥에 있고 대시하는 중이 아닌 상황.
-        if (coll.onGround && !isDashing)
+        if (Input.GetButtonDown("Interact") && !canGoDown)
+        {
+            StartCoroutine(CoRotatePlatform(0.5f));
+        }
+        #endregion     
+
+         #region State
+        if (pause)
+        {
+            PauseManager.instance.Pause(this.gameObject, true);            
+        }
+
+        if (collider.onGround && !isDashing)
         {
             wallJumped = false;
             GetComponent<BetterJumping>().enabled = true;
         }
 
-        // 벽을 짚고 대시는 안한 상황.
         if (wallGrab && !isDashing)
         {
-            rigid.gravityScale = 0;
+            rigidbody2d.gravityScale = 0;
             if (x > 0.2f || x < -0.2f)
             {
-                rigid.velocity = new Vector2(rigid.velocity.x, 0);
+                rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, 0);
             }
 
             float speedModifier = y > 0 ? 0.5f : 1;
 
-            rigid.velocity = new Vector2(rigid.velocity.x, y * (speed * speedModifier));
+            rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, y * (speed * speedModifier));
         }
         else
         {
-            rigid.gravityScale = 3;
+            rigidbody2d.gravityScale = 3;
         }
 
-        // 벽에 있고 바닥에 없는 상황.
-        if (coll.onWall && !coll.onGround)
+        if (collider.onWall && !collider.onGround)
         {
             if (x != 0 && !wallGrab)
             {
@@ -147,43 +181,18 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (!coll.onWall || coll.onGround)
+        if (!collider.onWall || collider.onGround)
         {
             wallSlide = false;
-        }
+        }        
 
-        if (Input.GetButtonDown("Jump"))
-        {
-            anim.SetTrigger("jump");
-
-            if (coll.onGround)
-            {
-                Jump(Vector2.up, false);
-            }
-            if (coll.onWall && !coll.onGround)
-            {
-                WallJump();
-            }
-        }
-
-        // 대시하지 않은 상태에서 대시버튼을 눌렀을 경우.
-        if (Input.GetButtonDown("Fire1") && !hasDashed)
-        {
-            if (xRaw != 0 || yRaw != 0)
-            {
-                Dash(xRaw, yRaw);
-            }
-        }
-
-        // 바닥에 충돌했는데 groundTouch가 안바꼈을 경우.
-        if (coll.onGround && !groundTouch)
+        if (collider.onGround && !groundTouch)
         {
             GroundTouch();
             groundTouch = true;
         }
 
-        // 바닥에 충돌하지 않고 groundTouch가 안바꼈을 경우.
-        if (!coll.onGround && groundTouch)
+        if (!collider.onGround && groundTouch)
         {
             groundTouch = false;
         }
@@ -196,18 +205,16 @@ public class PlayerMovement : MonoBehaviour
         if (x > 0)
         {
             side = 1;
-            anim.Flip(side);
+            animationScript.Flip(side);
         }
+
         if (x < 0)
         {
             side = -1;
-            anim.Flip(side);
-        }
+            animationScript.Flip(side);
+        }        
+        #endregion
 
-        if (Input.GetKeyDown(KeyCode.J) && !canGoDown)
-        {
-            StartCoroutine(rotateEffector(0.5f));
-        }
     }
 
     void Walk(Vector2 dir)
@@ -220,11 +227,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (!wallJumped)
         {
-            rigid.velocity = new Vector2(dir.x * speed, rigid.velocity.y);
+            rigidbody2d.velocity = new Vector2(dir.x * speed, rigidbody2d.velocity.y);
         }
         else
         {
-            rigid.velocity = Vector2.Lerp(rigid.velocity, (new Vector2(dir.x * speed, rigid.velocity.y)), wallJumpLerp * Time.deltaTime);
+            rigidbody2d.velocity = Vector2.Lerp(rigidbody2d.velocity, (new Vector2(dir.x * speed, rigidbody2d.velocity.y)), wallJumpLerp * Time.deltaTime);
         }
     }
 
@@ -236,13 +243,13 @@ public class PlayerMovement : MonoBehaviour
 
         hasDashed = true;
 
-        anim.SetTrigger("dash");
+        animationScript.SetTrigger("dash");
 
-        rigid.velocity = Vector2.zero;
+        rigidbody2d.velocity = Vector2.zero;
         Vector2 dir = new Vector2(x, y);
 
-        rigid.velocity += dir.normalized * dashSpeed;
-        StartCoroutine(DashWait());
+        rigidbody2d.velocity += dir.normalized * dashSpeed;
+        StartCoroutine(CoDashWait());
     }
 
     void Jump(Vector2 dir, bool wall)
@@ -250,24 +257,24 @@ public class PlayerMovement : MonoBehaviour
         slideParticle.transform.parent.localScale = new Vector3(ParticleSide(), 1, 1);
         ParticleSystem particle = wall ? wallJumpParticle : jumpParticle;
 
-        rigid.velocity = new Vector2(rigid.velocity.x, 0);
-        rigid.velocity += dir * jumpForce;
+        rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, 0);
+        rigidbody2d.velocity += dir * jumpForce;
 
         particle.Play();
     }
 
     void WallJump()
     {
-        if ((side == 1 && coll.onRightWall) || (side == -1 && !coll.onRightWall))
+        if ((side == 1 && collider.onRightWall) || (side == -1 && !collider.onRightWall))
         {
             side *= -1;
-            anim.Flip(side);
+            animationScript.Flip(side);
         }
 
-        StopCoroutine(DisableMovement(0));
-        StartCoroutine(DisableMovement(0.1f));
+        StopCoroutine(CoDisableMovement(0));
+        StartCoroutine(CoDisableMovement(0.1f));
 
-        Vector2 wallDir = coll.onRightWall ? Vector2.left : Vector2.right;
+        Vector2 wallDir = collider.onRightWall ? Vector2.left : Vector2.right;
 
         Jump((Vector2.up / 1.5f + wallDir / 1.5f), true);
 
@@ -276,22 +283,22 @@ public class PlayerMovement : MonoBehaviour
 
     void WallSlide()
     {
-        if (coll.wallSide != side)
+        if (collider.wallSide != side)
         {
-            anim.Flip(side * -1);
+            animationScript.Flip(side * -1);
         }
 
         if (!canMove)
             return;
 
         bool pushingWall = false;
-        if ((rigid.velocity.x > 0 && coll.onRightWall) || (rigid.velocity.x < 0 && coll.onLeftWall))
+        if ((rigidbody2d.velocity.x > 0 && collider.onRightWall) || (rigidbody2d.velocity.x < 0 && collider.onLeftWall))
         {
             pushingWall = true;
         }
-        float push = pushingWall ? 0 : rigid.velocity.x;
+        float push = pushingWall ? 0 : rigidbody2d.velocity.x;
 
-        rigid.velocity = new Vector2(push, -slideSpeed);
+        rigidbody2d.velocity = new Vector2(push, -slideSpeed);
     }
 
     void GroundTouch()
@@ -299,19 +306,19 @@ public class PlayerMovement : MonoBehaviour
         hasDashed = false;
         isDashing = false;
 
-        side = anim.sr.flipX ? -1 : 1;
+        side = animationScript.sr.flipX ? -1 : 1;
 
         jumpParticle.Play();
     }    
 
     void RigidbodyDrag(float x)
     {
-        rigid.drag = x;
+        rigidbody2d.drag = x;
     }
 
     int ParticleSide()
     {
-        int particleSide = coll.onRightWall ? 1 : -1;
+        int particleSide = collider.onRightWall ? 1 : -1;
         return particleSide;
     }
 
@@ -330,32 +337,34 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    IEnumerator rotateEffector(float time)
+    IEnumerator CoRotatePlatform(float waitTime)
     {
         canGoDown = true;
         effector.rotationalOffset = 180;
 
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(waitTime);
 
         effector.rotationalOffset = 0;
         canGoDown = false;
     }
 
-    IEnumerator DisableMovement(float time)
+    IEnumerator CoDisableMovement(float time)
     {
         canMove = false;
         yield return new WaitForSeconds(time);
         canMove = true;
     }
 
-    IEnumerator DashWait()
+    IEnumerator CoDashWait()
     {
         FindObjectOfType<GhostTrail>().ShowGhost();
-        StartCoroutine(GroundDash());
+
+        StartCoroutine(CoGroundDash());
+
         DOVirtual.Float(14, 0, .8f, RigidbodyDrag);
 
         dashParticle.Play();
-        rigid.gravityScale = 0;
+        rigidbody2d.gravityScale = 0;
         GetComponent<BetterJumping>().enabled = false;
         wallJumped = true;
         isDashing = true;
@@ -363,21 +372,21 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(.3f);
 
         dashParticle.Stop();
-        rigid.gravityScale = 3;
+        rigidbody2d.gravityScale = 3;
         GetComponent<BetterJumping>().enabled = true;
         wallJumped = false;
         isDashing = false;
     }
 
-    IEnumerator GroundDash()
+    IEnumerator CoGroundDash()
     {
-        yield return new WaitForSeconds(.15f);
-        if (coll.onGround)
+        yield return new WaitForSeconds(0.15f);
+
+        if (collider.onGround)
             hasDashed = false;
     }
 
-
-    IEnumerator MeleeAttack()
+    IEnumerator CoMeleeAttack()
     {
         // Constantly loops so you only have to call it once
         while(true)
@@ -418,6 +427,4 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
     }
-
-
 }

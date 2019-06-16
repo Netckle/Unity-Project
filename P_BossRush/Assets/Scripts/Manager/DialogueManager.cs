@@ -19,27 +19,23 @@ public class DialogueManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private Queue<Dialogue> sentences = new Queue<Dialogue>();
+    Queue<Dialogue> sentences = new Queue<Dialogue>();
 
-    [Header("IMAGE")]
+    [Header("UI")]
     public Image panel;
     public TextMeshProUGUI content;
-
-    private GameObject sayingOBJ;
-    private string sayingTag;
 
     void Start()
     {
         panel.gameObject.SetActive(false);
     }
-
-    public void StartDialogue(GameObject obj, string tag, Dialogue[] data, int start, int end)
+    private CutsceneTest cutscneTemp;
+    public void StartDialogue(CutsceneTest cutscne, Dialogue[] data, int start, int end)
     {
-        sayingOBJ = obj;
-        sayingTag = tag;
+        Debug.Log("대화 시작하는 문장" + start + " " + end);
+        FindObjectOfType<PlayerMovement>().isTalking = true;
 
-        PauseManager.instance.Pause(sayingOBJ, sayingTag);
-
+        cutscneTemp = cutscne;
         panel.gameObject.SetActive(true);
 
         sentences.Clear();
@@ -47,7 +43,6 @@ public class DialogueManager : MonoBehaviour
         for (int i = start; i < end; ++i)
         {
             sentences.Enqueue(data[i]);
-            Debug.Log(data[i].content);
         }
 
         DisplayNextSentence();
@@ -79,11 +74,10 @@ public class DialogueManager : MonoBehaviour
         yield return null;
     }
 
-    private void EndDialogue()
+    void EndDialogue()
     {
         panel.gameObject.SetActive(false);
-        PauseManager.instance.Release(sayingOBJ, sayingTag);
-        sayingOBJ = null;
-        sayingTag = "";
+        cutscneTemp.dialogueIsEnd = true;
+        FindObjectOfType<PlayerMovement>().isTalking = false;
     }
 }
