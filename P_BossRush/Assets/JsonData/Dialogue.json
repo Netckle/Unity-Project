@@ -3,33 +3,33 @@
     [
         {
         "index":0,
-        "name":"Player",
-        "content":"어이, 소용없어."
+        "name":"경비병",
+        "content":"아, 네가 성에서 말한 녀석인가?<br>드디어 집에 갈 수 있겠어."
         },
         {
         "index":1,
-        "name":"Player",
-        "content":"네 녀석같은 꼬마의 공격으론 어림없을거야."
+        "name":"경비병",
+        "content":"저 슬라임. 공격이 전혀 통하질 않아.<br>공격하면 분열했다가 다시 합쳐져."
         },
         {
         "index":2,
-        "name":"Player",
-        "content":"내가 도와주고 싶지만...너무 배가 고프군."
+        "name":"경비병",
+        "content":"저런게 마을에 들어가면 위험하다고,<br>뭘 하려는진 몰라도 부탁한다."
         },
         {
         "index":3,
-        "name":"Player",
-        "content":"뭐...열심히 해보라고...난 좀 자야겠어."
+        "name":"넷클",
+        "content":"네, 걱정 마세요. 금방 해결하겠습니다."
         },
         {
         "index":4,
-        "name":"Player",
-        "content":"혹시라도 쓰러뜨리면...나도 데리고 가달라고...크크"
+        "name":"넷클",
+        "content":"(슬라임이라면 분명...)"
         },
         {
         "index":5,
-        "name":"Player",
-        "content":"ZZZ... "
+        "name":"넷클",
+        "content":""
         }
     ]
 }

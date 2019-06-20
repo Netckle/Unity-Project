@@ -21,19 +21,24 @@ public class PlayerAttack : MonoBehaviour
         if (timeBtwAttack <= 0)
         {
             // then you can attack
-            if (Input.GetKey(KeyCode.J))
+            if (Input.GetKey(KeyCode.Q))
             {
-                camAnim.SetTrigger("shake");
-                playerAnim.SetTrigger("attack");
+                playerAnim.SetBool("isAttacking", true);
+                //playerAnim.SetTrigger("attack");
 
                 timeBtwAttack = startTimeBtwAttack;
                 // Collider2D[] ** = Phyiscs2D.OverlapBoxAll(attackPos.position, new Vector2(attackRangeX, attackRangeY), 0, whatIsEnemies);
                 Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, whatIsEnemies);
                 for (int i = 0; i < enemiesToDamage.Length; i++)
                 {
+                    Debug.Log("이럴수가");
                     enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
                 }
-            }            
+            }      
+            else
+            {
+                playerAnim.SetBool("isAttacking", false);
+            }      
         }
         else
         {

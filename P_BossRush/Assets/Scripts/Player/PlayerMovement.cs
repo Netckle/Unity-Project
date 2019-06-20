@@ -73,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
         animationScript = GetComponentInChildren<AnimationScript>();
         animator = GetComponentInChildren<Animator>();
 
-        StartCoroutine(CoMeleeAttack());
+        //StartCoroutine(CoMeleeAttack());
     }
 
     void Update()

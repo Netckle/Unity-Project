@@ -14,12 +14,13 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        anim = GetComponent<Animator>();
-        anim.SetBool("isRunning", true);
+        //anim = GetComponent<Animator>();
+        //anim.SetBool("isRunning", true);
     }
 
     void Update()
-    {
+    {   
+        /*
         if (dazedTime <= 0)
         {
             speed = 5;
@@ -36,13 +37,15 @@ public class Enemy : MonoBehaviour
         }
 
         transform.Translate(Vector2.left * speed * Time.deltaTime);
+        */
     }
 
     public void TakeDamage(int damage)
     {
         dazedTime = startDazedTime;
         // play a hurt sound
-        Instantiate(bloodEffect, transform.position, Quaternion.identity);
+        //Instantiate(bloodEffect, transform.position, Quaternion.identity);
+        Camera.main.GetComponent<CameraShake>().Shake(0.3f, 0.3f);
         health -= damage;
         Debug.Log("damage TAKEN !");
     }

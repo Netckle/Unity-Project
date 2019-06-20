@@ -17,6 +17,8 @@ public class MultipleTargetCamera : MonoBehaviour
     private Vector3 velocity;
     private Camera cam;
 
+    public bool canZoom = true;
+
     void Start()
     {
         cam = GetComponent<Camera>();
@@ -33,9 +35,9 @@ public class MultipleTargetCamera : MonoBehaviour
 
     void Zoom()
     {
-
         float newZoom = Mathf.Lerp(maxZoom, minZoom, GetGreatestDistance() / zoomLimiter);
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, newZoom, Time.deltaTime);
+        if (canZoom)
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, newZoom, Time.deltaTime);
     }
 
     void Move()
