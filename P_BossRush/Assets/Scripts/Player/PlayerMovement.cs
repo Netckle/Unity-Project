@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
 {   
     #region Variable
 
+    public int catchedSlimes = 0;
+
     [HideInInspector]
     public Rigidbody2D rigidbody2d;
     private Collision collider;

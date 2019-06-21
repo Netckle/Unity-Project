@@ -4837,7 +4837,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1484032555912673417}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7106679970866792414}
@@ -4924,7 +4924,7 @@ GameObject:
   - component: {fileID: 8127479134532376}
   - component: {fileID: 3406712874300877198}
   - component: {fileID: 2517843186798131516}
-  - component: {fileID: 6518915104684817446}
+  - component: {fileID: 6114467776317858686}
   m_Layer: 9
   m_Name: Mini Slime
   m_TagString: Untagged
@@ -4961,7 +4961,7 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.75}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.25
 --- !u!58 &3406712874300877198
@@ -4977,7 +4977,7 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.75}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.3
 --- !u!50 &2517843186798131516
@@ -5001,7 +5001,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6518915104684817446
+--- !u!114 &6114467776317858686
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5010,9 +5010,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6426726993506191764}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 363fc6d7609992d409eb549f7e1672dd, type: 3}
+  m_Script: {fileID: 11500000, guid: d2bc7fb2e6509d24d819304220c55268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 5
-  movePower: 5
-  particle: {fileID: 6132794612532474668}
+  HP: 3
+  particle: {fileID: 0}
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 256
+  speed: 3
