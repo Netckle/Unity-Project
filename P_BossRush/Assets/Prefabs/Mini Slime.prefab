@@ -5014,7 +5014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 3
-  particle: {fileID: 0}
+  particle: {fileID: 6132794612532474668}
   enemyMask:
     serializedVersion: 2
     m_Bits: 256

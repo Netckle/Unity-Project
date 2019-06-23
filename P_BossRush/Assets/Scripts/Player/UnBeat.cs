@@ -17,18 +17,18 @@ public class UnBeat : MonoBehaviour
     // Attacked by Creature
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Monster" && !other.isTrigger && !(rigid.velocity.y < -10f) && !isUnbeatTime)
+        if (other.gameObject.tag == "SlimeBoss" && !other.isTrigger && !(rigid.velocity.y < -10f) && !isUnbeatTime)
         {
             // Bouncing
             Vector2 attackedVelocity = Vector2.zero;
 
             if (other.gameObject.transform.position.x > transform.position.x)
             {
-                attackedVelocity = new Vector2 (-2f, 7f);
+                attackedVelocity = new Vector2 (-5f, 10f);
             }
             else
             {
-                attackedVelocity = new Vector2 (2f, 7f);
+                attackedVelocity = new Vector2 (5f, 10f);
             }
             rigid.AddForce(attackedVelocity, ForceMode2D.Impulse);
 

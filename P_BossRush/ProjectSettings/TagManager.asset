@@ -7,6 +7,8 @@ TagManager:
   - Monster
   - Controller
   - Manager
+  - ProgrammerNPC
+  - SlimeBoss
   layers:
   - Default
   - TransparentFX

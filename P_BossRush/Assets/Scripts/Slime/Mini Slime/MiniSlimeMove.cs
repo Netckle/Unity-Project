@@ -18,6 +18,8 @@ public class MiniSlimeMove : MonoBehaviour
 
     float myWidth, myHeight;
 
+    private bool canMove = false;
+
     void Start()
     {
         anim = GetComponentInChildren<Animator>();
@@ -39,6 +41,14 @@ public class MiniSlimeMove : MonoBehaviour
     }
 
     void FixedUpdate()
+    {
+        if (canMove)
+        {
+            Move();
+        }
+    }
+
+    void Move()
     {
         // Check to see if there's ground in front of us before moving forward
         Vector2 lineCastPos = myTrans.position.toVector2();// - myTrans.right.toVector2() * myWidth + Vector2.up * myHeight;
@@ -71,9 +81,18 @@ public class MiniSlimeMove : MonoBehaviour
         // show damage effect
         //Instantiate(bloodEffect, transform.position, Quaternion.identity);
 
+        
+        
+    }
+
+    IEnumerator CoTakeDamage(int damage)
+    {
+        canMove = false;
         Camera.main.GetComponent<CameraShake>().Shake(0.3f, 0.3f);
         
         HP -= damage;
         Debug.Log("damage TAKEN !");
+        yield return new WaitForSeconds(0.3f);
+        canMove = true;
     }
 }

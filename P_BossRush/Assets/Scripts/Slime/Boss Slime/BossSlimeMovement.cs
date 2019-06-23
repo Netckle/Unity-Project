@@ -29,14 +29,24 @@ public class BossSlimeMovement : MonoBehaviour
     public bool pause = false;
     public bool canRelease = false;
 
+    private Animator anim;
+
+    public bool pase02 = false;
+
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
-        StartCoroutine(BossPattern());
+        //StartCoroutine(BossPattern());
+
+        anim = GetComponent<Animator>();
     }
 
     void Update()
     {
+        if (pase02)
+        {
+            anim.SetBool("pase02", true);
+        }
         spawned = miniSlimes.miniSlimeIs();
 
         if (pause)
@@ -55,9 +65,12 @@ public class BossSlimeMovement : MonoBehaviour
     {
         Jump();
     }
-
+    public void BossPattern()
+    {
+        StartCoroutine(CoBossPattern());
+    }
     // Main Coroutine
-    public IEnumerator BossPattern()
+    IEnumerator CoBossPattern()
     {
         StartCoroutine(MoveToNewLine(player.currentLine, 1.0f, yPadding));
 
@@ -79,7 +92,7 @@ public class BossSlimeMovement : MonoBehaviour
 
         yield return new WaitUntil(() => spawned);
 
-        StartCoroutine(BossPattern());
+        StartCoroutine(CoBossPattern());
     }
 
     // Move Parts
@@ -101,10 +114,12 @@ public class BossSlimeMovement : MonoBehaviour
 
         Vector3 end = new Vector3(0, transform.position.y, 0);
 
+        transform.localScale = new Vector3(3, 3, 3);
+
         while (Vector3.Distance(transform.position, end) > 0.5f)
         {
             transform.position = Vector3.MoveTowards(transform.position, end, movePower * Time.deltaTime);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.01f);
         }        
         transform.position = new Vector3(0, transform.position.y, 0);     
 
@@ -118,18 +133,22 @@ public class BossSlimeMovement : MonoBehaviour
         Vector3 leftEnd = transform.position - new Vector3(halfRange, 0, 0);
         Vector3 rightEnd = transform.position + new Vector3(halfRange, 0, 0);
 
+        transform.localScale = new Vector3(3, 3, 3);
+
         while (Vector3.Distance(transform.position, leftEnd) > 0.5f)
         {
             transform.position = Vector3.MoveTowards(transform.position, leftEnd, movePower * Time.deltaTime);      
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.01f);
         }
 
         yield return new WaitForSeconds(waitTime);
 
+        transform.localScale = new Vector3(-3, 3, 3);
+
         while (Vector3.Distance(transform.position, rightEnd) > 0.5f)
-        {
+        {            
             transform.position = Vector3.MoveTowards(transform.position, rightEnd, movePower * Time.deltaTime);   
-            yield return new WaitForSeconds(0.05f);      
+            yield return new WaitForSeconds(0.01f);      
         }
 
         moveFromMiddleToSide = true;

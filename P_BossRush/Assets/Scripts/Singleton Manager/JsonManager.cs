@@ -10,6 +10,7 @@ public class Dialogue
     public int index;
     public string name;
     public string content;
+    public string target;
 }
 
 [System.Serializable]

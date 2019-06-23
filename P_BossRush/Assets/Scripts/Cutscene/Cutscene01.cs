@@ -4,86 +4,81 @@ using UnityEngine;
 
 public class Cutscene01 : Cutscene
 {
+    public Fade fade;
+
     public PlayerMovement player;
     public NPCMovement npc;
     public BossSlimeMovement bossSlime;
 
-    public bool bossIsDead = false;
+    public GameObject niddle;
 
-    public bool cutscne01IsEnd, cutscne02IsEnd;
-    
+    bool bossIsDead = false;
+    bool cutscne01IsEnd, cutscne02IsEnd;   
+
+    public bool type01, type02, type03;
+
     void Start()
     {
         if (!cutscne01IsEnd)
-            StartCoroutine(Cutscene0101(0, 6));
+        {
+            StartCoroutine(CoFirstCutscene(0, 6));
+        }            
+    }
+
+    public void BossIsDead()
+    {
+        bossIsDead = true;
     }
 
     void Update()
     {
-        if (player.catchedSlimes >= 1 && !cutscne02IsEnd)
-        {
-            cutscne02IsEnd = true;
-            StartCoroutine(Cutscene0102(7, 12));
-        }
-
         if (bossIsDead)
-        {
+        {            
+            StartCoroutine(CoLastCutscene(7, 10));
             bossIsDead = false;
-            StartCoroutine(EndCutscene(4.0f, 11, 16));
+        }
+
+        if (type02)
+        {
+            niddle.SetActive(true);
+        }
+
+        if (type03)
+        {
+            
         }
     }
 
-    IEnumerator EndCutscene(float xPaddingSize, int start, int end)
-    {
-        // 페이드 효과
-
-        player.transform.position = npc.gameObject.transform.position + new Vector3(xPaddingSize, 0, 0);
-
-        Camera.main.GetComponent<MultipleTargetCamera>().targets[1] = bossSlime.gameObject.transform;
-
-        DialogueManager.instance.StartDialogue(this, JsonManager.instance.Load<Dialogue>(), start, end);
-
-        yield return new WaitUntil(() => dialogueIsEnd);
-
-        // 페이드 효과...
-    }
-
-    IEnumerator Cutscene0101(int start, int end)
+    IEnumerator CoFirstCutscene(int dialogueStart, int dialogueEnd)
     {        
-        bossSlime.gameObject.SetActive(false);
+        fade.FadeOut(3.0f);
 
-        player.canMove = false;
-        player.gameObject.transform.position = npc.gameObject.transform.position + new Vector3(-5, 1, 0);
+        player.Pause();
+        player.ChangeTransform(npc.gameObject.transform.position + new Vector3(-5, 1, 0));
        
-        DialogueManager.instance.StartDialogue(this, JsonManager.instance.Load<Dialogue>(), start, end);
+        DialogueManager.instance.StartDialogue(this, JsonManager.instance.Load<Dialogue>(), dialogueStart, dialogueEnd);
 
         yield return new WaitUntil(() => dialogueIsEnd);
-
-        bossSlime.gameObject.SetActive(true);
         
         Camera.main.GetComponent<MultipleTargetCamera>().targets[1] = bossSlime.gameObject.transform;
-        player.canMove = true;
+
+        player.Release();  
+        bossSlime.BossPattern();
 
         cutscne01IsEnd = true;
     }
-    
-    IEnumerator Cutscene0102(int start, int end)
+
+    IEnumerator CoLastCutscene(int dialogueStart, int dialogueEnd)
     {
-        dialogueIsEnd = false;
-        Debug.Log("실행되었단다.");
-        
-        bossSlime.pause = true;
+        // Fade In Out 
 
-        Camera.main.GetComponent<MultipleTargetCamera>().targets[1] = npc.gameObject.transform;
-        player.canMove = false;
+        player.Pause();
+        player.ChangeTransform(npc.gameObject.transform.position + new Vector3(-5, 1, 0));
 
-        DialogueManager.instance.StartDialogue(this, JsonManager.instance.Load<Dialogue>(), start, end);
+        DialogueManager.instance.StartDialogue(this, JsonManager.instance.Load<Dialogue>(), dialogueStart, dialogueEnd);
 
         yield return new WaitUntil(() => dialogueIsEnd);
 
-        Camera.main.GetComponent<MultipleTargetCamera>().targets[1] = bossSlime.gameObject.transform;
-        player.canMove = true;
-
-        bossSlime.pause = false;
+        // Fade In Out 
     }
 }

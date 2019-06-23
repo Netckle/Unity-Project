@@ -24,6 +24,8 @@ public class DialogueManager : MonoBehaviour
     [Header("UI")]
     public Image panel;
     public TextMeshProUGUI content;
+    public Image namePanel;
+    public TextMeshProUGUI nameContent;
 
     void Start()
     {
@@ -39,10 +41,11 @@ public class DialogueManager : MonoBehaviour
 
         cutscneTemp = cutscne;
         panel.gameObject.SetActive(true);
+        namePanel.gameObject.SetActive(true);
 
         sentences.Clear();
 
-        for (int i = start; i < end; ++i)
+        for (int i = start; i < end + 1; ++i)
         {
             sentences.Enqueue(data[i]);
         }
@@ -67,9 +70,19 @@ public class DialogueManager : MonoBehaviour
     IEnumerator TypeSentence(Dialogue sentence)
     {
         content.text = "";
+        nameContent.text = "";
+
+        nameContent.text = sentence.name;
+        
+        float xPos = 0.0f;
+
+        Camera.main.GetComponent<MultipleTargetCamera>().targets[1] = GameObject.FindGameObjectWithTag(sentence.target).transform;
 
         foreach (char letter in sentence.content)
         {
+            xPos = panel.rectTransform.position.x - (panel.rectTransform.sizeDelta.x / 2) + (nameContent.rectTransform.sizeDelta.x / 2);
+            namePanel.rectTransform.position = new Vector3(xPos, namePanel.rectTransform.position.y, namePanel.rectTransform.position.z);
+
             content.text += letter;
             yield return new WaitForSeconds(0.01f);
         }
@@ -79,6 +92,8 @@ public class DialogueManager : MonoBehaviour
     void EndDialogue()
     {
         panel.gameObject.SetActive(false);
+        namePanel.gameObject.SetActive(false);
+
         cutscneTemp.dialogueIsEnd = true;
         FindObjectOfType<PlayerMovement>().isTalking = false;
     }

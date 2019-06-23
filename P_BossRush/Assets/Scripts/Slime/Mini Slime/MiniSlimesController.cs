@@ -50,7 +50,8 @@ public class MiniSlimesController : MonoBehaviour
         {
             miniSlimes[num].transform.position = firstPos[num];
             miniSlimes[num].SetActive(true);
-            //miniSlimes[num].GetComponent<MiniSlimeMove>().particle.Play();
+            Camera.main.GetComponent<MultipleTargetCamera>().targets.Add(miniSlimes[num].transform);
+            miniSlimes[num].GetComponent<MiniSlimeMove>().particle.Play();
         }
     }
 

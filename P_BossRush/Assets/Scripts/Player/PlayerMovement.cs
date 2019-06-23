@@ -68,6 +68,22 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
+
+    public void Pause()
+    {
+        canMove = false;
+    }
+
+    public void Release()
+    {
+        canMove = true;
+    }
+
+    public void ChangeTransform(Vector3 pos)
+    {
+        this.gameObject.transform.position = pos;
+    }
+
     void Start()
     {
         collider = GetComponent<Collision>();
