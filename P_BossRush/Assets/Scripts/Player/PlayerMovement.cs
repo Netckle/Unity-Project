@@ -66,8 +66,17 @@ public class PlayerMovement : MonoBehaviour
     public bool pause = false;
     public bool isTalking = false;
 
+    [Space]
+    [Header("UI 컨트롤")]
+    public bool inputLeft   = false;
+    public bool inputRight  = false;
+    public bool inputJump   = false;
+    public bool inputAttack = false;
+    public bool inputDash   = false;
+
     #endregion
 
+    
 
     public void Pause()
     {
@@ -92,19 +101,33 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
 
         //StartCoroutine(CoMeleeAttack());
+
+        UIButtonManager ui = GameObject.FindGameObjectWithTag("Managers").GetComponent<UIButtonManager>();
+        ui.Init();
     }
 
     void Update()
     {
-        #region Walk
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
+        //float x = Input.GetAxis("Horizontal");
+
+        //float y = Input.GetAxis("Vertical");
+
+        float x = 0f, y = 0f;
+        if (inputLeft || inputRight)
+        {         
+            x = Input.touches[0].deltaPosition.x;
+            y = Input.touches[0].deltaPosition.y;
+        }
         float xRaw = Input.GetAxisRaw("Horizontal");
         float yRaw = Input.GetAxisRaw("Vertical");
         Vector2 dir = new Vector2(x, y);
 
-        Walk(dir);        
-        animationScript.SetHorizontalMovement(x, y, rigidbody2d.velocity.y);
+
+            Walk(dir);        
+            animationScript.SetHorizontalMovement(x, y, rigidbody2d.velocity.y);
+        
+        #region Walk
+        
         #endregion
         
        
@@ -117,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
             DialogueManager.instance.DisplayNextSentence();
         }
         
-        if (Input.GetButtonDown("Jump"))
+        if (inputJump)
         {
             animationScript.SetTrigger("jump");
 
@@ -132,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         
-        if (Input.GetButtonDown("Dash") && !hasDashed)
+        if (inputDash && !hasDashed)
         {
             if (xRaw != 0 || yRaw != 0)
             {

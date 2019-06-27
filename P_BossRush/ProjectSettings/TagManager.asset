@@ -9,6 +9,7 @@ TagManager:
   - Manager
   - ProgrammerNPC
   - SlimeBoss
+  - Managers
   layers:
   - Default
   - TransparentFX

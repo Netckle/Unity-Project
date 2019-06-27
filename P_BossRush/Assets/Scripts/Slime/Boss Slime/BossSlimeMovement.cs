@@ -10,54 +10,69 @@ public class BossSlimeMovement : MonoBehaviour
     public float movePower;
     public float yPadding;
     public float halfRange;
-
     public float jumpPower;
 
-    // End Flags
+    [Space]
+    [Header("움직임 플래그")]    
     public bool moveToNewLine = false;
-    public bool moveToMiddle = false;
-    public bool moveFromMiddleToSide = false;
 
-    public bool jumping = false;
+    public bool moveToMiddle = false;
+    public bool moveToSide = false;
+
+    public bool blockDmgIsEnd = false;
+
+    public bool pause = false;
+
+    [Space]
+    [Header("플래그")]
+    public bool spawnIsEnd = false;
+    public bool jumpIsEnd = false;
 
     public bool isJumping = false;
 
+    [Space]
+    [Header("페이즈 플래그")]
+    public bool phase02IsOn = false;
+
     private Rigidbody2D rigid;
-
-    public bool canDamaged = false; // 공격을 받을 수 있는 상태인가.
-
-    public bool pause = false;
-    public bool canRelease = false;
-
     private Animator anim;
 
-    public bool pase02 = false;
+    private bool spawnedSlimeIsExist = false;
+    public bool canDamaged = false;
+
+    /*
+    보스 페이즈
+    01. 플레이어가 있는 곳으로 순간이동 - 방방뛰면서 좌우로 이동 - 중간으로 이동 - 미니 슬라임 소환 (일반 움직임) 
+    + 미니 슬라임이 활성화 된 동안은 공격을 받지 않음. (아마도 콜라이더 isTrigger가 좋을듯) 모두 제거하면 한동안 경직되어 공격할 수 있는 시간 주어짐. 물론 이동 중에도 때릴 수 있음.
+
+    02. 컨셉 : 버그 걸린 보스
+    오른쪽 끝에 순간이동 후 한 방향으로 돌진 - 벽에 닿으면 남은 다른 라인으로 이동 해서 반복 - 모든 라인을 한 번씩 돌면 중간으로 이동 - 미니 슬라임 소환 (방방 뛰어다님)
+    + 피는 절반에 발동, 속도는 up 됨.
+    */
 
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
-        //StartCoroutine(BossPattern());
-
         anim = GetComponent<Animator>();
     }
 
     void Update()
     {
-        if (pase02)
+        spawnedSlimeIsExist = miniSlimes.CheckSlimeIsActive();
+
+        switch(spawnedSlimeIsExist)
+        {
+            case true:
+                canDamaged = false;
+                break;
+            case false:
+                canDamaged = true;
+                break;
+        }
+        
+        if (phase02IsOn)
         {
             anim.SetBool("pase02", true);
-        }
-        spawned = miniSlimes.miniSlimeIs();
-
-        if (pause)
-        {
-            PauseManager.instance.Pause(this.gameObject, true);
-            canRelease = true;
-        }       
-
-        if (canRelease && !pause)
-        {
-            PauseManager.instance.Release(this.gameObject, "BossSlime");
         }
     }
 
@@ -65,60 +80,62 @@ public class BossSlimeMovement : MonoBehaviour
     {
         Jump();
     }
+
     public void BossPattern()
     {
-        StartCoroutine(CoBossPattern());
+        StartCoroutine(CoBossPatternPhase01());
     }
-    // Main Coroutine
-    IEnumerator CoBossPattern()
-    {
-        StartCoroutine(MoveToNewLine(player.currentLine, 1.0f, yPadding));
 
+    // 1 페이즈 메인 코루틴.
+    private IEnumerator CoBossPatternPhase01()
+    {
+        // 01. 플레이어가 있는 라인으로 이동.
+        StartCoroutine(CoMoveToNewLine(player.currentLine, 1.0f));
         yield return new WaitUntil(() => moveToNewLine);        
 
-        StartCoroutine(MoveFromMiddleToSide(movePower, halfRange, 1.0f));
+        // 02. 양 옆 이동.
+        StartCoroutine(CoMoveToSide(movePower, halfRange, 1.0f));
+        yield return new WaitUntil(() => moveToSide);
 
-        yield return new WaitUntil(() => moveFromMiddleToSide);
-
-        StartCoroutine(MoveToMiddle(movePower, 1.0f));
-    
+        // 03. 중간으로 이동.
+        StartCoroutine(CoMoveToMiddle(movePower, 1.0f));    
         yield return new WaitUntil(() => moveToMiddle);
 
-        StartCoroutine(Jump(2, 2.0f));
+        // 04. 점프함.
+        StartCoroutine(CoJump(2, 2.0f));
+        yield return new WaitUntil(() => jumpIsEnd);
 
-        yield return new WaitUntil(() => jumping);
+        // 05. 미니 슬라임 스폰.
+        StartCoroutine(CoSpawn(2.0f));
+        yield return new WaitUntil(() => spawnIsEnd);
 
-        StartCoroutine(Spawn(2.0f));
-
-        yield return new WaitUntil(() => spawned);
-
-        StartCoroutine(CoBossPattern());
+        // 무한 반복.
+        StartCoroutine(CoBossPatternPhase01());
     }
 
-    // Move Parts
-    IEnumerator MoveToNewLine(int lineNum, float waitTime, float yPadding)
+    // 플레이어가 있는 라인으로 이동합니다.
+    IEnumerator CoMoveToNewLine(int lineNum, float waitTime)
     {
         moveToNewLine = false;
-        // Fade Effect
 
         yield return new WaitForSeconds(waitTime);
         transform.position = miniSlimes.lines[lineNum].transform.position;
 
-        // Fade Effect
         moveToNewLine = true;
     }
 
-    IEnumerator MoveToMiddle(float movePower, float waitTime)
+    // 맵의 중간으로 이동합니다.
+    IEnumerator CoMoveToMiddle(float movePower, float waitTime)
     {
         moveToMiddle = false;
 
-        Vector3 end = new Vector3(0, transform.position.y, 0);
+        Vector3 endPos = new Vector3(0, transform.position.y, 0);
 
         transform.localScale = new Vector3(3, 3, 3);
 
-        while (Vector3.Distance(transform.position, end) > 0.5f)
+        while (Vector3.Distance(transform.position, endPos) > 0.5f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, end, movePower * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, endPos, movePower * Time.deltaTime);
             yield return new WaitForSeconds(0.01f);
         }        
         transform.position = new Vector3(0, transform.position.y, 0);     
@@ -126,9 +143,9 @@ public class BossSlimeMovement : MonoBehaviour
         moveToMiddle = true;
     }
 
-    IEnumerator MoveFromMiddleToSide(float movePower, float halfRange, float waitTime)
+    IEnumerator CoMoveToSide(float movePower, float halfRange, float waitTime)
     {
-        moveFromMiddleToSide = false;
+        moveToSide = false;
 
         Vector3 leftEnd = transform.position - new Vector3(halfRange, 0, 0);
         Vector3 rightEnd = transform.position + new Vector3(halfRange, 0, 0);
@@ -151,21 +168,21 @@ public class BossSlimeMovement : MonoBehaviour
             yield return new WaitForSeconds(0.01f);      
         }
 
-        moveFromMiddleToSide = true;
+        moveToSide = true;
     }
 
-    IEnumerator Jump(int count, float waitTime)
+    IEnumerator CoJump(int count, float waitTime)
     {
-        jumping = false;
+        jumpIsEnd = false;
 
         for (int i = 0; i < count; ++i)
         {
             isJumping = true;
-
             yield return new WaitForSeconds(waitTime);
         }
+
         isJumping = false;
-        jumping = true;
+        jumpIsEnd = true;
     }
 
     void Jump()
@@ -181,12 +198,11 @@ public class BossSlimeMovement : MonoBehaviour
         isJumping = false;
     }
 
-    public bool spawned = false;
-
-    IEnumerator Spawn(float waitTime)
+    IEnumerator CoSpawn(float waitTime)
     {
-        spawned = false;
-        miniSlimes.SpawnSlime(2);
+        spawnIsEnd = false;
+
+        miniSlimes.SpawnMiniSlimes(2);
         yield return new WaitForSeconds(waitTime);
     }
 }
