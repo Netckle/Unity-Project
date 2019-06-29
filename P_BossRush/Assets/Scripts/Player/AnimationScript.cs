@@ -16,27 +16,23 @@ public class AnimationScript : MonoBehaviour
         anim = GetComponent<Animator>();
         coll = GetComponentInParent<Collision>();
         move = GetComponentInParent<PlayerMovement>();
-        sr = GetComponent<SpriteRenderer>();
+        sr   = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        anim.SetBool("onGround", coll.onGround);
-        anim.SetBool("onWall", coll.onWall);
-        anim.SetBool("onRightWall", coll.onRightWall);
-        anim.SetBool("wallGrab", move.wallGrab);
-        anim.SetBool("wallSlide", move.wallSlide);
-        anim.SetBool("canMove", move.canMove);
-        anim.SetBool("isDashing", move.isDashing);
-
+        anim.SetBool("onGround"     , coll.onGround);
+        anim.SetBool("onWall"       , coll.onWall);
+        anim.SetBool("onRightWall"  , coll.onRightWall);
+        anim.SetBool("wallGrab"     , move.wallGrab);
+        anim.SetBool("wallSlide"    , move.wallSlide);
+        anim.SetBool("canMove"      , move.canMove);
+        anim.SetBool("isDashing"    , move.isDashing);
     }
 
     public void SetHorizontalMovement(float x,float y, float yVel)
     {
-
-            anim.SetFloat("HorizontalAxis", x);
-        
-        
+        anim.SetFloat("HorizontalAxis", x);      
         anim.SetFloat("VerticalAxis", y);
         anim.SetFloat("VerticalVelocity", yVel);
     }
@@ -61,6 +57,15 @@ public class AnimationScript : MonoBehaviour
         }
 
         bool state = (side == 1) ? false : true;
-        sr.flipX = state;
+        //sr.flipX = state;
+        switch (state)
+        {
+            case false:
+                move.transform.localScale = new Vector3(1, 1, 1);
+                break;
+            case true:
+                move.transform.localScale = new Vector3(-1, 1, 1);
+                break;
+        }
     }
 }

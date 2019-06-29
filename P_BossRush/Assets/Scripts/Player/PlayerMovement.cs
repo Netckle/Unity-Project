@@ -6,13 +6,11 @@ using System;
 
 public class PlayerMovement : MonoBehaviour
 {   
-    #region Variable
-
     public int catchedSlimes = 0;
 
     [HideInInspector]
     public Rigidbody2D rigidbody2d;
-    private Collision collider;
+    private Collision collision;
     private Animator animator;
     private AnimationScript animationScript;
 
@@ -66,17 +64,7 @@ public class PlayerMovement : MonoBehaviour
     public bool pause = false;
     public bool isTalking = false;
 
-    [Space]
-    [Header("UI 컨트롤")]
-    public bool inputLeft   = false;
-    public bool inputRight  = false;
-    public bool inputJump   = false;
-    public bool inputAttack = false;
-    public bool inputDash   = false;
-
-    #endregion
-
-    
+    public bool isJumping = false;
 
     public void Pause()
     {
@@ -95,67 +83,45 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        collider = GetComponent<Collision>();
+        collision = GetComponent<Collision>();
         rigidbody2d = GetComponent<Rigidbody2D>();
         animationScript = GetComponentInChildren<AnimationScript>();
         animator = GetComponentInChildren<Animator>();
-
-        //StartCoroutine(CoMeleeAttack());
-
-        UIButtonManager ui = GameObject.FindGameObjectWithTag("Managers").GetComponent<UIButtonManager>();
-        ui.Init();
     }
 
     void Update()
     {
-        //float x = Input.GetAxis("Horizontal");
-
-        //float y = Input.GetAxis("Vertical");
-
-        float x = 0f, y = 0f;
-        if (inputLeft || inputRight)
-        {         
-            x = Input.touches[0].deltaPosition.x;
-            y = Input.touches[0].deltaPosition.y;
-        }
+        float x = Input.GetAxis("Horizontal");
+        float y = Input.GetAxis("Vertical");
         float xRaw = Input.GetAxisRaw("Horizontal");
         float yRaw = Input.GetAxisRaw("Vertical");
+
         Vector2 dir = new Vector2(x, y);
 
-
-            Walk(dir);        
-            animationScript.SetHorizontalMovement(x, y, rigidbody2d.velocity.y);
-        
-        #region Walk
-        
-        #endregion
-        
-       
-        // -----
-
-        #region KeyDown 키를 누르는 것과 관련된 부분.
+        Walk(dir);        
+        animationScript.SetHorizontalMovement(x, y, rigidbody2d.velocity.y);
 
         if (isTalking && Input.GetButtonDown("Interact"))
         {
             DialogueManager.instance.DisplayNextSentence();
         }
         
-        if (inputJump)
+        if (isJumping)
         {
             animationScript.SetTrigger("jump");
 
-            if (collider.onGround)
+            if (collision.onGround)
             {
                 Jump(Vector2.up, false);
             }
 
-            if (collider.onWall && !collider.onGround)
+            if (collision.onWall && !collision.onGround)
             {
                 WallJump();
             }
         }
         
-        if (inputDash && !hasDashed)
+        if (isDashing && !hasDashed)
         {
             if (xRaw != 0 || yRaw != 0)
             {
@@ -163,16 +129,16 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (collider.onWall && Input.GetButton("Interact") && canMove)
+        if (collision.onWall && Input.GetButton("Interact") && canMove)
         {
-            if (side != collider.wallSide)
+            if (side != collision.wallSide)
                 animationScript.Flip(side * -1);
 
             wallGrab  = true;
             wallSlide = false;
         }
         
-        if (Input.GetButtonUp("Interact") || !collider.onWall || !canMove)
+        if (Input.GetButtonUp("Interact") || !collision.onWall || !canMove)
         {
             wallGrab  = false;
             wallSlide = false;
@@ -182,15 +148,13 @@ public class PlayerMovement : MonoBehaviour
         {
             StartCoroutine(CoRotatePlatform(0.5f));
         }
-        #endregion     
 
-         #region State
         if (pause)
         {
             PauseManager.instance.Pause(this.gameObject, true);            
         }
 
-        if (collider.onGround && !isDashing)
+        if (collision.onGround && !isDashing)
         {
             wallJumped = false;
             GetComponent<BetterJumping>().enabled = true;
@@ -213,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
             rigidbody2d.gravityScale = 3;
         }
 
-        if (collider.onWall && !collider.onGround)
+        if (collision.onWall && !collision.onGround)
         {
             if (x != 0 && !wallGrab)
             {
@@ -222,18 +186,18 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (!collider.onWall || collider.onGround)
+        if (!collision.onWall || collision.onGround)
         {
             wallSlide = false;
         }        
 
-        if (collider.onGround && !groundTouch)
+        if (collision.onGround && !groundTouch)
         {
             GroundTouch();
             groundTouch = true;
         }
 
-        if (!collider.onGround && groundTouch)
+        if (!collision.onGround && groundTouch)
         {
             groundTouch = false;
         }
@@ -254,8 +218,6 @@ public class PlayerMovement : MonoBehaviour
             side = -1;
             animationScript.Flip(side);
         }        
-        #endregion
-
     }
 
     void Walk(Vector2 dir)
@@ -306,7 +268,7 @@ public class PlayerMovement : MonoBehaviour
 
     void WallJump()
     {
-        if ((side == 1 && collider.onRightWall) || (side == -1 && !collider.onRightWall))
+        if ((side == 1 && collision.onRightWall) || (side == -1 && !collision.onRightWall))
         {
             side *= -1;
             animationScript.Flip(side);
@@ -315,7 +277,7 @@ public class PlayerMovement : MonoBehaviour
         StopCoroutine(CoDisableMovement(0));
         StartCoroutine(CoDisableMovement(0.1f));
 
-        Vector2 wallDir = collider.onRightWall ? Vector2.left : Vector2.right;
+        Vector2 wallDir = collision.onRightWall ? Vector2.left : Vector2.right;
 
         Jump((Vector2.up / 1.5f + wallDir / 1.5f), true);
 
@@ -324,7 +286,7 @@ public class PlayerMovement : MonoBehaviour
 
     void WallSlide()
     {
-        if (collider.wallSide != side)
+        if (collision.wallSide != side)
         {
             animationScript.Flip(side * -1);
         }
@@ -333,7 +295,7 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         bool pushingWall = false;
-        if ((rigidbody2d.velocity.x > 0 && collider.onRightWall) || (rigidbody2d.velocity.x < 0 && collider.onLeftWall))
+        if ((rigidbody2d.velocity.x > 0 && collision.onRightWall) || (rigidbody2d.velocity.x < 0 && collision.onLeftWall))
         {
             pushingWall = true;
         }
@@ -359,7 +321,7 @@ public class PlayerMovement : MonoBehaviour
 
     int ParticleSide()
     {
-        int particleSide = collider.onRightWall ? 1 : -1;
+        int particleSide = collision.onRightWall ? 1 : -1;
         return particleSide;
     }
 
@@ -423,7 +385,7 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(0.15f);
 
-        if (collider.onGround)
+        if (collision.onGround)
             hasDashed = false;
     }
 

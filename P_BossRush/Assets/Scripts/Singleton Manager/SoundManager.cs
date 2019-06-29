@@ -17,6 +17,11 @@ public class SoundManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    void Start()
+    {
+        SimplePlayBGM(0);
+    }
+
     public AudioClip[] BGMSounds;
     public AudioClip[] EffectSounds;
     
@@ -52,7 +57,10 @@ public class SoundManager : MonoBehaviour
 
         _AudioSource.Play();
 
-        Destroy(soundPlayObject, sfx.length);
+        if (!_Loop)
+        {
+            Destroy(soundPlayObject, sfx.length);
+        }        
     }
 
     public void PlaySfx(AudioClip sfx, bool loop)

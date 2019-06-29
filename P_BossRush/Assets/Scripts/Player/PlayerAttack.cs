@@ -12,12 +12,16 @@ public class PlayerAttack : MonoBehaviour
     public Animator camAnim;
     public Animator playerAnim;
 
+    public SpriteRenderer renderer;
+
     // public float attackRangeX, attackRangeY
     public float attackRange;
     public int damage;
 
     void Update()
     {
+        
+
         if (timeBtwAttack <= 0)
         {
             // then you can attack
@@ -27,8 +31,10 @@ public class PlayerAttack : MonoBehaviour
                 //playerAnim.SetTrigger("attack");
 
                 timeBtwAttack = startTimeBtwAttack;
+                Collider2D[] enemiesToDamage;
+ 
                 // Collider2D[] ** = Phyiscs2D.OverlapBoxAll(attackPos.position, new Vector2(attackRangeX, attackRangeY), 0, whatIsEnemies);
-                Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, whatIsEnemies);
+                enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position , attackRange, whatIsEnemies);
                 
                 for (int i = 0; i < enemiesToDamage.Length; i++)
                 {                    

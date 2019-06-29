@@ -18,7 +18,7 @@ public class MiniSlimeMove : MonoBehaviour
 
     float myWidth, myHeight;
 
-    private bool canMove = false;
+    private bool canMove = true;
 
     void Start()
     {

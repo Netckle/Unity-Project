@@ -8,7 +8,7 @@ public class Cutscene01 : Cutscene
 
     public PlayerMovement player;
     public NPCMovement npc;
-    public BossSlimeMovement bossSlime;
+    public BossMovement bossSlime;
 
     public GameObject niddle;
 
@@ -63,7 +63,7 @@ public class Cutscene01 : Cutscene
         Camera.main.GetComponent<MultipleTargetCamera>().targets[1] = bossSlime.gameObject.transform;
 
         player.Release();  
-        bossSlime.BossPattern();
+        bossSlime.StartBossMove(2);
 
         cutscne01IsEnd = true;
     }
